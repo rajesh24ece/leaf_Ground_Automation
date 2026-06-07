@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Rajesh Kumar",
+    "age": 28,
+    "number": "9876543210",
+    "address": {
+      "city": "Chennai",
+      "state": "Tamil Nadu"
+    }
+  },
+  {
+    "name": "Arun Prakash",
+    "age": 31,
+    "number": "9123456780",
+    "address": {
+      "city": "Coimbatore",
+      "state": "Tamil Nadu"
+    }
+  },
+  {
+    "name": "Vikram Singh",
+    "age": 26,
+    "number": "9988776655",
+    "address": {
+      "city": "Bangalore",
+      "state": "Karnataka"
+    }
+  },
+  {
+    "name": "Sneha Reddy",
+    "age": 24,
+    "number": "9012345678",
+    "address": {
+      "city": "Hyderabad",
+      "state": "Telangana"
+    }
+  },
+  {
+    "name": "Priya Sharma",
+    "age": 29,
+    "number": "9871203456",
+    "address": {
+      "city": "Mumbai",
+      "state": "Maharashtra"
+    }
+  },
+  {
+    "name": "Karthik Ravi",
+    "age": 33,
+    "number": "9090909090",
+    "address": {
+      "city": "Madurai",
+      "state": "Tamil Nadu"
+    }
+  },
+  {
+    "name": "Anjali Mehta",
+    "age": 27,
+    "number": "9345678901",
+    "address": {
+      "city": "Delhi",
+      "state": "India"
+    }
+  },
+  {
+    "name": "Rohit Verma",
+    "age": 30,
+    "number": "9786541230",
+    "address": {
+      "city": "Pune",
+      "state": "Maharashtra"
+    }
+  },
+  {
+    "name": "Divya Nair",
+    "age": 25,
+    "number": "9654321870",
+    "address": {
+      "city": "Kochi",
+      "state": "Kerala"
+    }
+  },
+  {
+    "name": "Suresh Babu",
+    "age": 35,
+    "number": "9898989898",
+    "address": {
+      "city": "Visakhapatnam",
+      "state": "Andhra Pradesh"
+    }
+  }
+]
