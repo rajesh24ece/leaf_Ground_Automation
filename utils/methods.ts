@@ -48,13 +48,15 @@ export class Methods extends Locators {
   protected static async assertText(
     page: Page,
     locator: string,
-    actualText: string,
+    actualText?: string,
     isVisible?: boolean,
   ): Promise<void> {
     const alertText = page.locator(locator);
     if (isVisible) {
       await expect(alertText).toBeVisible();
     }
-    await expect(alertText).toHaveText(actualText);
+    if (actualText) {
+      await expect(alertText).toHaveText(actualText);
+    }
   }
 }
