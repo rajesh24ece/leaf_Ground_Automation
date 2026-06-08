@@ -45,7 +45,6 @@ export class Locators {
   protected sliderLeft = '[class*="ui-slider-handle"]';
   protected sliderZeroPercentage = "0%";
   protected oskLocator = "#j_idt106\\:j_idt122";
-  protected oskInput = "rajesh";
   protected oskKeyPad = "[class*=keypad-key]";
   protected closeButton = "Close";
   protected oskKeypadClick = '[class*="keypad-special"]';
