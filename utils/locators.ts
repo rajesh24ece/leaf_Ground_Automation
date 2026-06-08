@@ -1,6 +1,6 @@
 export type DialogAction = "accept" | "dismiss";
 
-export type RoleActions = "button";
+export type RoleActions = "button" | "option";
 
 export class Locators {
   protected textPage = "input.xhtml";
@@ -72,6 +72,7 @@ export class Locators {
   protected dismiss: DialogAction = "dismiss";
   protected dialogText = "Dialog";
   protected button: RoleActions = "button";
+  protected option: RoleActions = "option";
 
   protected sweetModalButton = "#j_idt88\\:j_idt100";
   protected sweetModalButtonPopup = "#j_idt88\\:j_idt101";
@@ -93,4 +94,19 @@ export class Locators {
   protected sweetAlertBody = "Are you sure you want to proceed?";
   protected noText = "No";
   protected yesText = "Yes";
+
+  protected selectToolLocator = "select.ui-selectonemenu";
+  protected playwrightText = "Playwright";
+  protected countryLocator = "#j_idt87\\:country_label";
+  protected india = "India";
+
+  protected cityLocator = "#j_idt87\\:city_label";
+  protected chennai = "Chennai";
+
+  protected showOptions = "Show Options";
+  protected aws = "AWS";
+  protected languageLocator = "#j_idt87\\:lang_label";
+  protected tamil = "Tamil";
+  protected languageValue = "#j_idt87\\:value_label";
+  protected rendu = "இரண்டு";
 }

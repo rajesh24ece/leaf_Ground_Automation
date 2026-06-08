@@ -1,8 +1,8 @@
-import { expect, Page } from "@playwright/test";
-import { Locators } from "../utils/locators";
+import { expect, Page, test } from "@playwright/test";
+import { Methods } from "../utils/methods";
 
-export class DropdownPage extends Locators {
-  #page;
+export class DropdownPage extends Methods {
+  #page: Page;
 
   constructor(page: Page) {
     super();
@@ -10,67 +10,126 @@ export class DropdownPage extends Locators {
   }
 
   async handlingDropdown() {
-    await this.landingPage();
-    await this.selectTool();
-    await this.selectCountry();
-    await this.selectCity();
-    await this.selectCourse();
-    await this.selectLanguage();
-    await this.selectTwo();
+    await test.step("Landed on dropdown Page.", async () => {
+      await this.landingPage();
+    });
+
+    await test.step("Select favourite UI automation tool.", async () => {
+      await this.selectTool();
+    });
+
+    await test.step("Selecting preferred country.", async () => {
+      await this.selectCountry();
+    });
+
+    await test.step("Selecting Confirm Cities belongs to Country is loaded.", async () => {
+      await this.selectCity();
+    });
+
+    await test.step("Selecting the Course.", async () => {
+      await this.selectCourse();
+    });
+
+    await test.step("Selecting language randomly.", async () => {
+      await this.selectLanguage();
+    });
+
+    await test.step("Selecting 'Two' irrespective of the language chosen.", async () => {
+      await this.selectTwo();
+    });
   }
 
   private async landingPage() {
     await this.#page.goto(this.dropdownPage);
+    await Methods.captureAndLog(
+      this.#page,
+      "Successfully landed in the dropdown page.",
+    );
   }
 
   private async selectTool() {
-    const toolDropdown = this.#page.locator("select.ui-selectonemenu").first();
-    await toolDropdown.selectOption({ label: "Playwright" });
-    await expect(toolDropdown).toHaveValue("Playwright");
+    const toolDropdown = this.#page.locator(this.selectToolLocator).first();
+    await toolDropdown.selectOption({ label: this.playwrightText });
+    await expect(toolDropdown).toHaveValue(this.playwrightText);
+    await Methods.captureAndLog(
+      this.#page,
+      "Selected the UI automation tool from the dropdown.",
+    );
   }
 
   private async selectCountry() {
-    const countryDropdown = this.#page.locator("#j_idt87\\:country_label");
-    await countryDropdown.click();
-    await this.#page.getByRole("option", { name: "India" }).click();
-    await expect(countryDropdown).toHaveText("India");
+    await Methods.clickDropdownHandling(
+      this.#page,
+      this.countryLocator,
+      this.india,
+      this.option,
+    );
+    await Methods.captureAndLog(
+      this.#page,
+      "Selected the country from the list.",
+    );
   }
 
   private async selectCity() {
-    const cityDropdown = this.#page.locator("#j_idt87\\:city_label");
-    await cityDropdown.click();
-    await this.#page.getByRole("option", { name: "Chennai" }).click();
-    await expect(cityDropdown).toHaveText("Chennai");
+    await Methods.clickDropdownHandling(
+      this.#page,
+      this.cityLocator,
+      this.chennai,
+      this.option,
+    );
+    await Methods.captureAndLog(
+      this.#page,
+      "Selected the city from the dropdown.",
+    );
   }
 
   private async selectCourse() {
-    await this.#page.getByRole("button", { name: "Show Options" }).click();
-    await this.#page.getByRole("option", { name: "Playwright" }).nth(1).click();
-
-    await this.#page.getByRole("button", { name: "Show Options" }).click();
-    await this.#page.getByRole("option", { name: "AWS" }).click();
-
+    await Methods.clickMatchingByRole(
+      this.#page,
+      this.showOptions,
+      this.button,
+    );
+    await this.#page
+      .getByRole(this.option, { name: this.playwrightText })
+      .nth(1)
+      .click();
+    await Methods.clickMatchingByRole(
+      this.#page,
+      this.showOptions,
+      this.button,
+    );
+    await Methods.clickMatchingByRole(this.#page, this.aws, this.option);
     await expect(
-      this.#page.locator(".ui-autocomplete-token-label").nth(0),
-    ).toHaveText("Playwright");
+      this.#page.locator(this.dropDownDisplayValueLocator).nth(0),
+    ).toHaveText(this.playwrightText);
     await expect(
-      this.#page.locator(".ui-autocomplete-token-label").nth(1),
-    ).toHaveText("AWS");
+      this.#page.locator(this.dropDownDisplayValueLocator).nth(1),
+    ).toHaveText(this.aws);
   }
 
   private async selectLanguage() {
-    const language = this.#page.locator("#j_idt87\\:lang_label");
-    await language.click();
-    await this.#page.getByRole("option", { name: "Tamil" }).click();
-    await expect(language).toHaveText("Tamil");
+    await Methods.clickDropdownHandling(
+      this.#page,
+      this.languageLocator,
+      this.tamil,
+      this.option,
+    );
+    await Methods.captureAndLog(
+      this.#page,
+      "Selected the language from the dropdown list.",
+    );
   }
 
   private async selectTwo() {
-    const twoDropdown = this.#page.locator("#j_idt87\\:value_label");
-    await twoDropdown.click();
-    await this.#page.getByRole("option", { name: "இரண்டு" }).click();
-    await expect(this.#page.locator("#j_idt87\\:value_label")).toHaveText(
-      "இரண்டு",
+    await Methods.clickDropdownHandling(
+      this.#page,
+      this.languageValue,
+      this.rendu,
+      this.option,
+    );
+    await Methods.captureAndLog(
+      this.#page,
+      "Selected the two for the selected respective language.",
     );
   }
 }

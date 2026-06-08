@@ -18,7 +18,7 @@ test.describe("DemoQA UI Interactions", () => {
     await windowsPage.handlingMultipleWindows();
   });
 
-  test.skip("Handling drop down options", async ({ page }) => {
+  test("Handling drop down options", async ({ page }) => {
     const dropdownPage = new DropdownPage(page);
     await dropdownPage.handlingDropdown();
   });
