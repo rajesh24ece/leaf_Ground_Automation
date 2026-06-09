@@ -55,6 +55,10 @@ export class AlertPage extends Methods {
     });
   }
 
+  /**
+   *
+   */
+
   private async landingPage(): Promise<void> {
     await this.#page.goto(this.alertPage);
     await Methods.captureAndLog(
@@ -62,6 +66,10 @@ export class AlertPage extends Methods {
       "Landed in the alert page successfully.",
     );
   }
+
+  /**
+   *
+   */
 
   private async simpleAlert(): Promise<void> {
     await Methods.alertHandling(this.#page, this.accept);
@@ -77,6 +85,10 @@ export class AlertPage extends Methods {
     );
   }
 
+  /**
+   *
+   */
+
   private async simpleAlertConfirmClickOk(): Promise<void> {
     await Methods.alertHandling(this.#page, this.accept);
     await this.#page.locator(this.simpleAlertConfirmButton).click();
@@ -91,6 +103,10 @@ export class AlertPage extends Methods {
     );
   }
 
+  /**
+   *
+   */
+
   private async simpleAlertConfirmClickCancel(): Promise<void> {
     await Methods.alertHandling(this.#page, this.dismiss);
     await this.#page.locator(this.simpleAlertConfirmButton).click();
@@ -104,6 +120,10 @@ export class AlertPage extends Methods {
       this.simpleAlertConfirmTextCancel,
     );
   }
+
+  /**
+   *
+   */
 
   private async sweetAlertSimple(): Promise<void> {
     await this.#page.locator(this.sweetAlertSimpleButton).click();
@@ -129,6 +149,10 @@ export class AlertPage extends Methods {
     await expect(popupWindow).not.toBeVisible();
   }
 
+  /**
+   *
+   */
+
   private async sweetModalDialog(): Promise<void> {
     await this.#page.locator(this.sweetModalButton).click();
     await Methods.captureAndLog(
@@ -151,6 +175,7 @@ export class AlertPage extends Methods {
       this.closeButton,
       this.button,
     );
+    await Methods.captureAndLog(this.#page, "Clicked on the close button.");
   }
 
   private async alertPromptDialogEmpty() {
@@ -168,6 +193,11 @@ export class AlertPage extends Methods {
   }
 
   private async alertPromptDialogWithMessage() {
+    await Methods.alertHandling(
+      this.#page,
+      this.accept,
+      this.typeNameDropValue,
+    );
     await Methods.alertHandling(
       this.#page,
       this.accept,
