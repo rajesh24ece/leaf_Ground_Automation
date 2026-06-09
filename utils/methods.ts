@@ -4,7 +4,6 @@ import { Locators, DialogAction } from "./locators";
 type AriaRole = Parameters<Page["getByRole"]>[0];
 
 export class Methods extends Locators {
-  // Capture Screenshot With Logs
   public static async captureAndLog(page: Page, name: string): Promise<void> {
     const screenshotPath = `screenshots/${name}-${Date.now()}.png`;
 
@@ -16,7 +15,14 @@ export class Methods extends Locators {
     console.log(`📸 Screenshot captured: ${screenshotPath}`);
   }
 
-  protected static async loopClickWithByRole(
+  /**
+   *
+   * @param page
+   * @param locator
+   * @param roleType
+   */
+
+  protected static async clickMatchingByRole(
     page: Page,
     locator: string,
     roleType: AriaRole,
@@ -25,10 +31,17 @@ export class Methods extends Locators {
     const count = await elements.count();
     for (let i = 0; i < count; i++) {
       await elements.nth(i).click();
-      console.log(`✅ Clicked [${roleType}] "${locator}" — index ${i}`);
+      console.log(`✅ Clicked [${roleType}] "${locator}".`);
       await Methods.captureAndLog(page, `${locator}_click_${i}`);
     }
   }
+
+  /**
+   *
+   * @param page
+   * @param action
+   * @param text
+   */
 
   protected static async alertHandling(
     page: Page,
@@ -45,18 +58,72 @@ export class Methods extends Locators {
     });
   }
 
+  /**
+   *
+   * @param page
+   * @param locator
+   * @param actualText
+   * @param isVisible
+   */
+
+  protected static async assertVisible(
+    page: Page,
+    locator: string,
+  ): Promise<void> {
+    const alertText = page.locator(locator);
+    await expect(alertText).toBeVisible();
+  }
+
+  /**
+   *
+   * @param page
+   * @param locator
+   * @param actualText
+   * @param isVisible
+   */
+
   protected static async assertText(
     page: Page,
     locator: string,
-    actualText?: string,
-    isVisible?: boolean,
+    actualText: string,
   ): Promise<void> {
     const alertText = page.locator(locator);
-    if (isVisible) {
-      await expect(alertText).toBeVisible();
-    }
-    if (actualText) {
-      await expect(alertText).toHaveText(actualText);
-    }
+    await expect(alertText).toHaveText(actualText);
+  }
+
+  /**
+   *
+   * @param page
+   * @param locator
+   * @param expectedText
+   */
+
+  protected static async assertVisibleWithText(
+    page: Page,
+    locator: string,
+    expectedText: string,
+  ): Promise<void> {
+    await Methods.assertVisible(page, locator);
+    await Methods.assertText(page, locator, expectedText);
+  }
+
+  /**
+   *
+   * @param page
+   * @param locator
+   * @param value
+   * @param role
+   */
+
+  protected static async clickDropdownHandling(
+    page: Page,
+    locator: string,
+    value: string,
+    role: AriaRole,
+  ): Promise<void> {
+    const dropdownClick = page.locator(locator);
+    await dropdownClick.click();
+    await Methods.clickMatchingByRole(page, value, role);
+    await expect(dropdownClick).toHaveText(value);
   }
 }
