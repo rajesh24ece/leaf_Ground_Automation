@@ -55,10 +55,6 @@ export class AlertPage extends Methods {
     });
   }
 
-  /**
-   *
-   */
-
   private async landingPage(): Promise<void> {
     await this.#page.goto(this.alertPage);
     await Methods.captureAndLog(
@@ -66,10 +62,6 @@ export class AlertPage extends Methods {
       "Landed in the alert page successfully.",
     );
   }
-
-  /**
-   *
-   */
 
   private async simpleAlert(): Promise<void> {
     await Methods.alertHandling(this.#page, this.accept);
@@ -85,10 +77,6 @@ export class AlertPage extends Methods {
     );
   }
 
-  /**
-   *
-   */
-
   private async simpleAlertConfirmClickOk(): Promise<void> {
     await Methods.alertHandling(this.#page, this.accept);
     await this.#page.locator(this.simpleAlertConfirmButton).click();
@@ -102,10 +90,6 @@ export class AlertPage extends Methods {
       this.simpleAlertConfirmTextOk,
     );
   }
-
-  /**
-   *
-   */
 
   private async simpleAlertConfirmClickCancel(): Promise<void> {
     await Methods.alertHandling(this.#page, this.dismiss);
@@ -121,19 +105,13 @@ export class AlertPage extends Methods {
     );
   }
 
-  /**
-   *
-   */
-
   private async sweetAlertSimple(): Promise<void> {
     await this.#page.locator(this.sweetAlertSimpleButton).click();
     await Methods.captureAndLog(
       this.#page,
       "Clicked on the Sweet Alert (Simple Dialog) button to open the sweet alert window.",
     );
-
     await Methods.assertVisible(this.#page, this.sweetAlertSimplePopup);
-
     await Methods.assertText(
       this.#page,
       this.sweetAlertSimplePopupTitle,
@@ -148,10 +126,6 @@ export class AlertPage extends Methods {
     const popupWindow = this.#page.locator(this.sweetAlertSimplePopup);
     await expect(popupWindow).not.toBeVisible();
   }
-
-  /**
-   *
-   */
 
   private async sweetModalDialog(): Promise<void> {
     await this.#page.locator(this.sweetModalButton).click();
