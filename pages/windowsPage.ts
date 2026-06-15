@@ -1,4 +1,4 @@
-import { expect, Page } from "playwright/test";
+import { expect, Page, test } from "playwright/test";
 import { Locators } from "../utils/locators";
 
 export class WindowsPage extends Locators {
@@ -9,13 +9,19 @@ export class WindowsPage extends Locators {
     this.#page = page;
   }
   async handlingMultipleWindows() {
-    await this.landingWindowPage();
-    await this.openNewWindows();
-    await this.openAndCloseTab();
+    await test.step("Landing in the windows handling page.", async () => {
+      await this.landingWindowPage();
+    });
+    await test.step("Opening a new window.", async () => {
+      await this.openNewWindows();
+    });
+    await test.step("Opening a new window and close it again.", async () => {
+      await this.openAndCloseTab();
+    });
   }
 
   private async landingWindowPage() {
-    await this.#page.goto("window.xhtml");
+    await this.#page.goto(this.multipleWindowsPage);
   }
 
   private async openNewWindows() {

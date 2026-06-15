@@ -8,12 +8,12 @@ test.describe("DemoQA UI Interactions", () => {
   test.describe.configure({ mode: "serial" });
   //test.setTimeout(60000);
 
-  test.skip("Handling Text Box", async ({ page }) => {
+  test("Handling Text Box", async ({ page }) => {
     const textBoxPage = new TextBox(page);
     await textBoxPage.handlingTextBox();
   });
 
-  test.skip("Handling multiple windows", async ({ page }) => {
+  test("Handling multiple windows", async ({ page }) => {
     const windowsPage = new WindowsPage(page);
     await windowsPage.handlingMultipleWindows();
   });
