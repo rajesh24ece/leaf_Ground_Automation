@@ -1,0 +1,13 @@
+{
+  "simpleAlertResultText": "You have successfully clicked an alert",
+  "simpleAlertConfirmTextOk": "User Clicked : OK",
+  "simpleAlertConfirmTextCancel": "User Clicked : Cancel",
+  "sweetAlertSimplePopupBodyText": "You have clicked and open a dialog that can be inspectable.",
+  "sweetModalPopUpText": "Modal Dialog (Sweet Alert)",
+  "sweetModalBodyText": "Unless you close this, you cannot interact with other element. But am inspectable !",
+  "alertPromptDialogEmptyText": "User cancelled the prompt.",
+  "alertPromptDialogGivenText": "User entered name as: rajesh",
+  "alertPromptDialogNullText": "User entered name as: ",
+  "sweetAlertBody": "Are you sure you want to proceed?",
+  "typeNameDropValue": "rajesh"
+}

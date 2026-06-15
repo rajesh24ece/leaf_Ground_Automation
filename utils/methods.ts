@@ -1,7 +1,52 @@
 import { Page, expect } from "@playwright/test";
 import { Locators, DialogAction } from "./locators";
+import * as fs from "fs";
+import * as path from "path";
 
 type AriaRole = Parameters<Page["getByRole"]>[0];
+
+export interface TextBoxTestData {
+  typeName: string;
+  typeNewName: string;
+  mailID: string;
+  appendCountry: string;
+  aboutYourselfText: string;
+  errorMessageText: string;
+  dobYear: string;
+  dobDate: string;
+  monthInText: string;
+  fullDate: string;
+  typeNameDropValue: string;
+  typeNameDropValueDisplay: string;
+  courses: string[];
+  india: string;
+  chennai: string;
+  tamil: string;
+  customToolBarValue: string;
+}
+
+export interface DropdownTestData {
+  playwrightText: string;
+  india: string;
+  chennai: string;
+  tamil: string;
+  rendu: string;
+  courses: string[];
+}
+
+export interface AlertTestData {
+  simpleAlertResultText: string;
+  simpleAlertConfirmTextOk: string;
+  simpleAlertConfirmTextCancel: string;
+  sweetAlertSimplePopupBodyText: string;
+  sweetModalPopUpText: string;
+  sweetModalBodyText: string;
+  alertPromptDialogEmptyText: string;
+  alertPromptDialogGivenText: string;
+  alertPromptDialogNullText: string;
+  sweetAlertBody: string;
+  typeNameDropValue: string;
+}
 
 export class Methods extends Locators {
   public static async captureAndLog(page: Page, name: string): Promise<void> {
@@ -125,5 +170,19 @@ export class Methods extends Locators {
     await dropdownClick.click();
     await Methods.clickMatchingByRole(page, value, role);
     await expect(dropdownClick).toHaveText(value);
+  }
+
+  /**
+   *
+   * @param fileLocation
+   * @returns
+   */
+
+  protected static async accessJsonData<T>(fileLocation: string): Promise<T> {
+    const rawData = fs.readFileSync(
+      path.resolve(__dirname, fileLocation),
+      "utf-8",
+    );
+    return JSON.parse(rawData) as T;
   }
 }
