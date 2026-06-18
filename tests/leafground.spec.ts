@@ -3,28 +3,34 @@ import { TextBox } from "../pages/textBoxPage";
 import { WindowsPage } from "../pages/windowsPage";
 import { DropdownPage } from "../pages/dropdownPage";
 import { AlertPage } from "../pages/alertPage";
+import { WebTablePage } from "../pages/webtablePage";
 
 test.describe("DemoQA UI Interactions", () => {
   test.describe.configure({ mode: "serial" });
   //test.setTimeout(60000);
 
-  test("Handling Text Box", async ({ page }) => {
+  test.skip("Handling Text Box", async ({ page }) => {
     const textBoxPage = new TextBox(page);
     await textBoxPage.handlingTextBox();
   });
 
-  test("Handling multiple windows", async ({ page }) => {
+  test.skip("Handling multiple windows", async ({ page }) => {
     const windowsPage = new WindowsPage(page);
     await windowsPage.handlingMultipleWindows();
   });
 
-  test("Handling drop down options", async ({ page }) => {
+  test.skip("Handling drop down options", async ({ page }) => {
     const dropdownPage = new DropdownPage(page);
     await dropdownPage.handlingDropdown();
   });
 
-  test("Handling alerts", async ({ page }) => {
+  test.skip("Handling alerts", async ({ page }) => {
     const alertPage = new AlertPage(page);
     await alertPage.handlingAlert();
+  });
+
+  test("Handling web table", async ({ page }) => {
+    const tablePage = new WebTablePage(page);
+    await tablePage.handlingTable();
   });
 });

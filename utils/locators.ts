@@ -8,6 +8,7 @@ export class Locators {
   protected dropdownPage = "select.xhtml";
   protected alertPage = "alert.xhtml";
   protected multipleWindowsPage = "window.xhtml";
+  protected webTable = "grid.xhtml";
 
   protected typeNamePlaceHolder = "Babu Manickam";
   protected appendTextLocator = "#j_idt88\\:j_idt91";
@@ -100,4 +101,5 @@ export class Locators {
   protected textBoxJson = "../test-data/textBox.json";
   protected dropdownJson = "../test-data/dropdown.json";
   protected alertJson = "../test-data/alert.json";
+  protected tableJson = "../test-data/webTable.json";
 }
