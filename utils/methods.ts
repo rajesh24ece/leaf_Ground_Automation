@@ -48,6 +48,14 @@ export interface AlertTestData {
   typeNameDropValue: string;
 }
 
+export interface TableTestData {
+  ProductName: string;
+  Description: string;
+  Category: string;
+  Price: number;
+  Quantity: number;
+}
+
 export class Methods extends Locators {
   public static async captureAndLog(page: Page, name: string): Promise<void> {
     const screenshotPath = `screenshots/${name}-${Date.now()}.png`;
@@ -184,5 +192,16 @@ export class Methods extends Locators {
       "utf-8",
     );
     return JSON.parse(rawData) as T;
+  }
+
+  protected static async accessJsonArrayData<T>(
+    fileLocation: string,
+  ): Promise<T[]> {
+    const rawData = fs.readFileSync(
+      path.resolve(__dirname, fileLocation),
+      "utf-8",
+    );
+
+    return JSON.parse(rawData) as T[];
   }
 }
