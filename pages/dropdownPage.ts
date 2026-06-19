@@ -1,5 +1,6 @@
 import { expect, Page, test } from "@playwright/test";
 import { Methods, DropdownTestData } from "../utils/methods";
+import { DropDownLocators } from "../locators/dropDownLocators";
 
 export class DropdownPage extends Methods {
   #page: Page;
@@ -13,7 +14,7 @@ export class DropdownPage extends Methods {
     let testData: DropdownTestData;
 
     await test.step("Read test data from json file.", async () => {
-      testData = await Methods.accessJsonData(this.dropdownJson);
+      testData = await Methods.accessJsonData(DropDownLocators.dropdownJson);
     });
 
     await test.step("Landed on dropdown Page.", async () => {
@@ -46,7 +47,7 @@ export class DropdownPage extends Methods {
   }
 
   private async landingPage() {
-    await this.#page.goto(this.dropdownPage);
+    await this.#page.goto(DropDownLocators.dropdownPage);
     await Methods.captureAndLog(
       this.#page,
       "Successfully landed in the dropdown page.",
@@ -54,7 +55,9 @@ export class DropdownPage extends Methods {
   }
 
   private async selectTool(testData: DropdownTestData) {
-    const toolDropdown = this.#page.locator(this.selectToolLocator).first();
+    const toolDropdown = this.#page
+      .locator(DropDownLocators.selectToolLocator)
+      .first();
     await toolDropdown.selectOption({ label: testData.playwrightText });
     await expect(toolDropdown).toHaveValue(testData.playwrightText);
     await Methods.captureAndLog(
@@ -66,7 +69,7 @@ export class DropdownPage extends Methods {
   private async selectCountry(testData: DropdownTestData) {
     await Methods.clickDropdownHandling(
       this.#page,
-      this.countryLocator,
+      DropDownLocators.countryLocator,
       testData.india,
       this.option,
     );
@@ -79,7 +82,7 @@ export class DropdownPage extends Methods {
   private async selectCity(testData: DropdownTestData) {
     await Methods.clickDropdownHandling(
       this.#page,
-      this.cityLocator,
+      DropDownLocators.cityLocator,
       testData.chennai,
       this.option,
     );
@@ -93,25 +96,29 @@ export class DropdownPage extends Methods {
     for (const course of testData.courses) {
       await Methods.clickMatchingByRole(
         this.#page,
-        this.showOptions,
+        DropDownLocators.showOptions,
         this.button,
       );
-      await expect(this.#page.locator(this.courseDropdownPanel)).toBeVisible();
+      await expect(
+        this.#page.locator(DropDownLocators.courseDropdownPanel),
+      ).toBeVisible();
       await this.#page
         .locator(`[class*="ui-autocomplete-item"][data-item-label="${course}"]`)
         .click();
-      await expect(this.#page.locator(this.courseDropdownPanel)).toBeHidden();
+      await expect(
+        this.#page.locator(DropDownLocators.courseDropdownPanel),
+      ).toBeHidden();
     }
 
     await expect(
-      this.#page.locator(this.dropDownDisplayValueLocator),
+      this.#page.locator(DropDownLocators.dropDownDisplayValueLocator),
     ).toHaveText(testData.courses);
   }
 
   private async selectLanguage(testData: DropdownTestData) {
     await Methods.clickDropdownHandling(
       this.#page,
-      this.languageLocator,
+      DropDownLocators.languageLocator,
       testData.tamil,
       this.option,
     );
@@ -124,7 +131,7 @@ export class DropdownPage extends Methods {
   private async selectTwo(testData: DropdownTestData) {
     await Methods.clickDropdownHandling(
       this.#page,
-      this.languageValue,
+      DropDownLocators.languageValue,
       testData.rendu,
       this.option,
     );

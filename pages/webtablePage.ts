@@ -1,4 +1,4 @@
-import { Page, test } from "@playwright/test";
+import { Page, test, expect } from "@playwright/test";
 import { Methods, TableTestData } from "../utils/methods";
 
 export class WebTablePage extends Methods {
@@ -9,12 +9,10 @@ export class WebTablePage extends Methods {
   }
 
   async handlingTable() {
-    let testDataList: TableTestData[];
+    let testData: TableTestData;
 
     await test.step("Read test data from json file.", async () => {
-      testDataList = await Methods.accessJsonArrayData<TableTestData>(
-        this.tableJson,
-      );
+      testData = await Methods.accessJsonData(this.tableJson);
     });
 
     await test.step("Successfully landed in the web table page.", async () => {
@@ -22,7 +20,7 @@ export class WebTablePage extends Methods {
     });
 
     await test.step("Successfully landed in the web table page.", async () => {
-      await this.createNewProduct(testDataList);
+      await this.createNewProduct(testData);
     });
   }
 
@@ -31,27 +29,35 @@ export class WebTablePage extends Methods {
     await this.#page.waitForLoadState();
   }
 
-  private async createNewProduct(testDataList: TableTestData[]) {
-    for (let testData of testDataList) {
-      await this.#page.getByRole("button", { name: "New" }).click();
-      await this.#page.waitForSelector("#form\\:j_idt130");
-      await this.#page
-        .getByRole("textbox", { name: "Name*" })
-        .fill(testData.ProductName);
-      await this.#page
-        .getByRole("textbox", { name: "Description" })
-        .fill(testData.Description);
+  private async createNewProduct(testData: TableTestData) {
+    await this.#page.getByRole("button", { name: "New" }).click();
+    await this.#page.waitForSelector("#form\\:j_idt130");
+    await this.#page
+      .getByRole("textbox", { name: "Name*" })
+      .fill(testData.ProductName);
+    await this.#page
+      .getByRole("textbox", { name: "Description" })
+      .fill(testData.Description);
 
-      await this.#page.locator(`label:text-is("${testData.Category}")`).click();
+    await this.#page.locator(`label:text-is("${testData.Category}")`).click();
 
-      await this.#page.getByRole("textbox", { name: "Price" }).clear();
-      await this.#page
-        .getByRole("textbox", { name: "Price" })
-        .fill(String(testData.Price));
-      await this.#page
-        .locator("#form\\:quantity_input")
-        .fill(String(testData.Quantity));
-      await this.#page.getByText("Save", { exact: true }).click();
+    await this.#page.getByRole("textbox", { name: "Price" }).clear();
+    await this.#page
+      .getByRole("textbox", { name: "Price" })
+      .fill(String(testData.Price));
+    await this.#page
+      .locator("#form\\:quantity_input")
+      .fill(String(testData.Quantity));
+    await this.#page.getByText("Save", { exact: true }).click();
+    await expect(this.#page.locator(".ui-growl-message")).toContainText(
+      /Product Added/i,
+    );
+    const search = this.#page.getByPlaceholder("Search").nth(1);
+    await search.click();
+    await search.pressSequentially(testData.ProductName, { delay: 50 });
+    const isavailable = await this.checkTableData(testData.ProductName);
+    if (isavailable) {
+      console.log("Product available in the list.");
     }
   }
 

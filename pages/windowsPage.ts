@@ -1,11 +1,10 @@
 import { expect, Page, test } from "playwright/test";
-import { Locators } from "../utils/locators";
+import { WindowsLocators } from "../locators/windowsLocator";
 
-export class WindowsPage extends Locators {
+export class WindowsPage {
   #page: Page;
 
   constructor(page: Page) {
-    super();
     this.#page = page;
   }
   async handlingMultipleWindows() {
@@ -21,7 +20,7 @@ export class WindowsPage extends Locators {
   }
 
   private async landingWindowPage() {
-    await this.#page.goto(this.multipleWindowsPage);
+    await this.#page.goto(WindowsLocators.multipleWindowsPage);
   }
 
   private async openNewWindows() {
@@ -29,7 +28,7 @@ export class WindowsPage extends Locators {
     console.log("Parent Page Title: " + parentTitle);
     const [newPage] = await Promise.all([
       this.#page.context().waitForEvent("page"),
-      this.#page.click(this.openOneBrowserlocator),
+      this.#page.click(WindowsLocators.openOneBrowserlocator),
     ]);
     await newPage.waitForLoadState();
     let newPageTitle = await newPage.title();
@@ -43,7 +42,9 @@ export class WindowsPage extends Locators {
     const context = this.#page.context();
     const parentTitle = await this.#page.title();
     const pagesBefore = context.pages();
-    await this.#page.locator(this.openThreeBrowsersCloseLocator).click();
+    await this.#page
+      .locator(WindowsLocators.openThreeBrowsersCloseLocator)
+      .click();
     await expect
       .poll(() => context.pages().length)
       .toBe(pagesBefore.length + 3);
