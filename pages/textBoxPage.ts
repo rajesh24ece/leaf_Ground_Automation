@@ -1,5 +1,6 @@
 import { expect, Page, test } from "@playwright/test";
 import { Methods, TextBoxTestData } from "../utils/methods";
+import { TextBoxLocators } from "../locators/textBoxLocators";
 
 export class TextBox extends Methods {
   #page: Page;
@@ -13,7 +14,7 @@ export class TextBox extends Methods {
     let testData: TextBoxTestData;
 
     await test.step("Read test data from json file.", async () => {
-      testData = await Methods.accessJsonData(this.textBoxJson);
+      testData = await Methods.accessJsonData(TextBoxLocators.textBoxJson);
     });
 
     await test.step("Landing in the text box page", async () => {
@@ -69,7 +70,7 @@ export class TextBox extends Methods {
   }
 
   private async landingTextBoxPage() {
-    await this.#page.goto(this.textPage);
+    await this.#page.goto(TextBoxLocators.textPage);
     await Methods.captureAndLog(
       this.#page,
       "Successfully landed in the text box page.",
@@ -77,7 +78,9 @@ export class TextBox extends Methods {
   }
 
   private async typeInTextBox(testData: TextBoxTestData) {
-    const textbox = this.#page.getByPlaceholder(this.typeNamePlaceHolder);
+    const textbox = this.#page.getByPlaceholder(
+      TextBoxLocators.typeNamePlaceHolder,
+    );
     await textbox.fill(testData.typeNewName);
     console.log(
       `Typed the name "${testData.typeNewName}" in the text box field.`,
@@ -86,7 +89,7 @@ export class TextBox extends Methods {
   }
 
   private async appendText(testData: TextBoxTestData) {
-    const input = this.#page.locator(this.appendTextLocator);
+    const input = this.#page.locator(TextBoxLocators.appendTextLocator);
     await input.click();
     await input.press("Control+End");
     await input.press("Space");
@@ -103,30 +106,36 @@ export class TextBox extends Methods {
 
   private async isDisabled() {
     const isDisabled = await this.#page
-      .locator(this.isDisabledLocator)
+      .locator(TextBoxLocators.isDisabledLocator)
       .isDisabled();
     console.log("Is the text box disabled?", isDisabled);
   }
 
   private async clearText() {
-    let textField = this.#page.locator(this.clearTextLocator);
+    let textField = this.#page.locator(TextBoxLocators.clearTextLocator);
     await textField.fill("");
     await expect(textField).toHaveValue("");
   }
 
   private async typeMailIDPressTab(testData: TextBoxTestData) {
-    const emailInput = this.#page.getByPlaceholder(this.mailIDLocator);
+    const emailInput = this.#page.getByPlaceholder(
+      TextBoxLocators.mailIDLocator,
+    );
     await emailInput.fill(testData.mailID);
     console.log(`In the text field "${testData.mailID}" is typed correctly.`);
     await emailInput.press("Tab");
     console.log(`Pressed tab button.`);
     await expect(emailInput).toHaveValue(testData.mailID);
-    const focusedField = this.#page.getByPlaceholder(this.aboutYouLocator);
+    const focusedField = this.#page.getByPlaceholder(
+      TextBoxLocators.aboutYouLocator,
+    );
     await expect(focusedField).toBeFocused();
   }
 
   private async aboutYourself(testData: TextBoxTestData) {
-    const aboutYouInput = this.#page.getByPlaceholder(this.aboutYouLocator);
+    const aboutYouInput = this.#page.getByPlaceholder(
+      TextBoxLocators.aboutYouLocator,
+    );
     await aboutYouInput.pressSequentially(testData.aboutYourselfText);
     console.log(
       `In the text field typed "${testData.aboutYourselfText}" this in the about yourself text field.`,
@@ -135,98 +144,116 @@ export class TextBox extends Methods {
   }
 
   private async confirmErrorMessage(testData: TextBoxTestData) {
-    const textFieldBox = this.#page.locator(this.errorMessageLocator);
+    const textFieldBox = this.#page.locator(
+      TextBoxLocators.errorMessageLocator,
+    );
     await textFieldBox.click();
     console.log(`Clicked inside the text box.`);
     await textFieldBox.press("Enter");
-    const errorMessage = this.#page.locator(this.errorMessageTextLocator);
+    const errorMessage = this.#page.locator(
+      TextBoxLocators.errorMessageTextLocator,
+    );
     await expect(errorMessage).toBeVisible();
     await expect(errorMessage).toHaveText(testData.errorMessageText);
   }
 
   private async selectValueFromDropDown(testData: TextBoxTestData) {
     const drop = this.#page
-      .locator(this.typeNameDrop)
+      .locator(TextBoxLocators.typeNameDrop)
       .and(this.#page.getByRole("application"));
     await drop.click();
     await drop.pressSequentially(testData.typeNameDropValue);
-    await expect(this.#page.locator(this.dropDownClickLocator)).toBeVisible();
+    await expect(
+      this.#page.locator(TextBoxLocators.dropDownClickLocator),
+    ).toBeVisible();
     await this.#page
-      .locator(this.dropDownClickLocator)
+      .locator(TextBoxLocators.dropDownClickLocator)
       .getByRole("option")
       .nth(2)
       .click();
-    const selectedValue = this.#page.locator(this.dropDownDisplayValueLocator);
+    const selectedValue = this.#page.locator(
+      TextBoxLocators.dropDownDisplayValueLocator,
+    );
     await expect(selectedValue).toHaveText(testData.typeNameDropValueDisplay);
   }
 
   private async selectDateOfBirth(testData: TextBoxTestData) {
-    await this.#page.locator(this.calendariconLocator).click();
-    await expect(this.#page.locator(this.calendarPanelLocator)).toBeVisible();
+    await this.#page.locator(TextBoxLocators.calendariconLocator).click();
+    await expect(
+      this.#page.locator(TextBoxLocators.calendarPanelLocator),
+    ).toBeVisible();
     while (true) {
       const currentYear = await this.#page
-        .locator(this.currentYearLocator)
+        .locator(TextBoxLocators.currentYearLocator)
         .textContent();
 
       if (currentYear !== testData.dobYear) {
-        await this.#page.locator(this.calendarLeftArrow).click();
+        await this.#page.locator(TextBoxLocators.calendarLeftArrow).click();
         continue;
       }
 
       const currentMonth = await this.#page
-        .locator(this.currentMonthLocator)
+        .locator(TextBoxLocators.currentMonthLocator)
         .textContent();
 
       if (currentMonth !== testData.monthInText) {
-        await this.#page.locator(this.calendarLeftArrow).click();
+        await this.#page.locator(TextBoxLocators.calendarLeftArrow).click();
         continue;
       }
 
       await this.#page
-        .locator(this.calendarPanelLocator)
-        .locator(this.calendarDates)
+        .locator(TextBoxLocators.calendarPanelLocator)
+        .locator(TextBoxLocators.calendarDates)
         .filter({
           hasText: new RegExp(`^${testData.dobDate}$`),
         })
         .click();
       break;
     }
-    const dataData = await this.#page.locator(this.fullDateInput).inputValue();
+    const dataData = await this.#page
+      .locator(TextBoxLocators.fullDateInput)
+      .inputValue();
     expect(dataData).toBe(testData.fullDate);
   }
 
   private async checkSliding() {
-    const sliderValue = this.#page.locator(this.sliderLocator);
-    await sliderValue.fill(this.sliderValue);
+    const sliderValue = this.#page.locator(TextBoxLocators.sliderLocator);
+    await sliderValue.fill(TextBoxLocators.sliderValue);
     await sliderValue.press("Tab");
     let sliderWidth = await this.#page
-      .locator(this.sliderRangeWidth)
-      .getAttribute(this.sliderStyle);
+      .locator(TextBoxLocators.sliderRangeWidth)
+      .getAttribute(TextBoxLocators.sliderStyle);
 
     let sliderLeft = await this.#page
-      .locator(this.sliderLeft)
-      .getAttribute(this.sliderStyle);
+      .locator(TextBoxLocators.sliderLeft)
+      .getAttribute(TextBoxLocators.sliderStyle);
 
-    expect(sliderWidth).not.toContain(this.sliderZeroPercentage);
-    expect(sliderLeft).not.toContain(this.sliderZeroPercentage);
+    expect(sliderWidth).not.toContain(TextBoxLocators.sliderZeroPercentage);
+    expect(sliderLeft).not.toContain(TextBoxLocators.sliderZeroPercentage);
   }
 
   private async oskHandling(testData: TextBoxTestData) {
-    await this.#page.locator(this.oskLocator).click();
+    await this.#page.locator(TextBoxLocators.oskLocator).click();
     for (let char of testData.typeNameDropValue) {
-      await this.#page.locator(this.oskKeyPad, { hasText: char }).click();
+      await this.#page
+        .locator(TextBoxLocators.oskKeyPad, { hasText: char })
+        .click();
     }
     await this.#page
-      .locator(this.oskKeypadClick, { hasText: this.closeButton })
+      .locator(TextBoxLocators.oskKeypadClick, {
+        hasText: TextBoxLocators.closeButton,
+      })
       .click();
-    const value = this.#page.locator(this.oskInputValue);
+    const value = this.#page.locator(TextBoxLocators.oskInputValue);
     await expect(value).toHaveValue(testData.typeNameDropValue);
   }
 
   private async typeCustomToolBar(testData: TextBoxTestData) {
-    const editor = this.#page.locator(this.customToolBarEditor).nth(1);
+    const editor = this.#page
+      .locator(TextBoxLocators.customToolBarEditor)
+      .nth(1);
     await editor.pressSequentially(testData.customToolBarValue);
-    await expect(editor.locator(this.paragraphLocator)).toHaveText(
+    await expect(editor.locator(TextBoxLocators.paragraphLocator)).toHaveText(
       testData.customToolBarValue,
     );
     await Methods.captureAndLog(
@@ -236,20 +263,22 @@ export class TextBox extends Methods {
   }
 
   private async typeNumberAndSpin() {
-    const value = this.#page.locator(this.typeNumberToSpinLocator);
+    const value = this.#page.locator(TextBoxLocators.typeNumberToSpinLocator);
     await value.clear();
-    await value.pressSequentially(this.typeNumberToSpin, { delay: 50 });
+    await value.pressSequentially(TextBoxLocators.typeNumberToSpin, {
+      delay: 50,
+    });
     await value.press("Tab");
     await expect(
-      this.#page.locator(
-        ".ui-spinner-button.ui-spinner-up ui-corner-tr ui-button.ui-widget.ui-state-default.ui-button-text-only",
-      ),
+      this.#page.locator(TextBoxLocators.spinningButton),
     ).toBeVisible();
-    await expect(value).toHaveValue(this.typeNumberToSpin);
-    const beforeValue = Number(await value.getAttribute(this.typedNumber));
-    await this.#page.locator(this.upArrow).click();
+    await expect(value).toHaveValue(TextBoxLocators.typeNumberToSpin);
+    const beforeValue = Number(
+      await value.getAttribute(TextBoxLocators.typedNumber),
+    );
+    await this.#page.locator(TextBoxLocators.upArrow).click();
     await expect(value).toHaveAttribute(
-      this.typedNumber,
+      TextBoxLocators.typedNumber,
       String(beforeValue + 1),
     );
   }

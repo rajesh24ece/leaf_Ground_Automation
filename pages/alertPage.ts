@@ -1,5 +1,6 @@
 import { Page, expect, test } from "@playwright/test";
 import { Methods, AlertTestData } from "../utils/methods";
+import { AlertLocators } from "../locators/alertLocators";
 
 export class AlertPage extends Methods {
   #page: Page;
@@ -13,7 +14,7 @@ export class AlertPage extends Methods {
     let testData: AlertTestData;
 
     await test.step("Read test data from json file.", async () => {
-      testData = await Methods.accessJsonData(this.alertJson);
+      testData = await Methods.accessJsonData(AlertLocators.alertJson);
     });
 
     await test.step("Landing on Alert Page", async () => {
@@ -62,7 +63,7 @@ export class AlertPage extends Methods {
   }
 
   private async landingPage(): Promise<void> {
-    await this.#page.goto(this.alertPage);
+    await this.#page.goto(AlertLocators.alertPage);
     await Methods.captureAndLog(
       this.#page,
       "Landed in the alert page successfully.",
@@ -71,14 +72,14 @@ export class AlertPage extends Methods {
 
   private async simpleAlert(testData: AlertTestData): Promise<void> {
     await Methods.alertHandling(this.#page, this.accept);
-    await this.#page.locator(this.simpleAlertButton).click();
+    await this.#page.locator(AlertLocators.simpleAlertButton).click();
     await Methods.captureAndLog(
       this.#page,
       "Clicked on the Alert (Simple Dialog) button.",
     );
     await Methods.assertVisibleWithText(
       this.#page,
-      this.simpleAlertResult,
+      AlertLocators.simpleAlertResult,
       testData.simpleAlertResultText,
     );
   }
@@ -87,14 +88,14 @@ export class AlertPage extends Methods {
     testData: AlertTestData,
   ): Promise<void> {
     await Methods.alertHandling(this.#page, this.accept);
-    await this.#page.locator(this.simpleAlertConfirmButton).click();
+    await this.#page.locator(AlertLocators.simpleAlertConfirmButton).click();
     await Methods.captureAndLog(
       this.#page,
       "Clicked on the Alert (Confirm Dialog) button and clicked OK button in the alert.",
     );
     await Methods.assertVisibleWithText(
       this.#page,
-      this.simpleAlertConfirmResult,
+      AlertLocators.simpleAlertConfirmResult,
       testData.simpleAlertConfirmTextOk,
     );
   }
@@ -103,62 +104,68 @@ export class AlertPage extends Methods {
     testData: AlertTestData,
   ): Promise<void> {
     await Methods.alertHandling(this.#page, this.dismiss);
-    await this.#page.locator(this.simpleAlertConfirmButton).click();
+    await this.#page.locator(AlertLocators.simpleAlertConfirmButton).click();
     await Methods.captureAndLog(
       this.#page,
       "Clicked on the Alert (Confirm Dialog) button and clicked CANCEL button in the alert.",
     );
     await Methods.assertVisibleWithText(
       this.#page,
-      this.simpleAlertConfirmResult,
+      AlertLocators.simpleAlertConfirmResult,
       testData.simpleAlertConfirmTextCancel,
     );
   }
 
   private async sweetAlertSimple(testData: AlertTestData): Promise<void> {
-    await this.#page.locator(this.sweetAlertSimpleButton).click();
+    await this.#page.locator(AlertLocators.sweetAlertSimpleButton).click();
     await Methods.captureAndLog(
       this.#page,
       "Clicked on the Sweet Alert (Simple Dialog) button to open the sweet alert window.",
     );
 
-    await Methods.assertVisible(this.#page, this.sweetAlertSimplePopup);
+    await Methods.assertVisible(
+      this.#page,
+      AlertLocators.sweetAlertSimplePopup,
+    );
 
     await Methods.assertText(
       this.#page,
-      this.sweetAlertSimplePopupTitle,
+      AlertLocators.sweetAlertSimplePopupTitle,
       this.dialogText,
     );
     await Methods.assertText(
       this.#page,
-      this.sweetAlertSimplePopupBody,
+      AlertLocators.sweetAlertSimplePopupBody,
       testData.sweetAlertSimplePopupBodyText,
     );
     await Methods.clickMatchingByRole(this.#page, this.dismiss, this.button);
-    const popupWindow = this.#page.locator(this.sweetAlertSimplePopup);
+    const popupWindow = this.#page.locator(AlertLocators.sweetAlertSimplePopup);
     await expect(popupWindow).not.toBeVisible();
   }
 
   private async sweetModalDialog(testData: AlertTestData): Promise<void> {
-    await this.#page.locator(this.sweetModalButton).click();
+    await this.#page.locator(AlertLocators.sweetModalButton).click();
     await Methods.captureAndLog(
       this.#page,
       "Clicked on the Sweet Modal Dialog button to open the sweet alert window.",
     );
-    await Methods.assertVisible(this.#page, this.sweetModalButtonPopup);
+    await Methods.assertVisible(
+      this.#page,
+      AlertLocators.sweetModalButtonPopup,
+    );
     await Methods.assertText(
       this.#page,
-      this.sweetModalTitle,
+      AlertLocators.sweetModalTitle,
       testData.sweetModalPopUpText,
     );
     await Methods.assertText(
       this.#page,
-      this.sweetModalBody,
+      AlertLocators.sweetModalBody,
       testData.sweetModalBodyText,
     );
     await Methods.clickMatchingByRole(
       this.#page,
-      this.closeButton,
+      AlertLocators.closeButton,
       this.button,
     );
     await Methods.captureAndLog(this.#page, "Clicked on the close button.");
@@ -166,14 +173,14 @@ export class AlertPage extends Methods {
 
   private async alertPromptDialogEmpty(testData: AlertTestData) {
     await Methods.alertHandling(this.#page, this.dismiss);
-    await this.#page.locator(this.alertPromptDialogButton).click();
+    await this.#page.locator(AlertLocators.alertPromptDialogButton).click();
     await Methods.captureAndLog(
       this.#page,
       "Clicked on button Alert (Prompt Dialog) to trigger the alert.",
     );
     await Methods.assertText(
       this.#page,
-      this.alertPromptDialogConfirmButton,
+      AlertLocators.alertPromptDialogConfirmButton,
       testData.alertPromptDialogEmptyText,
     );
   }
@@ -184,69 +191,85 @@ export class AlertPage extends Methods {
       this.accept,
       testData.typeNameDropValue,
     );
-    await this.#page.locator(this.alertPromptDialogButton).click();
+    await this.#page.locator(AlertLocators.alertPromptDialogButton).click();
     await Methods.captureAndLog(
       this.#page,
       "Clicked on the Alert (Prompt Dialog) and sending the message in the alert.",
     );
     await Methods.assertText(
       this.#page,
-      this.alertPromptDialogConfirmButton,
+      AlertLocators.alertPromptDialogConfirmButton,
       testData.alertPromptDialogGivenText,
     );
   }
 
   private async alertPromptDialogWithNullMessage(testData: AlertTestData) {
     await Methods.alertHandling(this.#page, this.accept);
-    await this.#page.locator(this.alertPromptDialogButton).click();
+    await this.#page.locator(AlertLocators.alertPromptDialogButton).click();
     await Methods.captureAndLog(
       this.#page,
       "Alert prompt dialog and passing it with null message.",
     );
     await Methods.assertText(
       this.#page,
-      this.alertPromptDialogConfirmButton,
+      AlertLocators.alertPromptDialogConfirmButton,
       testData.alertPromptDialogNullText,
     );
   }
 
   private async sweetAlertConfirmationYes(testData: AlertTestData) {
-    await Methods.clickMatchingByRole(this.#page, this.delete, this.button);
+    await Methods.clickMatchingByRole(
+      this.#page,
+      AlertLocators.delete,
+      this.button,
+    );
     await Methods.captureAndLog(
       this.#page,
       "Clicked on the Sweet Alert (Confirmation) delete button to bring the sweet alert.",
     );
-    await Methods.assertVisible(this.#page, this.sweetAlertButton);
+    await Methods.assertVisible(this.#page, AlertLocators.sweetAlertButton);
     await Methods.assertText(
       this.#page,
-      this.sweetAlertTitle,
-      this.confirmationButton,
+      AlertLocators.sweetAlertTitle,
+      AlertLocators.confirmationButton,
     );
     await Methods.assertText(
       this.#page,
-      this.sweetAlertMessage,
+      AlertLocators.sweetAlertMessage,
       testData.sweetAlertBody,
     );
-    await Methods.clickMatchingByRole(this.#page, this.yesText, this.button);
+    await Methods.clickMatchingByRole(
+      this.#page,
+      AlertLocators.yesText,
+      this.button,
+    );
   }
 
   private async sweetAlertConfirmationNo(testData: AlertTestData) {
-    await Methods.clickMatchingByRole(this.#page, this.delete, this.button);
+    await Methods.clickMatchingByRole(
+      this.#page,
+      AlertLocators.delete,
+      this.button,
+    );
     await Methods.captureAndLog(
       this.#page,
       "Clicked on the Sweet Alert (Confirmation) delete button to bring the sweet alert.",
     );
-    await Methods.assertVisible(this.#page, this.sweetAlertButton);
+    await Methods.assertVisible(this.#page, AlertLocators.sweetAlertButton);
     await Methods.assertText(
       this.#page,
-      this.sweetAlertTitle,
-      this.confirmationButton,
+      AlertLocators.sweetAlertTitle,
+      AlertLocators.confirmationButton,
     );
     await Methods.assertText(
       this.#page,
-      this.sweetAlertMessage,
+      AlertLocators.sweetAlertMessage,
       testData.sweetAlertBody,
     );
-    await Methods.clickMatchingByRole(this.#page, this.noText, this.button);
+    await Methods.clickMatchingByRole(
+      this.#page,
+      AlertLocators.noText,
+      this.button,
+    );
   }
 }
