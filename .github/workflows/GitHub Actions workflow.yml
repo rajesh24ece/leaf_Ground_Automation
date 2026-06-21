@@ -16,3 +16,19 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
+      - name: Generate Allure Report run: | npm install -g allure-commandline allure generate allure-results --clean -o allure-report
+      - name: Upload Allure Report
+  uses: actions/upload-artifact@v4
+  with:
+    name: allure-report
+    path: allure-report/
+    - name: Send Slack Notification
+  if: always()
+  uses: 8398a7/action-slack@v3
+  with:
+    status: ${{ job.status }}
+    text: |
+      Playwright execution completed.
+      Check GitHub Actions for details.
+  env:
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
