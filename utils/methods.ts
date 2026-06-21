@@ -56,6 +56,10 @@ export interface TableTestData {
   Quantity: number;
 }
 
+export interface UploadTestData {
+  fileName: string;
+}
+
 export class Methods extends Locators {
   public static async captureAndLog(page: Page, name: string): Promise<void> {
     const screenshotPath = `screenshots/${name}-${Date.now()}.png`;

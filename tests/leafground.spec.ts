@@ -4,6 +4,7 @@ import { WindowsPage } from "../pages/windowsPage";
 import { DropdownPage } from "../pages/dropdownPage";
 import { AlertPage } from "../pages/alertPage";
 import { WebTablePage } from "../pages/webtablePage";
+import { UploadPage } from "../pages/uploadPage";
 
 test.describe("DemoQA UI Interactions", () => {
   test.describe.configure({ mode: "serial" });
@@ -29,8 +30,8 @@ test.describe("DemoQA UI Interactions", () => {
     await alertPage.handlingAlert();
   });
 
-  test("Handling web table", async ({ page }) => {
-    const tablePage = new WebTablePage(page);
-    await tablePage.handlingTable();
+  test("Handling file upload and download", async ({ page }) => {
+    const uploadPage = new UploadPage(page);
+    await uploadPage.handlingUpload();
   });
 });

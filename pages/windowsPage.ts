@@ -1,10 +1,12 @@
-import { expect, Page, test } from "playwright/test";
+import { expect, Page, test } from "@playwright/test";
 import { WindowsLocators } from "../locators/windowsLocator";
+import { Methods } from "../utils/methods";
 
-export class WindowsPage {
+export class WindowsPage extends Methods {
   #page: Page;
 
   constructor(page: Page) {
+    super();
     this.#page = page;
   }
   async handlingMultipleWindows() {
