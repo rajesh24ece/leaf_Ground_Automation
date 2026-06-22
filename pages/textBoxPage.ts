@@ -10,7 +10,7 @@ export class TextBox extends Methods {
     this.#page = page;
   }
 
-  async handlingTextBox() {
+  async completeTextBoxFlow() {
     let testData: TextBoxTestData;
 
     await test.step("Read test data from json file.", async () => {
