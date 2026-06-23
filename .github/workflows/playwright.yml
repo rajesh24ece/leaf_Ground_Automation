@@ -1,26 +1,66 @@
 name: Playwright Tests
 
 on:
-workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-test:
-runs-on: ubuntu-latest
+  test:
+    name: Run Playwright Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
 
-steps:
-  - name: Checkout Repository
-    uses: actions/checkout@v4
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-  - name: Setup Node.js
-    uses: actions/setup-node@v4
-    with:
-      node-version: "20"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
 
-  - name: Install Dependencies
-    run: npm ci
+      - name: Install Dependencies
+        run: npm ci
 
-  - name: Install Playwright Browsers
-    run: npx playwright install --with-deps
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
 
-  - name: Run Playwright Tests
-    run: npx playwright test
+      - name: Create Environment File
+        run: |
+          echo "BASE_URL=https://www.primefaces.org/primeng/" > .env.leafground
+
+      - name: Run Playwright Tests
+        run: npx playwright test
+        env:
+          CI: true
+
+      - name: Upload HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 14
+
+      - name: Upload Test Results on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 7
