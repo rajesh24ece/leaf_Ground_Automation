@@ -190,12 +190,9 @@ export class Methods extends Locators {
    * @returns
    */
 
-  protected static async accessJsonData<T>(fileLocation: string): Promise<T> {
-    const rawData = fs.readFileSync(
-      path.resolve(__dirname, fileLocation),
-      "utf-8",
-    );
-    return JSON.parse(rawData) as T;
+  static async accessJsonData<T>(filePath: string): Promise<T> {
+    const data = await fs.promises.readFile(filePath, "utf-8");
+    return JSON.parse(data) as T;
   }
 
   protected static async accessJsonArrayData<T>(

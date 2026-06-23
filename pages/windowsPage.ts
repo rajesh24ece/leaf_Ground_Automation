@@ -1,31 +1,18 @@
 import { expect, Page, test } from "@playwright/test";
 import { WindowsLocators } from "../locators/windowsLocator";
-import { Methods } from "../utils/methods";
 
-export class WindowsPage extends Methods {
-  #page: Page;
+export class WindowsPage {
+  readonly #page: Page;
 
   constructor(page: Page) {
-    super();
     this.#page = page;
   }
-  async handlingMultipleWindows() {
-    await test.step("Landing in the windows handling page.", async () => {
-      await this.landingWindowPage();
-    });
-    await test.step("Opening a new window.", async () => {
-      await this.openNewWindows();
-    });
-    await test.step("Opening a new window and close it again.", async () => {
-      await this.openAndCloseTab();
-    });
-  }
 
-  private async landingWindowPage() {
+  async landingWindowPage() {
     await this.#page.goto(WindowsLocators.multipleWindowsPage);
   }
 
-  private async openNewWindows() {
+  async openNewWindows() {
     let parentTitle = await this.#page.title();
     console.log("Parent Page Title: " + parentTitle);
     const [newPage] = await Promise.all([
@@ -39,8 +26,7 @@ export class WindowsPage extends Methods {
     await newPage.close();
   }
 
-  private async openAndCloseTab() {
-    await this.landingWindowPage();
+  async openAndCloseTab() {
     const context = this.#page.context();
     const parentTitle = await this.#page.title();
     const pagesBefore = context.pages();
@@ -59,5 +45,21 @@ export class WindowsPage extends Methods {
       await page.close();
     }
     await this.#page.bringToFront();
+  }
+
+  async countOpenedTabs() {
+    const [newpage] = await Promise.all([
+      this.#page.context().waitForEvent("page"),
+      await this.#page.getByRole("button", { name: "Open Multiple" }).click(),
+    ]);
+    const pages = this.#page.context().pages();
+    console.log("Total pages:", pages.length);
+  }
+
+  async waitForTabsToOpen() {
+    const [newpage] = await Promise.all([
+      this.#page.context().waitForEvent("page"),
+      await this.#page.getByRole("button", { name: "Open with delay" }).click(),
+    ]);
   }
 }
