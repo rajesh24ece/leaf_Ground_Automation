@@ -25,4 +25,3 @@ steps:
 
   - name: Run Playwright Tests
     run: npx playwright test
-```
