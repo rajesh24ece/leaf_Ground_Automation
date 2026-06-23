@@ -1,6 +1,8 @@
+import path from "path";
+
 export const TextBoxLocators = {
   textPage: "input.xhtml",
-  textBoxJson: "../test-data/textBox.json",
+  textBoxJson: path.join(process.cwd(), "test-data", "textBox.json"),
   typeNamePlaceHolder: "Babu Manickam",
   appendTextLocator: "#j_idt88\\:j_idt91",
   isDisabledLocator: "#j_idt88\\:j_idt93",

@@ -28,23 +28,23 @@ export class UploadPage extends Methods {
     await this.fileDownload(testData);
   }
 
-  private async landingPage(): Promise<void> {
+  async landingPage(): Promise<void> {
     await this.#page.goto(UploadLocators.pageUrl);
     await this.#page.waitForLoadState();
   }
 
-  private async fileUploadOne(): Promise<void> {
+  async fileUploadOne(): Promise<void> {
     const filepath = path.resolve(__dirname, UploadLocators.uploadOne);
     await this.#page.setInputFiles(UploadLocators.uploadOneLocator, filepath);
   }
 
-  private async fileUploadTwo(): Promise<void> {
+  async fileUploadTwo(): Promise<void> {
     const filepath = path.resolve(__dirname, UploadLocators.uploadTwo);
     await this.#page.setInputFiles(UploadLocators.uploadTwoLocator, filepath);
     await this.#page.getByRole("button", { name: " Upload" }).click();
   }
 
-  private async fileDownload(testData: UploadTestData): Promise<void> {
+  async fileDownload(testData: UploadTestData): Promise<void> {
     const downloadPromise = this.#page.waitForEvent("download");
     await this.#page.getByRole("button", { name: "Download" }).click();
     const download = await downloadPromise;
