@@ -1,18 +1,21 @@
 name: Playwright Tests
+run-name: Playwright Tests triggered by ${{ github.actor }}
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: "30 3 * * 1-5"
   workflow_dispatch:
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  playwright-tests:
     timeout-minutes: 60
-
-    env:
-      WORKERS: 1
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
@@ -21,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: 20
           cache: "npm"
 
       - name: Install Dependencies
@@ -32,13 +35,8 @@ jobs:
 
       - name: Run Playwright Tests
         run: npx playwright test
-        continue-on-error: true
         env:
           CI: true
-
-      - name: Verify Generated Files
-        if: always()
-        run: ls -la
 
       - name: Generate Allure Report
         if: always()
@@ -60,53 +58,19 @@ jobs:
           path: allure-report/
           retention-days: 30
 
-      - name: Calculate Test Results
+      - name: Upload Test Results
         if: always()
-        id: results
-        run: |
-          node <<'EOF'
-          const fs = require('fs');
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 30
 
-          let passed = 0;
-          let failed = 0;
-          let skipped = 0;
-
-          if (fs.existsSync('test-results.json')) {
-            const report = JSON.parse(
-              fs.readFileSync('test-results.json', 'utf8')
-            );
-
-            function walk(suites) {
-              if (!suites) return;
-              for (const suite of suites) {
-                if (suite.specs) {
-                  for (const spec of suite.specs) {
-                    for (const test of spec.tests || []) {
-                      for (const result of test.results || []) {
-                        if (result.status === 'passed')  passed++;
-                        if (result.status === 'failed')  failed++;
-                        if (result.status === 'skipped') skipped++;
-                      }
-                    }
-                  }
-                }
-                walk(suite.suites);
-              }
-            }
-
-            walk(report.suites);
-          }
-
-          fs.appendFileSync(
-            process.env.GITHUB_OUTPUT,
-            `passed=${passed}\nfailed=${failed}\nskipped=${skipped}\n`
-          );
-          EOF
-
-      - name: Send Slack Notification
+      - name: Upload Screenshots
         if: always()
-        run: |
-          curl -X POST \
-            -H "Content-Type: application/json" \
-            --data "{\"text\":\"🚀 Playwright Execution Completed\n\n📂 Repository: ${{ github.repository }}\n🌿 Branch: ${{ github.ref_name }}\n👤 Triggered By: ${{ github.actor }}\n\n✅ Passed: ${{ steps.results.outputs.passed }}\n❌ Failed: ${{ steps.results.outputs.failed }}\n⏭️ Skipped: ${{ steps.results.outputs.skipped }}\n\n📊 Job Status: ${{ job.status }}\n\n🔗 Workflow Run:\nhttps://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n\n📦 Reports available in GitHub Actions Artifacts\"}" \
-            "${{ secrets.SLACK_WEBHOOK_URL }}"
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: screenshots/
+          if-no-files-found: ignore
+          retention-days: 30
