@@ -1,17 +1,17 @@
 import { test } from "../fixtures/accessJsonFile";
-import { DropDownLocators } from "../locators/dropDownLocators";
-import { DropDownPage } from "../pages/dropDownPage";
+import { DropdownLocators } from "../locators/dropdownLocators";
+import { DropdownPage } from "../pages/dropdownPage";
 import { DropdownTestData } from "../utils/test-data.interface";
 
-let dropdownPage: DropDownPage;
+let dropdownPage: DropdownPage;
 let data: DropdownTestData;
 
 test.beforeAll(async ({ getJsonData }) => {
-  data = await getJsonData<DropdownTestData>(DropDownLocators.dropdownJson);
+  data = await getJsonData<DropdownTestData>(DropdownLocators.dropdownJson);
 });
 
 test.beforeEach(async ({ page }) => {
-  dropdownPage = new DropDownPage(page);
+  dropdownPage = new DropdownPage(page);
   await dropdownPage.landingDropdownPage();
 });
 

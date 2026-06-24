@@ -1,6 +1,6 @@
 import path from "path";
 
-export const DropDownLocators = {
+export const DropdownLocators = {
   dropdownJson: path.join(process.cwd(), "test-data", "dropdown.json"),
   dropdownPage: "select.xhtml",
   selectToolLocator: "select.ui-selectonemenu",
