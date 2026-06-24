@@ -4,7 +4,7 @@ import { DropdownTestData } from "../utils/test-data.interface";
 import { DropDownLocators } from "../locators/dropDownLocators";
 import { Roles } from "../utils/constants";
 
-export class DropdownPage extends Methods {
+export class DropDownPage extends Methods {
   #page: Page;
 
   constructor(page: Page) {
