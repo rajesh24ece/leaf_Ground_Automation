@@ -1,0 +1,12 @@
+name: Playwright Tests
+
+on:
+  workflow_dispatch:
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test Workflow
+        run: echo "GitHub Actions is working"
