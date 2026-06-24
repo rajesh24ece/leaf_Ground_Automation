@@ -9,5 +9,6 @@
   "alertPromptDialogGivenText": "User entered name as: rajesh",
   "alertPromptDialogNullText": "User entered name as: ",
   "sweetAlertBody": "Are you sure you want to proceed?",
-  "typeNameDropValue": "rajesh"
+  "typeNameDropValue": "rajesh",
+  "dialogText": "Dialog"
 }

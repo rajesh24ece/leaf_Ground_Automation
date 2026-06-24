@@ -1,6 +1,6 @@
 import { test } from "../fixtures/accessJsonFile";
 import { AlertPage } from "../pages/alertPage";
-import { AlertTestData } from "../utils/methods";
+import { AlertTestData } from "../utils/test-data.interface";
 import { AlertLocators } from "../locators/alertLocators";
 
 let alertPage: AlertPage;

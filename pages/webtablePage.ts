@@ -1,5 +1,6 @@
 import { Page, test, expect } from "@playwright/test";
-import { Methods, TableTestData } from "../utils/methods";
+import { Methods } from "../utils/methods";
+import { TableTestData } from "../utils/test-data.interface";
 
 export class WebTablePage extends Methods {
   #page: Page;

@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test";
-import { TextBoxTestData } from "../utils/methods";
+import { TextBoxTestData } from "../utils/test-data.interface";
 import { TextBoxLocators } from "../locators/textBoxLocators";
 
 export class TextBoxPage {

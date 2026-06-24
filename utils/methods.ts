@@ -1,66 +1,11 @@
 import { Page, expect } from "@playwright/test";
-import { Locators, DialogAction } from "./locators";
+import { DialogAction } from "./constants";
 import * as fs from "fs";
 import * as path from "path";
 
 type AriaRole = Parameters<Page["getByRole"]>[0];
 
-export interface TextBoxTestData {
-  typeName: string;
-  typeNewName: string;
-  mailID: string;
-  appendCountry: string;
-  aboutYourselfText: string;
-  errorMessageText: string;
-  dobYear: string;
-  dobDate: string;
-  monthInText: string;
-  fullDate: string;
-  typeNameDropValue: string;
-  typeNameDropValueDisplay: string;
-  courses: string[];
-  india: string;
-  chennai: string;
-  tamil: string;
-  customToolBarValue: string;
-}
-
-export interface DropdownTestData {
-  playwrightText: string;
-  india: string;
-  chennai: string;
-  tamil: string;
-  rendu: string;
-  courses: string[];
-}
-
-export interface AlertTestData {
-  simpleAlertResultText: string;
-  simpleAlertConfirmTextOk: string;
-  simpleAlertConfirmTextCancel: string;
-  sweetAlertSimplePopupBodyText: string;
-  sweetModalPopUpText: string;
-  sweetModalBodyText: string;
-  alertPromptDialogEmptyText: string;
-  alertPromptDialogGivenText: string;
-  alertPromptDialogNullText: string;
-  sweetAlertBody: string;
-  typeNameDropValue: string;
-}
-
-export interface TableTestData {
-  ProductName: string;
-  Description: string;
-  Category: string;
-  Price: number;
-  Quantity: number;
-}
-
-export interface UploadTestData {
-  fileName: string;
-}
-
-export class Methods extends Locators {
+export class Methods {
   public static async captureAndLog(page: Page, name: string): Promise<void> {
     const screenshotPath = `screenshots/${name}-${Date.now()}.png`;
 
@@ -79,7 +24,7 @@ export class Methods extends Locators {
    * @param roleType
    */
 
-  protected static async clickMatchingByRole(
+  static async clickMatchingByRole(
     page: Page,
     locator: string,
     roleType: AriaRole,
@@ -100,7 +45,7 @@ export class Methods extends Locators {
    * @param text
    */
 
-  protected static async alertHandling(
+  static async alertHandling(
     page: Page,
     action: DialogAction,
     text?: string,
@@ -123,10 +68,7 @@ export class Methods extends Locators {
    * @param isVisible
    */
 
-  protected static async assertVisible(
-    page: Page,
-    locator: string,
-  ): Promise<void> {
+  static async assertVisible(page: Page, locator: string): Promise<void> {
     const alertText = page.locator(locator);
     await expect(alertText).toBeVisible();
   }
@@ -139,7 +81,7 @@ export class Methods extends Locators {
    * @param isVisible
    */
 
-  protected static async assertText(
+  static async assertText(
     page: Page,
     locator: string,
     actualText: string,
@@ -155,7 +97,7 @@ export class Methods extends Locators {
    * @param expectedText
    */
 
-  protected static async assertVisibleWithText(
+  static async assertVisibleWithText(
     page: Page,
     locator: string,
     expectedText: string,
@@ -172,7 +114,7 @@ export class Methods extends Locators {
    * @param role
    */
 
-  protected static async clickDropdownHandling(
+  static async clickDropdownHandling(
     page: Page,
     locator: string,
     value: string,
@@ -195,9 +137,7 @@ export class Methods extends Locators {
     return JSON.parse(data) as T;
   }
 
-  protected static async accessJsonArrayData<T>(
-    fileLocation: string,
-  ): Promise<T[]> {
+  static async accessJsonArrayData<T>(fileLocation: string): Promise<T[]> {
     const rawData = fs.readFileSync(
       path.resolve(__dirname, fileLocation),
       "utf-8",

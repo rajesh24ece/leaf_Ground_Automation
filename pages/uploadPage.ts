@@ -1,5 +1,6 @@
 import { Page, test, expect } from "@playwright/test";
-import { Methods, UploadTestData } from "../utils/methods";
+import { Methods } from "../utils/methods";
+import { UploadTestData } from "../utils/test-data.interface";
 import { UploadLocators } from "../locators/uploadLocators";
 import path from "path";
 import fs from "fs";

@@ -1,7 +1,7 @@
 import { test } from "../fixtures/accessJsonFile";
 import { TextBoxPage } from "../pages/textBoxPage";
 import { TextBoxLocators } from "../locators/textBoxLocators";
-import { TextBoxTestData } from "../utils/methods";
+import { TextBoxTestData } from "../utils/test-data.interface";
 
 let textBoxPage: TextBoxPage;
 let data: TextBoxTestData;
