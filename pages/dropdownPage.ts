@@ -1,4 +1,4 @@
-import { expect, Page, test } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 import { Methods } from "../utils/methods";
 import { DropdownTestData } from "../utils/test-data.interface";
 import { DropDownLocators } from "../locators/dropDownLocators";
