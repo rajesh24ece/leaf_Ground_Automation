@@ -16,23 +16,27 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("Select favourite UI automation tool.", async () => {
-  await dropdownPage.selectTool(data);
-});
+  await test.step("Which is your favorite UI Automation tool?", async () => {
+    await dropdownPage.selectTool(data);
+  });
 
-test("Selecting preferred country.", async () => {
-  await test.step("Selecting Confirm Cities belongs to Country is loaded.", async () => {
+  await test.step("Country is loaded and selected correctly.", async () => {
     await dropdownPage.selectCountry(data);
+  });
+
+  await test.step("Selecting Confirm Cities belongs to Country is loaded.", async () => {
     await dropdownPage.selectCity(data);
   });
-});
 
-test("Selecting the Course.", async () => {
-  await dropdownPage.selectCourse(data);
-});
+  await test.step("Selecting the Course.", async () => {
+    await dropdownPage.selectCourse(data);
+  });
 
-test("Choose language randomly.", async () => {
-  await test.step("Select language to select the two from the following dropdown to select 'Two' irrespective of the language chosen .", async () => {
+  await test.step("Select language to select the two from the following dropdown.", async () => {
     await dropdownPage.selectLanguage(data);
+  });
+
+  await test.step("Select 'Two' irrespective of the language chosen.", async () => {
     await dropdownPage.selectTwo(data);
   });
 });
