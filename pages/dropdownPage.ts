@@ -1,6 +1,8 @@
 import { expect, Page, test } from "@playwright/test";
-import { Methods, DropdownTestData } from "../utils/methods";
+import { Methods } from "../utils/methods";
+import { DropdownTestData } from "../utils/test-data.interface";
 import { DropDownLocators } from "../locators/dropDownLocators";
+import { Roles } from "../utils/constants";
 
 export class DropdownPage extends Methods {
   #page: Page;
@@ -27,7 +29,7 @@ export class DropdownPage extends Methods {
       this.#page,
       DropDownLocators.countryLocator,
       testData.india,
-      this.option,
+      Roles.OPTION,
     );
   }
 
@@ -36,7 +38,7 @@ export class DropdownPage extends Methods {
       this.#page,
       DropDownLocators.cityLocator,
       testData.chennai,
-      this.option,
+      Roles.OPTION,
     );
   }
 
@@ -45,7 +47,7 @@ export class DropdownPage extends Methods {
       await Methods.clickMatchingByRole(
         this.#page,
         DropDownLocators.showOptions,
-        this.button,
+        Roles.BUTTON,
       );
       await expect(
         this.#page.locator(DropDownLocators.courseDropdownPanel),
@@ -68,7 +70,7 @@ export class DropdownPage extends Methods {
       this.#page,
       DropDownLocators.languageLocator,
       testData.tamil,
-      this.option,
+      Roles.OPTION,
     );
   }
 
@@ -77,7 +79,7 @@ export class DropdownPage extends Methods {
       this.#page,
       DropDownLocators.languageValue,
       testData.rendu,
-      this.option,
+      Roles.OPTION,
     );
   }
 }

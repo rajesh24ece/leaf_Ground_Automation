@@ -1,9 +1,11 @@
 import { Page, expect, test } from "@playwright/test";
-import { Methods, AlertTestData } from "../utils/methods";
+import { Methods } from "../utils/methods";
+import { AlertTestData } from "../utils/test-data.interface";
 import { AlertLocators } from "../locators/alertLocators";
+import { DialogActions, Roles } from "../utils/constants";
 
 export class AlertPage extends Methods {
-  #page: Page;
+  readonly #page: Page;
 
   constructor(page: Page) {
     super();
@@ -12,14 +14,10 @@ export class AlertPage extends Methods {
 
   async landingPage(): Promise<void> {
     await this.#page.goto(AlertLocators.alertPage);
-    await Methods.captureAndLog(
-      this.#page,
-      "Landed in the alert page successfully.",
-    );
   }
 
   async simpleAlert(testData: AlertTestData): Promise<void> {
-    await Methods.alertHandling(this.#page, this.accept);
+    await Methods.alertHandling(this.#page, DialogActions.ACCEPT);
     await this.#page.locator(AlertLocators.simpleAlertButton).click();
 
     await Methods.assertVisibleWithText(
@@ -30,7 +28,7 @@ export class AlertPage extends Methods {
   }
 
   async simpleAlertConfirmClickOk(testData: AlertTestData): Promise<void> {
-    await Methods.alertHandling(this.#page, this.accept);
+    await Methods.alertHandling(this.#page, DialogActions.ACCEPT);
     await this.#page.locator(AlertLocators.simpleAlertConfirmButton).click();
     await Methods.assertVisibleWithText(
       this.#page,
@@ -40,7 +38,7 @@ export class AlertPage extends Methods {
   }
 
   async simpleAlertConfirmClickCancel(testData: AlertTestData): Promise<void> {
-    await Methods.alertHandling(this.#page, this.dismiss);
+    await Methods.alertHandling(this.#page, DialogActions.DISMISS);
     await this.#page.locator(AlertLocators.simpleAlertConfirmButton).click();
     await Methods.assertVisibleWithText(
       this.#page,
@@ -59,14 +57,18 @@ export class AlertPage extends Methods {
     await Methods.assertText(
       this.#page,
       AlertLocators.sweetAlertSimplePopupTitle,
-      this.dialogText,
+      testData.dialogText,
     );
     await Methods.assertText(
       this.#page,
       AlertLocators.sweetAlertSimplePopupBody,
       testData.sweetAlertSimplePopupBodyText,
     );
-    await Methods.clickMatchingByRole(this.#page, this.dismiss, this.button);
+    await Methods.clickMatchingByRole(
+      this.#page,
+      DialogActions.DISMISS,
+      Roles.BUTTON,
+    );
     const popupWindow = this.#page.locator(AlertLocators.sweetAlertSimplePopup);
     await expect(popupWindow).not.toBeVisible();
   }
@@ -90,12 +92,12 @@ export class AlertPage extends Methods {
     await Methods.clickMatchingByRole(
       this.#page,
       AlertLocators.closeButton,
-      this.button,
+      Roles.BUTTON,
     );
   }
 
   async alertPromptDialogEmpty(testData: AlertTestData) {
-    await Methods.alertHandling(this.#page, this.dismiss);
+    await Methods.alertHandling(this.#page, DialogActions.DISMISS);
     await this.#page.locator(AlertLocators.alertPromptDialogButton).click();
     await Methods.assertText(
       this.#page,
@@ -107,7 +109,7 @@ export class AlertPage extends Methods {
   async alertPromptDialogWithMessage(testData: AlertTestData) {
     await Methods.alertHandling(
       this.#page,
-      this.accept,
+      DialogActions.ACCEPT,
       testData.typeNameDropValue,
     );
     await this.#page.locator(AlertLocators.alertPromptDialogButton).click();
@@ -119,7 +121,7 @@ export class AlertPage extends Methods {
   }
 
   async alertPromptDialogWithNullMessage(testData: AlertTestData) {
-    await Methods.alertHandling(this.#page, this.accept);
+    await Methods.alertHandling(this.#page, DialogActions.ACCEPT);
     await this.#page.locator(AlertLocators.alertPromptDialogButton).click();
     await Methods.assertText(
       this.#page,
@@ -132,7 +134,7 @@ export class AlertPage extends Methods {
     await Methods.clickMatchingByRole(
       this.#page,
       AlertLocators.delete,
-      this.button,
+      Roles.BUTTON,
     );
     await Methods.assertVisible(this.#page, AlertLocators.sweetAlertButton);
     await Methods.assertText(
@@ -148,7 +150,7 @@ export class AlertPage extends Methods {
     await Methods.clickMatchingByRole(
       this.#page,
       AlertLocators.yesText,
-      this.button,
+      Roles.BUTTON,
     );
   }
 
@@ -156,7 +158,7 @@ export class AlertPage extends Methods {
     await Methods.clickMatchingByRole(
       this.#page,
       AlertLocators.delete,
-      this.button,
+      Roles.BUTTON,
     );
 
     await Methods.assertVisible(this.#page, AlertLocators.sweetAlertButton);
@@ -173,7 +175,7 @@ export class AlertPage extends Methods {
     await Methods.clickMatchingByRole(
       this.#page,
       AlertLocators.noText,
-      this.button,
+      Roles.BUTTON,
     );
   }
 }
