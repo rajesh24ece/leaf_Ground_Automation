@@ -133,21 +133,36 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": "*Playwright Tests — ${{ job.status == 'success' && '✅ All Passed' || '❌ Some Failed' }}*",
               "attachments": [
                 {
                   "color": "${{ job.status == 'success' && 'good' || 'danger' }}",
-                  "fields": [
-                    { "title": "Repository", "value": "${{ github.repository }}", "short": true },
-                    { "title": "Branch", "value": "${{ github.ref_name }}", "short": true },
-                    { "title": "Triggered by", "value": "${{ github.actor }}", "short": true },
-                    { "title": "Run", "value": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>", "short": true },
-                    { "title": "🔢 Total", "value": "${{ steps.test-results.outputs.total }}", "short": true },
-                    { "title": "✅ Passed", "value": "${{ steps.test-results.outputs.passed }}", "short": true },
-                    { "title": "❌ Failed", "value": "${{ steps.test-results.outputs.failed }}", "short": true },
-                    { "title": "⚠️ Flaky", "value": "${{ steps.test-results.outputs.flaky }}", "short": true },
-                    { "title": "⏭️ Skipped", "value": "${{ steps.test-results.outputs.skipped }}", "short": true },
-                    { "title": "📊 Success Rate", "value": "${{ steps.test-results.outputs.percentage }}%", "short": true }
+                  "blocks": [
+                    {
+                      "type": "header",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "${{ job.status == 'success' && '✅ Playwright Tests — All Passed' || '❌ Playwright Tests — Some Failed' }}"
+                      }
+                    },
+                    {
+                      "type": "section",
+                      "fields": [
+                        { "type": "mrkdwn", "text": "*Repository:*\n${{ github.repository }}" },
+                        { "type": "mrkdwn", "text": "*Branch:*\n${{ github.ref_name }}" },
+                        { "type": "mrkdwn", "text": "*Triggered by:*\n${{ github.actor }}" },
+                        { "type": "mrkdwn", "text": "*Run:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>" }
+                      ]
+                    },
+                    {
+                      "type": "divider"
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "*Test Results:*\n🔢 Total         =>  ${{ steps.test-results.outputs.total }}\n✅ Passed        =>  ${{ steps.test-results.outputs.passed }}\n❌ Failed        =>  ${{ steps.test-results.outputs.failed }}\n⚠️ Flaky          =>  ${{ steps.test-results.outputs.flaky }}\n⏭️ Skipped       =>  ${{ steps.test-results.outputs.skipped }}\n📊 Success Rate  =>  ${{ steps.test-results.outputs.percentage }}%"
+                      }
+                    }
                   ]
                 }
               ]
