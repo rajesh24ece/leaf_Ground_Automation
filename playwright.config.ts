@@ -23,7 +23,6 @@ export default defineConfig({
 
   workers: Number(process.env.WORKERS) || 1,
 
-  // Added
   timeout: 30 * 1000,
 
   expect: {
@@ -34,12 +33,13 @@ export default defineConfig({
     ["list"],
     ["html"],
     ["allure-playwright"],
-    ["json", { outputFile: "test-results.json" }],
+    ["json", { outputFile: "test-results/test-results.json" }],
   ],
 
   use: {
     baseURL: process.env.BASE_URL,
 
+    // true in CI, false locally — driven by CI env var set in workflow
     headless: !!process.env.CI,
 
     trace: "on-first-retry",
@@ -48,7 +48,6 @@ export default defineConfig({
 
     video: "on",
 
-    // Added
     actionTimeout: 10 * 1000,
     navigationTimeout: 30 * 1000,
     ignoreHTTPSErrors: true,
