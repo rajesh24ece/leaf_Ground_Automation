@@ -1,6 +1,8 @@
 # 🌿 leaf_Ground_Automation
 
-A production-grade test automation framework built with **Playwright** and **TypeScript**, following a clean three-level **Page Object Model (POM)** architecture. Designed for scalability, reusability, and maintainability.
+A portfolio-grade test automation framework built with **Playwright** and **TypeScript**, following a clean three-level **Page Object Model (POM)** architecture. Designed for scalability, reusability, and CI/CD readiness.
+
+![CI](https://github.com/rajesh24ece/leaf_Ground_Automation/actions/workflows/playwright-tests.yml/badge.svg)
 
 ---
 
@@ -11,6 +13,7 @@ A production-grade test automation framework built with **Playwright** and **Typ
 | [Playwright](https://playwright.dev/) | ^1.59.1 |
 | TypeScript                            | ^6.0.3  |
 | Node.js                               | ≥ 18.x  |
+| Allure Playwright                     | ^3.10.1 |
 | dotenv                                | ^17.4.2 |
 
 ---
@@ -19,57 +22,83 @@ A production-grade test automation framework built with **Playwright** and **Typ
 
 ```
 leaf_Ground_Automation/
-├── pages/                    # Page classes (one per feature/page)
+├── .github/
+│   └── workflows/
+│       └── playwright-tests.yml  # GitHub Actions CI/CD pipeline
+├── fixtures/
+│   └── accessJsonFile.ts         # Custom Playwright fixture for JSON data loading
+├── locators/                     # Locator files (one per feature)
+│   ├── alertLocators.ts
+│   ├── dropdownLocators.ts
+│   ├── textBoxLocators.ts
+│   ├── uploadLocators.ts
+│   └── windowsLocator.ts
+├── pages/                        # Page classes (one per feature)
 │   ├── alertPage.ts
 │   ├── dropdownPage.ts
 │   ├── textBoxPage.ts
+│   ├── uploadPage.ts
+│   ├── webtablePage.ts
 │   └── windowsPage.ts
-├── tests/                    # Test spec files
-│   └── leafground.spec.ts
-├── utils/                    # Base framework classes
-│   ├── locators.ts           # All locators and test data (base class)
-│   └── methods.ts            # Reusable static utility methods
-├── screenshots/              # Auto-captured screenshots per action
-├── playwright-report/        # HTML test report
-├── playwright.config.ts      # Playwright configuration
-├── .env.leafground            # Environment variables (BASE_URL, etc.)
-└── package.json
+├── test-data/                    # JSON test data files
+│   ├── alert.json
+│   ├── dropdown.json
+│   ├── textBox.json
+│   ├── upload.json
+│   └── webTable.json
+├── tests/                        # Test spec files
+│   ├── alert.spec.ts
+│   ├── dropdown.spec.ts
+│   ├── textBox.spec.ts
+│   ├── upload.spec.ts
+│   ├── webtable.spec.ts
+│   └── windows.spec.ts
+├── utils/
+│   ├── constants.ts              # Typed constants and enums
+│   ├── methods.ts                # Reusable static utility methods
+│   └── test-data.interface.ts   # TypeScript interfaces for test data
+├── globalSetup.ts                # Cleans output folders before each run
+├── playwright.config.ts          # Playwright configuration
+└── .env.leafground               # Environment variables (BASE_URL etc.)
 ```
 
 ---
 
 ## 🏗️ Framework Architecture
 
-This framework follows a strict **three-level class hierarchy**:
+This framework follows a **three-layer POM architecture**:
 
 ```
-Locators  (utils/locators.ts)
-    └── Methods extends Locators  (utils/methods.ts)
-            └── Page Classes e.g. AlertPage extends Methods  (pages/)
+Layer 1 — Locators     (locators/*.ts)
+              ↓
+Layer 2 — Methods      (utils/methods.ts)    ← static utility methods
+              ↓
+Layer 3 — Page Classes (pages/*.ts)          ← action methods per page
 ```
 
-### Level 1 — `Locators`
+### Layer 1 — Locators
 
-- Holds all CSS/XPath selectors as `protected readonly` properties
-- Holds all test data (expected texts, URLs, input values)
-- Typed constants using literal union types (e.g. `DialogAction`, `RoleActions`)
+- One file per feature (`alertLocators.ts`, `dropdownLocators.ts` etc.)
+- All selectors declared as `as const` objects for type safety and autocomplete
+- JSON data file paths resolved at runtime using `path.join(process.cwd(), ...)`
 
-### Level 2 — `Methods`
+### Layer 2 — Methods
 
-- Extends `Locators`
-- Contains `protected static` utility methods that accept `page` as a parameter (no constructor dependency)
+- Reusable `static` utility methods that accept `page` as a parameter
 - Key utilities:
-  - `alertHandling(page, action, text?)` — handles browser dialogs (accept/dismiss) with optional prompt text
-  - `assertText(page, locator, text, isVisible?)` — optional visibility check + text assertion
-  - `loopClickWithByRole(page, name, role)` — clicks all matching role elements with screenshot capture
-  - `captureAndLog(page, name)` — takes a timestamped full-page screenshot
+  - `alertHandling(page, action, text?)` — handles browser dialogs (accept/dismiss)
+  - `clickDropdownHandling(page, locator, value, role)` — handles PrimeFaces custom dropdowns
+  - `clickMatchingByRole(page, locator, roleType)` — clicks all elements matching a role
+  - `assertText / assertVisible / assertVisibleWithText` — assertion helpers
+  - `accessJsonData<T>(filePath)` — generic typed JSON loader
+  - `captureAndLog(page, name)` — timestamped full-page screenshot capture
 
-### Level 3 — Page Classes
+### Layer 3 — Page Classes
 
-- Extends `Methods`
-- Uses `#page` (private class field) for page isolation
-- Contains `private async` action methods
-- Exposes a single `public async` entry method (e.g. `handlingAlert()`)
+- One class per page/feature (`AlertPage`, `DropdownPage` etc.)
+- Uses `#page` private class field for strict page encapsulation
+- Extends `Methods` to inherit utility functions
+- Each method wraps one logical user action
 
 ---
 
@@ -88,18 +117,13 @@ cd leaf_Ground_Automation
 npm install
 ```
 
-### 3. Install Playwright browsers
+### 3. Configure environment
 
-```bash
-npx playwright install
-```
-
-### 4. Configure environment
-
-Create or update `.env.leafground` in the project root:
+Create `.env.leafground` in the project root:
 
 ```env
-BASE_URL=https://www.primefaces.org/primefaces-tur/
+BASE_URL=https://leafground.com
+WORKERS=1
 ```
 
 ---
@@ -107,70 +131,100 @@ BASE_URL=https://www.primefaces.org/primefaces-tur/
 ## ▶️ Running Tests
 
 ```bash
-# Run all tests
+# Run all tests (headless)
 npx playwright test
 
 # Run in headed mode (visible browser)
 npx playwright test --headed
 
-# Run a specific test file
-npx playwright test tests/leafground.spec.ts
+# Run a specific spec file
+npx playwright test tests/dropdown.spec.ts
 
-# Run with UI mode
+# Run with Playwright UI mode
 npx playwright test --ui
 ```
 
 ---
 
-## 📊 View Test Report
+## 📊 Reports
 
 ```bash
+# Open Playwright HTML report
 npx playwright show-report
-```
 
-The HTML report opens in your browser with full test details, screenshots, and traces.
+# Generate Allure HTML report
+npx allure generate allure-results --clean -o allure-report
+npx allure open allure-report
+```
 
 ---
 
 ## 🧪 Test Coverage
 
-| Feature                                  | Status |
-| ---------------------------------------- | ------ |
-| Text Box interactions                    | ✅     |
-| Dropdown selections                      | ✅     |
-| Multiple window handling                 | ✅     |
-| Browser alert / confirm / prompt dialogs | ✅     |
-| Sweet Alert popups                       | ✅     |
-| Modal dialogs                            | ✅     |
+| Feature                                          | Tests  | Status |
+| ------------------------------------------------ | ------ | ------ |
+| Alerts — simple, confirm, prompt, sweet alert    | 10     | ✅     |
+| Dropdowns — native, PrimeFaces AJAX-dependent    | 1      | ✅     |
+| Text Box — fill, append, clear, date picker, OSK | 11     | ✅     |
+| File Upload & Download                           | 3      | ✅     |
+| Multi-Window & Tab handling                      | 4      | ✅     |
+| Web Table — create, search, paginate             | 1      | ✅     |
+| **Total**                                        | **31** | ✅     |
 
 ---
 
-## 📸 Screenshot Strategy
+## 🚀 CI/CD Pipeline
 
-Screenshots are automatically captured after every significant action via `captureAndLog()` and saved to the `screenshots/` directory with a timestamped filename:
+The framework runs on **GitHub Actions** using the official **Microsoft Playwright Docker image** (`mcr.microsoft.com/playwright:v1.59.1-noble`), which eliminates browser download steps entirely.
+
+### Pipeline steps
+
+1. Checkout → Install dependencies
+2. Run all 31 tests headless inside Docker
+3. Upload Playwright HTML report artifact
+4. Upload test results (screenshots, videos, traces)
+5. Install Java → Generate Allure HTML report
+6. Upload Allure results + Allure HTML report artifacts
+7. Send Slack Block Kit notification with pass/fail/flaky counts and run link
+
+### Slack notification sample
 
 ```
-screenshots/dismiss_click_0-1780850708878.png
-screenshots/Yes_click_0-1780850710281.png
+✅ Playwright Tests — All Passed
+
+Repository:   rajesh24ece/leaf_Ground_Automation
+Branch:       main
+Triggered by: rajesh24ece
+Run:          View Run
+
+Test Results:
+🔢 Total         =>  31
+✅ Passed        =>  31
+❌ Failed        =>  0
+⚠️ Flaky          =>  0
+⏭️ Skipped       =>  0
+📊 Success Rate  =>  100.0%
 ```
 
 ---
 
 ## 🔑 Key TypeScript Patterns Used
 
-- **Literal union types** — `type DialogAction = "accept" | "dismiss"` for type-safe dialog handling
-- **`as const`** — used with property declarations to prevent type widening
 - **Private class fields** — `#page` for strict page encapsulation
-- **`Parameters<Page["getByRole"]>[0]`** — for `AriaRole` typing without importing internal types
-- **Nullish coalescing** — `text ?? ""` for optional dialog prompt text
-- **Static methods with `page` parameter** — avoids constructor coupling in utility layer
+- **Literal union types** — `type DialogAction = "accept" | "dismiss"` for type-safe constants
+- **`as const`** — on locator objects to prevent type widening and enable autocomplete
+- **Generics** — `accessJsonData<T>()` and `getJsonData<T>()` fixture for typed JSON loading
+- **`Parameters<Page["getByRole"]>[0]`** — for `AriaRole` typing without importing internal Playwright types
+- **Custom fixtures** — `getJsonData` fixture extends Playwright's base `test` for reusable data loading
+- **`Promise.all`** — for concurrent page event listening and action triggering in multi-tab tests
+- **`waitForLoadState("networkidle")`** — for AJAX-dependent dropdown timing in CI environments
 
 ---
 
 ## 👤 Author
 
-**Rajesh Kumar Pandian**  
-Senior Specialist QA / SDET  
+**Rajesh Kumar Pandian**
+Senior SDET | 11+ years experience | Playwright · TypeScript · CI/CD
 [GitHub](https://github.com/rajesh24ece) · [LinkedIn](https://www.linkedin.com/in/rajeshkumarpandian/)
 
 ---
