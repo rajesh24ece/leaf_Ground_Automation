@@ -23,7 +23,15 @@ export default defineConfig({
 
   workers: Number(process.env.WORKERS) || 1,
 
+  // Added
+  timeout: 30 * 1000,
+
+  expect: {
+    timeout: 10 * 1000,
+  },
+
   reporter: [
+    ["list"],
     ["html"],
     ["allure-playwright"],
     ["json", { outputFile: "test-results.json" }],
@@ -32,13 +40,18 @@ export default defineConfig({
   use: {
     baseURL: process.env.BASE_URL,
 
-    trace: "on-first-retry",
-
     headless: !!process.env.CI,
+
+    trace: "on-first-retry",
 
     screenshot: "on",
 
-    video: "retain-on-failure",
+    video: "on",
+
+    // Added
+    actionTimeout: 10 * 1000,
+    navigationTimeout: 30 * 1000,
+    ignoreHTTPSErrors: true,
   },
 
   projects: [
@@ -51,22 +64,16 @@ export default defineConfig({
 
     // {
     //   name: "firefox",
-    //   use: { ...devices["Desktop Firefox"] },
+    //   use: {
+    //     ...devices["Desktop Firefox"],
+    //   },
     // },
 
     // {
     //   name: "webkit",
-    //   use: { ...devices["Desktop Safari"] },
-    // },
-
-    // {
-    //   name: "Mobile Chrome",
-    //   use: { ...devices["Pixel 5"] },
-    // },
-
-    // {
-    //   name: "Mobile Safari",
-    //   use: { ...devices["iPhone 12"] },
+    //   use: {
+    //     ...devices["Desktop Safari"],
+    //   },
     // },
   ],
 });
