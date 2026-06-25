@@ -41,26 +41,47 @@ jobs:
         if: always()
         id: test-results
         run: |
-          node -e "
-            const fs = require('fs');
-            const data = JSON.parse(fs.readFileSync('test-results.json', 'utf8'));
-            const stats = data.stats;
-            const total = stats.expected + stats.unexpected + stats.flaky + stats.skipped;
-            const passed = stats.expected;
-            const failed = stats.unexpected;
-            const flaky = stats.flaky;
-            const skipped = stats.skipped;
-            const percentage = total > 0 ? ((passed / total) * 100).toFixed(1) : '0.0';
-            const lines = [
-              'total=' + total,
-              'passed=' + passed,
-              'failed=' + failed,
-              'flaky=' + flaky,
-              'skipped=' + skipped,
-              'percentage=' + percentage
-            ];
-            lines.forEach(l => console.log(l));
-          " >> $GITHUB_OUTPUT
+          node << 'SCRIPT'
+          const fs = require('fs');
+
+          const filePath = 'test-results/test-results.json';
+
+          if (!fs.existsSync(filePath)) {
+            console.log('test-results.json not found, writing zeros');
+            const output = [
+              'total=0',
+              'passed=0',
+              'failed=0',
+              'flaky=0',
+              'skipped=0',
+              'percentage=0.0'
+            ].join('\n');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, output + '\n');
+            process.exit(0);
+          }
+
+          const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+          const stats = data.stats;
+
+          const total = stats.expected + stats.unexpected + stats.flaky + stats.skipped;
+          const passed = stats.expected;
+          const failed = stats.unexpected;
+          const flaky = stats.flaky;
+          const skipped = stats.skipped;
+          const percentage = total > 0 ? ((passed / total) * 100).toFixed(1) : '0.0';
+
+          const output = [
+            `total=${total}`,
+            `passed=${passed}`,
+            `failed=${failed}`,
+            `flaky=${flaky}`,
+            `skipped=${skipped}`,
+            `percentage=${percentage}`
+          ].join('\n');
+
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, output + '\n');
+          console.log('Written to GITHUB_OUTPUT:\n' + output);
+          SCRIPT
 
       - name: Upload Playwright HTML Report
         if: always()
