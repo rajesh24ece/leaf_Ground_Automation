@@ -37,6 +37,31 @@ jobs:
         env:
           HOME: /root
 
+      - name: Parse Test Results
+        if: always()
+        id: test-results
+        run: |
+          node -e "
+            const fs = require('fs');
+            const data = JSON.parse(fs.readFileSync('test-results.json', 'utf8'));
+            const stats = data.stats;
+            const total = stats.expected + stats.unexpected + stats.flaky + stats.skipped;
+            const passed = stats.expected;
+            const failed = stats.unexpected;
+            const flaky = stats.flaky;
+            const skipped = stats.skipped;
+            const percentage = total > 0 ? ((passed / total) * 100).toFixed(1) : '0.0';
+            const lines = [
+              'total=' + total,
+              'passed=' + passed,
+              'failed=' + failed,
+              'flaky=' + flaky,
+              'skipped=' + skipped,
+              'percentage=' + percentage
+            ];
+            lines.forEach(l => console.log(l));
+          " >> $GITHUB_OUTPUT
+
       - name: Upload Playwright HTML Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -87,7 +112,7 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": "*Playwright Tests — ${{ job.status == 'success' && '✅ Passed' || '❌ Failed' }}*",
+              "text": "*Playwright Tests — ${{ job.status == 'success' && '✅ All Passed' || '❌ Some Failed' }}*",
               "attachments": [
                 {
                   "color": "${{ job.status == 'success' && 'good' || 'danger' }}",
@@ -95,7 +120,13 @@ jobs:
                     { "title": "Repository", "value": "${{ github.repository }}", "short": true },
                     { "title": "Branch", "value": "${{ github.ref_name }}", "short": true },
                     { "title": "Triggered by", "value": "${{ github.actor }}", "short": true },
-                    { "title": "Run", "value": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>", "short": true }
+                    { "title": "Run", "value": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>", "short": true },
+                    { "title": "🔢 Total", "value": "${{ steps.test-results.outputs.total }}", "short": true },
+                    { "title": "✅ Passed", "value": "${{ steps.test-results.outputs.passed }}", "short": true },
+                    { "title": "❌ Failed", "value": "${{ steps.test-results.outputs.failed }}", "short": true },
+                    { "title": "⚠️ Flaky", "value": "${{ steps.test-results.outputs.flaky }}", "short": true },
+                    { "title": "⏭️ Skipped", "value": "${{ steps.test-results.outputs.skipped }}", "short": true },
+                    { "title": "📊 Success Rate", "value": "${{ steps.test-results.outputs.percentage }}%", "short": true }
                   ]
                 }
               ]
