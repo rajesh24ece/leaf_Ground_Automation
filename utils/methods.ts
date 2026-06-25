@@ -34,7 +34,6 @@ export class Methods {
     for (let i = 0; i < count; i++) {
       await elements.nth(i).click();
       console.log(`✅ Clicked [${roleType}] "${locator}".`);
-      await Methods.captureAndLog(page, `${locator}_click_${i}`);
     }
   }
 
