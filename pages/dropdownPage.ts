@@ -73,6 +73,7 @@ export class DropdownPage extends Methods {
       testData.tamil,
       Roles.OPTION,
     );
+    await this.#page.waitForLoadState("networkidle", { timeout: 15000 });
   }
 
   async selectTwo(testData: DropdownTestData) {
