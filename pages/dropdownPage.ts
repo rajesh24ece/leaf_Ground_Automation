@@ -25,32 +25,15 @@ export class DropdownPage extends Methods {
   }
 
   async selectCountry(testData: DropdownTestData) {
-    // Wait for the AJAX response that populates city dropdown
-    const [response] = await Promise.all([
-      this.#page.waitForResponse(
-        (res) => res.url().includes("city") || res.status() === 200,
-        { timeout: 15000 },
-      ),
-      Methods.clickDropdownHandling(
-        this.#page,
-        DropdownLocators.countryLocator,
-        testData.country,
-        Roles.OPTION,
-      ),
-    ]);
+    await Methods.clickDropdownHandling(
+      this.#page,
+      DropdownLocators.countryLocator, // the country dropdown locator
+      testData.india,
+      Roles.OPTION,
+    );
   }
 
   async selectCity(testData: DropdownTestData) {
-    // Give city dropdown time to populate after AJAX
-    await this.#page.waitForFunction(
-      (locator) => {
-        const el = document.querySelector(locator);
-        return el && el.textContent?.trim() !== "Select City";
-      },
-      "#j_idt87\\:city_label",
-      { timeout: 15000 },
-    );
-
     await Methods.clickDropdownHandling(
       this.#page,
       DropdownLocators.cityLocator,
