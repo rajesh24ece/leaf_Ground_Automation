@@ -34,6 +34,15 @@ export class DropdownPage extends Methods {
   }
 
   async selectCity(testData: DropdownTestData) {
+    // Wait for city dropdown to be enabled after country AJAX response
+    await this.#page
+      .locator(DropdownLocators.cityLocator)
+      .waitFor({ state: "visible", timeout: 15000 });
+
+    await expect(
+      this.#page.locator(DropdownLocators.cityLocator),
+    ).not.toHaveText("Select City", { timeout: 15000 });
+
     await Methods.clickDropdownHandling(
       this.#page,
       DropdownLocators.cityLocator,
