@@ -31,6 +31,7 @@ export class DropdownPage extends Methods {
       testData.india,
       Roles.OPTION,
     );
+    await this.#page.waitForLoadState("networkidle", { timeout: 15000 });
   }
 
   async selectCity(testData: DropdownTestData) {
