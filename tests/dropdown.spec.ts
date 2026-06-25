@@ -2,17 +2,21 @@ import { test } from "../fixtures/accessJsonFile";
 import { DropdownLocators } from "../locators/dropdownLocators";
 import { DropdownPage } from "../pages/dropdownPage";
 import { DropdownTestData } from "../utils/test-data.interface";
+import { Page } from "@playwright/test";
 
 let dropdownPage: DropdownPage;
 let data: DropdownTestData;
+let sharedPage: Page;
 
-test.beforeAll(async ({ getJsonData }) => {
+test.beforeAll(async ({ browser, getJsonData }) => {
   data = await getJsonData<DropdownTestData>(DropdownLocators.dropdownJson);
+  sharedPage = await browser.newPage();
+  dropdownPage = new DropdownPage(sharedPage);
+  await dropdownPage.landingDropdownPage();
 });
 
-test.beforeEach(async ({ page }) => {
-  dropdownPage = new DropdownPage(page);
-  await dropdownPage.landingDropdownPage();
+test.afterAll(async () => {
+  await sharedPage.close();
 });
 
 test("Select favourite UI automation tool.", async () => {
