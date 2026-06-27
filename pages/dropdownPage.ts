@@ -3,6 +3,7 @@ import { Methods } from "../utils/methods";
 import { DropdownTestData } from "../utils/test-data.interface";
 import { DropdownLocators } from "../locators/dropdownLocators";
 import { Roles } from "../utils/constants";
+import { logger } from "../utils/logger";
 
 export class DropdownPage extends Methods {
   #page: Page;
@@ -14,6 +15,9 @@ export class DropdownPage extends Methods {
 
   async landingDropdownPage() {
     await this.#page.goto(DropdownLocators.dropdownPage);
+    logger.info(
+      `Landed in the dropdown page "${DropdownLocators.dropdownPage}" successfully.`,
+    );
   }
 
   async selectTool(testData: DropdownTestData) {
@@ -21,16 +25,20 @@ export class DropdownPage extends Methods {
       .locator(DropdownLocators.selectToolLocator)
       .first();
     await toolDropdown.selectOption({ label: testData.playwrightText });
+    logger.info(
+      `Selecting the tool value "${testData.playwrightText}" from the dropdown list.`,
+    );
     await expect(toolDropdown).toHaveValue(testData.playwrightText);
   }
 
   async selectCountry(testData: DropdownTestData) {
     await Methods.clickDropdownHandling(
       this.#page,
-      DropdownLocators.countryLocator, // the country dropdown locator
+      DropdownLocators.countryLocator,
       testData.india,
       Roles.OPTION,
     );
+    logger.info(`Select country "${testData.india}" from the dropdown list.`);
     await this.#page.waitForLoadState("networkidle", { timeout: 30000 });
   }
 
@@ -41,6 +49,9 @@ export class DropdownPage extends Methods {
       testData.chennai,
       Roles.OPTION,
     );
+    logger.info(
+      `Selected the city "${testData.chennai}" from the dropdown list.`,
+    );
   }
 
   async selectCourse(testData: DropdownTestData) {
@@ -50,6 +61,7 @@ export class DropdownPage extends Methods {
         DropdownLocators.showOptions,
         Roles.BUTTON,
       );
+      logger.info(`Selecting the course "${course}" from the dropdown list .`);
       await expect(
         this.#page.locator(DropdownLocators.courseDropdownPanel),
       ).toBeVisible();
@@ -60,7 +72,6 @@ export class DropdownPage extends Methods {
         this.#page.locator(DropdownLocators.courseDropdownPanel),
       ).toBeHidden();
     }
-
     await expect(
       this.#page.locator(DropdownLocators.dropDownDisplayValueLocator),
     ).toHaveText(testData.courses);
@@ -72,6 +83,9 @@ export class DropdownPage extends Methods {
       DropdownLocators.languageLocator,
       testData.tamil,
       Roles.OPTION,
+    );
+    logger.info(
+      `Selected language "${testData.tamil}" from the dropdown list.`,
     );
     await this.#page.waitForLoadState("networkidle", { timeout: 30000 });
   }
