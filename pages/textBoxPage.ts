@@ -1,6 +1,8 @@
 import { expect, Page } from "@playwright/test";
 import { TextBoxTestData } from "../utils/test-data.interface";
 import { TextBoxLocators } from "../locators/textBoxLocators";
+import { logger } from "../utils/logger";
+import { Roles } from "../utils/constants";
 
 export class TextBoxPage {
   readonly #page: Page;
@@ -11,6 +13,9 @@ export class TextBoxPage {
 
   async landingTextBoxPage() {
     await this.#page.goto(TextBoxLocators.textPage);
+    logger.info(
+      `Landed in the dropdown page "${TextBoxLocators.textPage}" successfully.`,
+    );
   }
 
   async typeInTextBox(testData: TextBoxTestData) {
@@ -18,7 +23,7 @@ export class TextBoxPage {
       TextBoxLocators.typeNamePlaceHolder,
     );
     await textbox.fill(testData.typeNewName);
-    console.log(
+    logger.info(
       `Typed the name "${testData.typeNewName}" in the text box field.`,
     );
     await expect(textbox).toHaveValue(testData.typeNewName);
@@ -30,11 +35,11 @@ export class TextBoxPage {
     await input.press("Control+End");
     await input.press("Space");
     await input.pressSequentially(testData.appendCountry);
-    console.log(
+    logger.info(
       `Appended the country "${testData.appendCountry}" in the text box field.`,
     );
     const result = "Chennai" + " " + testData.appendCountry.trim();
-    console.log(
+    logger.info(
       `After appending the country "${result}" in the text box field.`,
     );
     await expect(input).toHaveValue(result);
@@ -44,11 +49,13 @@ export class TextBoxPage {
     await expect(
       this.#page.locator(TextBoxLocators.isDisabledLocator),
     ).toBeDisabled();
+    logger.info("Checking the text whether it is disabled or not.");
   }
 
   async clearText() {
     let textField = this.#page.locator(TextBoxLocators.clearTextLocator);
     await textField.fill("");
+    logger.info("Cleared the existing text.");
     await expect(textField).toHaveValue("");
   }
 
@@ -57,9 +64,9 @@ export class TextBoxPage {
       TextBoxLocators.mailIDLocator,
     );
     await emailInput.fill(testData.mailID);
-    console.log(`In the text field "${testData.mailID}" is typed correctly.`);
+    logger.info(`In the text field "${testData.mailID}" is typed correctly.`);
     await emailInput.press("Tab");
-    console.log(`Pressed tab button.`);
+    logger.info(`Pressed tab button.`);
     await expect(emailInput).toHaveValue(testData.mailID);
     const focusedField = this.#page.getByPlaceholder(
       TextBoxLocators.aboutYouLocator,
@@ -72,7 +79,7 @@ export class TextBoxPage {
       TextBoxLocators.aboutYouLocator,
     );
     await aboutYouInput.pressSequentially(testData.aboutYourselfText);
-    console.log(
+    logger.info(
       `In the text field typed "${testData.aboutYourselfText}" this in the about yourself text field.`,
     );
     await expect(aboutYouInput).toHaveValue(testData.aboutYourselfText);
@@ -83,7 +90,7 @@ export class TextBoxPage {
       TextBoxLocators.errorMessageLocator,
     );
     await textFieldBox.click();
-    console.log(`Clicked inside the text box.`);
+    logger.info(`Clicked inside the text box.`);
     await textFieldBox.press("Enter");
     const errorMessage = this.#page.locator(
       TextBoxLocators.errorMessageTextLocator,
@@ -103,7 +110,7 @@ export class TextBoxPage {
     ).toBeVisible();
     await this.#page
       .locator(TextBoxLocators.dropDownClickLocator)
-      .getByRole("option")
+      .getByRole(Roles.OPTION)
       .nth(2)
       .click();
     const selectedValue = this.#page.locator(

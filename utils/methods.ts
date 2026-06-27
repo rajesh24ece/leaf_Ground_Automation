@@ -2,19 +2,18 @@ import { Page, expect } from "@playwright/test";
 import { DialogAction } from "./constants";
 import * as fs from "fs";
 import * as path from "path";
+import { logger } from "../utils/logger";
 
 type AriaRole = Parameters<Page["getByRole"]>[0];
 
 export class Methods {
   public static async captureAndLog(page: Page, name: string): Promise<void> {
     const screenshotPath = `screenshots/${name}-${Date.now()}.png`;
-
     await page.screenshot({
       path: screenshotPath,
       fullPage: true,
     });
-
-    console.log(`📸 Screenshot captured: ${screenshotPath}`);
+    logger.info(`📸 Screenshot captured: ${screenshotPath}`);
   }
 
   /**
@@ -33,7 +32,7 @@ export class Methods {
     const count = await elements.count();
     for (let i = 0; i < count; i++) {
       await elements.nth(i).click();
-      console.log(`✅ Clicked [${roleType}] "${locator}".`);
+      //logger.info(`✅ Clicked [${roleType}] "${locator}".`);
     }
   }
 
@@ -50,7 +49,9 @@ export class Methods {
     text?: string,
   ): Promise<void> {
     page.once("dialog", async (dialog) => {
-      console.log(dialog.message());
+      logger.info(
+        `This is the message available in the alert. "${dialog.message()}"`,
+      );
       if (action === "accept") {
         await dialog.accept(text ?? "");
       } else {
@@ -70,6 +71,7 @@ export class Methods {
   static async assertVisible(page: Page, locator: string): Promise<void> {
     const alertText = page.locator(locator);
     await expect(alertText).toBeVisible();
+    logger.info("Asserted whether the locator/text is visible or not.");
   }
 
   /**
@@ -87,6 +89,7 @@ export class Methods {
   ): Promise<void> {
     const alertText = page.locator(locator);
     await expect(alertText).toHaveText(actualText);
+    logger.info("Asserted the actual text and expected text.");
   }
 
   /**
