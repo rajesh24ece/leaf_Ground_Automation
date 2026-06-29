@@ -1,15 +1,15 @@
 import { expect, Page } from "@playwright/test";
-import { Methods } from "../utils/methods";
+import { DropdownHelper } from "../utils/dropdownHelper";
 import { DropdownTestData } from "../utils/test-data.interface";
 import { DropdownLocators } from "../locators/dropdownLocators";
+import { ClickHelper } from "../utils/clickHelper";
 import { Roles } from "../utils/constants";
 import { logger } from "../utils/logger";
 
-export class DropdownPage extends Methods {
+export class DropdownPage {
   #page: Page;
 
   constructor(page: Page) {
-    super();
     this.#page = page;
   }
 
@@ -32,7 +32,7 @@ export class DropdownPage extends Methods {
   }
 
   async selectCountry(testData: DropdownTestData) {
-    await Methods.clickDropdownHandling(
+    await DropdownHelper.clickDropdownHandling(
       this.#page,
       DropdownLocators.countryLocator,
       testData.india,
@@ -43,7 +43,7 @@ export class DropdownPage extends Methods {
   }
 
   async selectCity(testData: DropdownTestData) {
-    await Methods.clickDropdownHandling(
+    await DropdownHelper.clickDropdownHandling(
       this.#page,
       DropdownLocators.cityLocator,
       testData.chennai,
@@ -56,7 +56,7 @@ export class DropdownPage extends Methods {
 
   async selectCourse(testData: DropdownTestData) {
     for (const course of testData.courses) {
-      await Methods.clickMatchingByRole(
+      await ClickHelper.clickMatchingByRole(
         this.#page,
         DropdownLocators.showOptions,
         Roles.BUTTON,
@@ -78,7 +78,7 @@ export class DropdownPage extends Methods {
   }
 
   async selectLanguage(testData: DropdownTestData) {
-    await Methods.clickDropdownHandling(
+    await DropdownHelper.clickDropdownHandling(
       this.#page,
       DropdownLocators.languageLocator,
       testData.tamil,
@@ -91,7 +91,7 @@ export class DropdownPage extends Methods {
   }
 
   async selectTwo(testData: DropdownTestData) {
-    await Methods.clickDropdownHandling(
+    await DropdownHelper.clickDropdownHandling(
       this.#page,
       DropdownLocators.languageValue,
       testData.rendu,

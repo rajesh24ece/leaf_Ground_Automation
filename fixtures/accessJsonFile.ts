@@ -1,5 +1,5 @@
 import { test as base } from "@playwright/test";
-import { Methods } from "../utils/methods";
+import { FileHelper } from "../utils/fileHelper";
 
 type MyFixtures = {
   getJsonData: <T>(path: string) => Promise<T>;
@@ -8,7 +8,7 @@ type MyFixtures = {
 export const test = base.extend<MyFixtures>({
   getJsonData: async ({}, use) => {
     const loader = async <T>(path: string): Promise<T> => {
-      return await Methods.accessJsonData<T>(path);
+      return await FileHelper.accessJsonData<T>(path);
     };
 
     await use(loader);

@@ -1,15 +1,14 @@
 import { Page, test, expect } from "@playwright/test";
-import { Methods } from "../utils/methods";
+import { FileHelper } from "../utils/fileHelper";
 import { UploadTestData } from "../utils/test-data.interface";
 import { UploadLocators } from "../locators/uploadLocators";
 import path from "path";
 import fs from "fs";
 
-export class UploadPage extends Methods {
+export class UploadPage {
   #page: Page;
 
   constructor(page: Page) {
-    super();
     this.#page = page;
   }
 
@@ -17,7 +16,7 @@ export class UploadPage extends Methods {
     let testData!: UploadTestData;
 
     await test.step("Read test data from json file.", async () => {
-      testData = await Methods.accessJsonData(UploadLocators.uploadJson);
+      testData = await FileHelper.accessJsonData(UploadLocators.uploadJson);
     });
 
     await test.step("Successfully landed in the upload and download page.", async () => {
