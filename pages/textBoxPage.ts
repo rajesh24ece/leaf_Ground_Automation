@@ -53,7 +53,7 @@ export class TextBoxPage {
   }
 
   async clearText() {
-    let textField = this.#page.locator(TextBoxLocators.clearTextLocator);
+    const textField = this.#page.locator(TextBoxLocators.clearTextLocator);
     await textField.fill("");
     logger.info("Cleared the existing text.");
     await expect(textField).toHaveValue("");
@@ -162,11 +162,11 @@ export class TextBoxPage {
     const sliderValue = this.#page.locator(TextBoxLocators.sliderLocator);
     await sliderValue.fill(TextBoxLocators.sliderValue);
     await sliderValue.press("Tab");
-    let sliderWidth = await this.#page
+    const sliderWidth = await this.#page
       .locator(TextBoxLocators.sliderRangeWidth)
       .getAttribute(TextBoxLocators.sliderStyle);
 
-    let sliderLeft = await this.#page
+    const sliderLeft = await this.#page
       .locator(TextBoxLocators.sliderLeft)
       .getAttribute(TextBoxLocators.sliderStyle);
 

@@ -4,6 +4,7 @@ import { UploadTestData } from "../utils/test-data.interface";
 import { UploadLocators } from "../locators/uploadLocators";
 import path from "path";
 import fs from "fs";
+import { logger } from "../utils/logger";
 
 export class UploadPage {
   #page: Page;
@@ -48,7 +49,7 @@ export class UploadPage {
     const downloadPromise = this.#page.waitForEvent("download");
     await this.#page.getByRole("button", { name: "Download" }).click();
     const download = await downloadPromise;
-    console.log(download.suggestedFilename());
+    logger.info(download.suggestedFilename());
     expect(download.suggestedFilename()).toBe(testData.fileName);
     const savePath = path.join("downloads", testData.fileName);
     await download.saveAs(savePath);
