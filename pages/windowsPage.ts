@@ -1,5 +1,6 @@
 import { expect, Page, test } from "@playwright/test";
 import { WindowsLocators } from "../locators/windowsLocator";
+import { logger } from "../utils/logger";
 
 export class WindowsPage {
   readonly #page: Page;
@@ -13,15 +14,15 @@ export class WindowsPage {
   }
 
   async openNewWindows() {
-    let parentTitle = await this.#page.title();
-    console.log("Parent Page Title: " + parentTitle);
+    const parentTitle = await this.#page.title();
+    logger.info("Parent Page Title: " + parentTitle);
     const [newPage] = await Promise.all([
       this.#page.context().waitForEvent("page"),
       this.#page.click(WindowsLocators.openOneBrowserlocator),
     ]);
     await newPage.waitForLoadState();
-    let newPageTitle = await newPage.title();
-    console.log("New Page Title: " + newPageTitle);
+    const newPageTitle = await newPage.title();
+    logger.info("New Page Title: " + newPageTitle);
     expect(newPageTitle).not.toBe(parentTitle);
     await newPage.close();
   }
@@ -40,7 +41,7 @@ export class WindowsPage {
     for (const page of newPages) {
       await page.waitForLoadState();
       const newTitle = await page.title();
-      console.log("New Page Title:", newTitle);
+      logger.info("New Page Title:", newTitle);
       expect(newTitle).not.toBe(parentTitle);
       await page.close();
     }
@@ -53,7 +54,7 @@ export class WindowsPage {
       await this.#page.getByRole("button", { name: "Open Multiple" }).click(),
     ]);
     const pages = this.#page.context().pages();
-    console.log("Total pages:", pages.length);
+    logger.info("Total pages:", pages.length);
   }
 
   async waitForTabsToOpen() {
