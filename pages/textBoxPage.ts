@@ -1,8 +1,12 @@
 import { expect, Page } from "@playwright/test";
-import { TextBoxTestData } from "../utils/test-data.interface";
-import { TextBoxLocators } from "../locators/textBoxLocators";
-import { logger } from "../utils/logger";
-import { Roles } from "../utils/constants";
+import { TextBoxTestData } from "../utils/Test-data.interface";
+import { TextBoxLocators } from "../locators/TextBoxLocators";
+import { logger } from "../utils/Logger";
+import { Roles } from "../utils/Constants";
+import { NavigationHelper } from "../helpers/NavigationHelper";
+import { AssertionHelper } from "../helpers/AssertionHelper";
+import { InputHelper } from "../helpers/InputHelper";
+import { ClickHelper } from "../helpers/ClickHelper";
 
 export class TextBoxPage {
   readonly #page: Page;
@@ -12,134 +16,82 @@ export class TextBoxPage {
   }
 
   async landingTextBoxPage() {
-    await this.#page.goto(TextBoxLocators.textPage);
-    logger.info(
-      `Landed in the dropdown page "${TextBoxLocators.textPage}" successfully.`,
-    );
+    await NavigationHelper.navigateToPage(this.#page, TextBoxLocators.textPage);
   }
 
   async typeInTextBox(testData: TextBoxTestData) {
-    const textbox = this.#page.getByPlaceholder(
-      TextBoxLocators.typeNamePlaceHolder,
-    );
-    await textbox.fill(testData.typeNewName);
-    logger.info(
-      `Typed the name "${testData.typeNewName}" in the text box field.`,
-    );
-    await expect(textbox).toHaveValue(testData.typeNewName);
+    const textbox = this.#page.getByPlaceholder(TextBoxLocators.typeNamePlaceHolder);
+    await InputHelper.fill(textbox, testData.typeNewName);
+    await AssertionHelper.assertValue(textbox, testData.typeNewName);
   }
 
   async appendText(testData: TextBoxTestData) {
     const input = this.#page.locator(TextBoxLocators.appendTextLocator);
-    await input.click();
+    await ClickHelper.click(input);
     await input.press("Control+End");
     await input.press("Space");
-    await input.pressSequentially(testData.appendCountry);
-    logger.info(
-      `Appended the country "${testData.appendCountry}" in the text box field.`,
-    );
+    await InputHelper.pressSequentially(input, testData.appendCountry);
     const result = "Chennai" + " " + testData.appendCountry.trim();
-    logger.info(
-      `After appending the country "${result}" in the text box field.`,
-    );
-    await expect(input).toHaveValue(result);
+    await AssertionHelper.assertValue(input, result);
   }
 
   async isDisabled() {
-    await expect(
-      this.#page.locator(TextBoxLocators.isDisabledLocator),
-    ).toBeDisabled();
-    logger.info("Checking the text whether it is disabled or not.");
+    await AssertionHelper.assertDisabled(this.#page.locator(TextBoxLocators.isDisabledLocator));
   }
 
   async clearText() {
     const textField = this.#page.locator(TextBoxLocators.clearTextLocator);
-    await textField.fill("");
-    logger.info("Cleared the existing text.");
-    await expect(textField).toHaveValue("");
+    await InputHelper.fill(textField, "");
+    await AssertionHelper.assertValue(textField, "");
   }
 
   async typeMailIDPressTab(testData: TextBoxTestData) {
-    const emailInput = this.#page.getByPlaceholder(
-      TextBoxLocators.mailIDLocator,
-    );
-    await emailInput.fill(testData.mailID);
-    logger.info(`In the text field "${testData.mailID}" is typed correctly.`);
+    const emailInput = this.#page.getByPlaceholder(TextBoxLocators.mailIDLocator);
+    await InputHelper.fill(emailInput, testData.mailID);
     await emailInput.press("Tab");
-    logger.info(`Pressed tab button.`);
-    await expect(emailInput).toHaveValue(testData.mailID);
-    const focusedField = this.#page.getByPlaceholder(
-      TextBoxLocators.aboutYouLocator,
-    );
-    await expect(focusedField).toBeFocused();
+    await AssertionHelper.assertValue(emailInput, testData.mailID);
+    const focusedField = this.#page.getByPlaceholder(TextBoxLocators.aboutYouLocator);
+    await AssertionHelper.assertFocused(focusedField);
   }
 
   async aboutYourself(testData: TextBoxTestData) {
-    const aboutYouInput = this.#page.getByPlaceholder(
-      TextBoxLocators.aboutYouLocator,
-    );
-    await aboutYouInput.pressSequentially(testData.aboutYourselfText);
-    logger.info(
-      `In the text field typed "${testData.aboutYourselfText}" this in the about yourself text field.`,
-    );
-    await expect(aboutYouInput).toHaveValue(testData.aboutYourselfText);
+    const aboutYouInput = this.#page.getByPlaceholder(TextBoxLocators.aboutYouLocator);
+    await InputHelper.pressSequentially(aboutYouInput, testData.aboutYourselfText);
+    await AssertionHelper.assertValue(aboutYouInput, testData.aboutYourselfText);
   }
 
   async confirmErrorMessage(testData: TextBoxTestData) {
-    const textFieldBox = this.#page.locator(
-      TextBoxLocators.errorMessageLocator,
-    );
-    await textFieldBox.click();
-    logger.info(`Clicked inside the text box.`);
+    const textFieldBox = this.#page.locator(TextBoxLocators.errorMessageLocator);
+    await ClickHelper.click(textFieldBox);
     await textFieldBox.press("Enter");
-    const errorMessage = this.#page.locator(
-      TextBoxLocators.errorMessageTextLocator,
-    );
-    await expect(errorMessage).toBeVisible();
-    await expect(errorMessage).toHaveText(testData.errorMessageText);
+    const errorMessage = this.#page.locator(TextBoxLocators.errorMessageTextLocator);
+    await AssertionHelper.assertVisible(errorMessage);
+    await AssertionHelper.assertText(errorMessage, testData.errorMessageText);
   }
 
   async selectValueFromDropDown(testData: TextBoxTestData) {
-    const drop = this.#page
-      .locator(TextBoxLocators.typeNameDrop)
-      .and(this.#page.getByRole("application"));
-    await drop.click();
-    await drop.pressSequentially(testData.typeNameDropValue);
-    await expect(
-      this.#page.locator(TextBoxLocators.dropDownClickLocator),
-    ).toBeVisible();
-    await this.#page
-      .locator(TextBoxLocators.dropDownClickLocator)
-      .getByRole(Roles.OPTION)
-      .nth(2)
-      .click();
-    const selectedValue = this.#page.locator(
-      TextBoxLocators.dropDownDisplayValueLocator,
-    );
-    await expect(selectedValue).toHaveText(testData.typeNameDropValueDisplay);
+    const drop = this.#page.locator(TextBoxLocators.typeNameDrop).and(this.#page.getByRole("application"));
+    await ClickHelper.click(drop);
+    await InputHelper.pressSequentially(drop, testData.typeNameDropValue);
+    await AssertionHelper.assertVisible(this.#page.locator(TextBoxLocators.dropDownClickLocator));
+    //await ClickHelper.clickAllByRole(this.#page, Roles.OPTION, TextBoxLocators.dropDownClickLocator);
+    await this.#page.locator(TextBoxLocators.dropDownClickLocator).getByRole(Roles.OPTION).nth(2).click();
+    const selectedValue = this.#page.locator(TextBoxLocators.dropDownDisplayValueLocator);
+    await AssertionHelper.assertText(selectedValue, testData.typeNameDropValueDisplay);
   }
 
   async selectDateOfBirth(testData: TextBoxTestData) {
-    await this.#page.locator(TextBoxLocators.calendariconLocator).click();
-    await expect(
-      this.#page.locator(TextBoxLocators.calendarPanelLocator),
-    ).toBeVisible();
+    await ClickHelper.click(this.#page.locator(TextBoxLocators.calendariconLocator));
+    await AssertionHelper.assertVisible(this.#page.locator(TextBoxLocators.calendarPanelLocator));
     while (true) {
-      const currentYear = await this.#page
-        .locator(TextBoxLocators.currentYearLocator)
-        .textContent();
-
+      const currentYear = await this.#page.locator(TextBoxLocators.currentYearLocator).textContent();
       if (currentYear !== testData.dobYear) {
-        await this.#page.locator(TextBoxLocators.calendarLeftArrow).click();
+        await ClickHelper.click(this.#page.locator(TextBoxLocators.calendarLeftArrow));
         continue;
       }
-
-      const currentMonth = await this.#page
-        .locator(TextBoxLocators.currentMonthLocator)
-        .textContent();
-
+      const currentMonth = await this.#page.locator(TextBoxLocators.currentMonthLocator).textContent();
       if (currentMonth !== testData.monthInText) {
-        await this.#page.locator(TextBoxLocators.calendarLeftArrow).click();
+        await ClickHelper.click(this.#page.locator(TextBoxLocators.calendarLeftArrow));
         continue;
       }
 
@@ -152,9 +104,7 @@ export class TextBoxPage {
         .click();
       break;
     }
-    const dataData = await this.#page
-      .locator(TextBoxLocators.fullDateInput)
-      .inputValue();
+    const dataData = await this.#page.locator(TextBoxLocators.fullDateInput).inputValue();
     expect(dataData).toBe(testData.fullDate);
   }
 
@@ -162,24 +112,18 @@ export class TextBoxPage {
     const sliderValue = this.#page.locator(TextBoxLocators.sliderLocator);
     await sliderValue.fill(TextBoxLocators.sliderValue);
     await sliderValue.press("Tab");
-    const sliderWidth = await this.#page
-      .locator(TextBoxLocators.sliderRangeWidth)
-      .getAttribute(TextBoxLocators.sliderStyle);
+    const sliderWidth = await this.#page.locator(TextBoxLocators.sliderRangeWidth).getAttribute(TextBoxLocators.sliderStyle);
 
-    const sliderLeft = await this.#page
-      .locator(TextBoxLocators.sliderLeft)
-      .getAttribute(TextBoxLocators.sliderStyle);
+    const sliderLeft = await this.#page.locator(TextBoxLocators.sliderLeft).getAttribute(TextBoxLocators.sliderStyle);
 
     expect(sliderWidth).not.toContain(TextBoxLocators.sliderZeroPercentage);
     expect(sliderLeft).not.toContain(TextBoxLocators.sliderZeroPercentage);
   }
 
   async oskHandling(testData: TextBoxTestData) {
-    await this.#page.locator(TextBoxLocators.oskLocator).click();
+    await ClickHelper.click(this.#page.locator(TextBoxLocators.oskLocator));
     for (let char of testData.typeNameDropValue) {
-      await this.#page
-        .locator(TextBoxLocators.oskKeyPad, { hasText: char })
-        .click();
+      await this.#page.locator(TextBoxLocators.oskKeyPad, { hasText: char }).click();
     }
     await this.#page
       .locator(TextBoxLocators.oskKeypadClick, {
@@ -187,17 +131,13 @@ export class TextBoxPage {
       })
       .click();
     const value = this.#page.locator(TextBoxLocators.oskInputValue);
-    await expect(value).toHaveValue(testData.typeNameDropValue);
+    await AssertionHelper.assertValue(value, testData.typeNameDropValue);
   }
 
   async typeCustomToolBar(testData: TextBoxTestData) {
-    const editor = this.#page
-      .locator(TextBoxLocators.customToolBarEditor)
-      .nth(1);
-    await editor.pressSequentially(testData.customToolBarValue);
-    await expect(editor.locator(TextBoxLocators.paragraphLocator)).toHaveText(
-      testData.customToolBarValue,
-    );
+    const editor = this.#page.locator(TextBoxLocators.customToolBarEditor).nth(1);
+    await InputHelper.pressSequentially(editor, testData.customToolBarValue);
+    await AssertionHelper.assertText(editor.locator(TextBoxLocators.paragraphLocator), testData.customToolBarValue);
   }
 
   async typeNumberAndSpin() {
@@ -207,17 +147,10 @@ export class TextBoxPage {
       delay: 50,
     });
     await value.press("Tab");
-    await expect(
-      this.#page.locator(TextBoxLocators.spinningButton),
-    ).toBeVisible();
+    await expect(this.#page.locator(TextBoxLocators.spinningButton)).toBeVisible();
     await expect(value).toHaveValue(TextBoxLocators.typeNumberToSpin);
-    const beforeValue = Number(
-      await value.getAttribute(TextBoxLocators.typedNumber),
-    );
+    const beforeValue = Number(await value.getAttribute(TextBoxLocators.typedNumber));
     await this.#page.locator(TextBoxLocators.upArrow).click();
-    await expect(value).toHaveAttribute(
-      TextBoxLocators.typedNumber,
-      String(beforeValue + 1),
-    );
+    await expect(value).toHaveAttribute(TextBoxLocators.typedNumber, String(beforeValue + 1));
   }
 }

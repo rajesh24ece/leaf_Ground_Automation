@@ -1,11 +1,11 @@
-import { Page, expect, test } from "@playwright/test";
-import { AlertHelper } from "../utils/alertHelper";
-import { AssertHelper } from "../utils/assertHelper";
-import { ClickHelper } from "../utils/clickHelper";
-import { AlertTestData } from "../utils/test-data.interface";
-import { AlertLocators } from "../locators/alertLocators";
-import { DialogActions, Roles } from "../utils/constants";
-import { logger } from "../utils/logger";
+import { Page } from "@playwright/test";
+import { AlertHelper } from "../helpers/AlertHelper";
+import { NavigationHelper } from "../helpers/NavigationHelper";
+import { AssertionHelper } from "../helpers/AssertionHelper";
+import { ClickHelper } from "../helpers/ClickHelper";
+import { AlertTestData } from "../utils/Test-data.interface";
+import { AlertLocators } from "../locators/AlertLocators";
+import { DialogActions, Roles } from "../utils/Constants";
 
 export class AlertPage {
   readonly #page: Page;
@@ -15,200 +15,80 @@ export class AlertPage {
   }
 
   async landingPage(): Promise<void> {
-    await this.#page.goto(AlertLocators.alertPage);
-    logger.info("Landed in the alert page successfully.");
+    await NavigationHelper.navigateToPage(this.#page, AlertLocators.alertPage);
   }
 
   async simpleAlert(testData: AlertTestData): Promise<void> {
     await AlertHelper.alertHandling(this.#page, DialogActions.ACCEPT);
-    await this.#page.locator(AlertLocators.simpleAlertButton).click();
-    logger.info("Simple alert triggered and clicked on accept.");
-
-    await AssertHelper.assertVisibleWithText(
-      this.#page,
-      AlertLocators.simpleAlertResult,
-      testData.simpleAlertResultText,
-    );
-    logger.info("Verified the message available in the simple alert.");
+    await ClickHelper.click(this.#page.locator(AlertLocators.simpleAlertButton));
+    await AssertionHelper.assertVisible(this.#page.locator(AlertLocators.simpleAlertResult));
+    await AssertionHelper.assertTextMatches(this.#page.locator(AlertLocators.simpleAlertResult), testData.simpleAlertResultText);
   }
 
   async simpleAlertConfirmClickOk(testData: AlertTestData): Promise<void> {
     await AlertHelper.alertHandling(this.#page, DialogActions.ACCEPT);
-    await this.#page.locator(AlertLocators.simpleAlertConfirmButton).click();
-    logger.info("Simple alert triggered and clicked on OK.");
-    await AssertHelper.assertVisibleWithText(
-      this.#page,
-      AlertLocators.simpleAlertConfirmResult,
-      testData.simpleAlertConfirmTextOk,
-    );
-    logger.info(
-      "Verified the message available in the simple alert when clicking on OK.",
-    );
+    await ClickHelper.click(this.#page.locator(AlertLocators.simpleAlertConfirmButton));
+    await AssertionHelper.assertVisible(this.#page.locator(AlertLocators.simpleAlertConfirmResult));
+    await AssertionHelper.assertTextMatches(this.#page.locator(AlertLocators.simpleAlertConfirmResult), testData.simpleAlertConfirmTextOk);
   }
 
   async simpleAlertConfirmClickCancel(testData: AlertTestData): Promise<void> {
     await AlertHelper.alertHandling(this.#page, DialogActions.DISMISS);
-    await this.#page.locator(AlertLocators.simpleAlertConfirmButton).click();
-    logger.info("Simple confirm alert triggered and clicked on dismiss.");
-    await AssertHelper.assertVisibleWithText(
-      this.#page,
-      AlertLocators.simpleAlertConfirmResult,
-      testData.simpleAlertConfirmTextCancel,
-    );
+    await ClickHelper.click(this.#page.locator(AlertLocators.simpleAlertConfirmButton));
+    await AssertionHelper.assertVisible(this.#page.locator(AlertLocators.simpleAlertConfirmResult));
+    await AssertionHelper.assertTextMatches(this.#page.locator(AlertLocators.simpleAlertConfirmResult), testData.simpleAlertConfirmTextCancel);
   }
 
   async sweetAlertSimple(testData: AlertTestData): Promise<void> {
-    await this.#page.locator(AlertLocators.sweetAlertSimpleButton).click();
-    logger.info("Simple sweet alert triggered.");
-    await AssertHelper.assertVisible(
-      this.#page,
-      AlertLocators.sweetAlertSimplePopup,
-    );
+    await ClickHelper.click(this.#page.locator(AlertLocators.sweetAlertSimpleButton));
+    await AssertionHelper.assertVisible(this.#page.locator(AlertLocators.sweetAlertSimplePopup));
+    await AssertionHelper.assertText(this.#page.locator(AlertLocators.sweetAlertSimplePopupTitle), testData.dialogText);
+    await AssertionHelper.assertText(this.#page.locator(AlertLocators.sweetAlertSimplePopupBody), testData.sweetAlertSimplePopupBodyText);
 
-    await AssertHelper.assertText(
-      this.#page,
-      AlertLocators.sweetAlertSimplePopupTitle,
-      testData.dialogText,
-    );
-    await AssertHelper.assertText(
-      this.#page,
-      AlertLocators.sweetAlertSimplePopupBody,
-      testData.sweetAlertSimplePopupBodyText,
-    );
-    await ClickHelper.clickMatchingByRole(
-      this.#page,
-      DialogActions.DISMISS,
-      Roles.BUTTON,
-    );
+    await ClickHelper.clickByRole(this.#page, Roles.BUTTON, DialogActions.DISMISS);
     const popupWindow = this.#page.locator(AlertLocators.sweetAlertSimplePopup);
-    await expect(popupWindow).not.toBeVisible();
-    logger.info("Negative assertion to validate the visibility.");
+    await AssertionHelper.assertNotVisible(popupWindow);
   }
 
   async sweetModalDialog(testData: AlertTestData): Promise<void> {
-    await this.#page.locator(AlertLocators.sweetModalButton).click();
-    logger.info("Clicked on button to trigger the sweet modal pop up.");
-    await AssertHelper.assertVisible(
-      this.#page,
-      AlertLocators.sweetModalButtonPopup,
-    );
-    await AssertHelper.assertText(
-      this.#page,
-      AlertLocators.sweetModalTitle,
-      testData.sweetModalPopUpText,
-    );
-    await AssertHelper.assertText(
-      this.#page,
-      AlertLocators.sweetModalBody,
-      testData.sweetModalBodyText,
-    );
-    await ClickHelper.clickMatchingByRole(
-      this.#page,
-      AlertLocators.closeButton,
-      Roles.BUTTON,
-    );
+    await ClickHelper.click(this.#page.locator(AlertLocators.sweetModalButton));
+    await AssertionHelper.assertVisible(this.#page.locator(AlertLocators.sweetModalButtonPopup));
+    await AssertionHelper.assertText(this.#page.locator(AlertLocators.sweetModalTitle), testData.sweetModalPopUpText);
+    await AssertionHelper.assertText(this.#page.locator(AlertLocators.sweetModalBody), testData.sweetModalBodyText);
+    await ClickHelper.clickByRole(this.#page, Roles.BUTTON, AlertLocators.closeButton);
   }
 
   async alertPromptDialogEmpty(testData: AlertTestData) {
     await AlertHelper.alertHandling(this.#page, DialogActions.DISMISS);
-    await this.#page.locator(AlertLocators.alertPromptDialogButton).click();
-    logger.info(
-      "Clicked on button to trigger the alert and clicked on dismiss.",
-    );
-    await AssertHelper.assertText(
-      this.#page,
-      AlertLocators.alertPromptDialogConfirmButton,
-      testData.alertPromptDialogEmptyText,
-    );
+    await ClickHelper.click(this.#page.locator(AlertLocators.alertPromptDialogButton));
+    await AssertionHelper.assertText(this.#page.locator(AlertLocators.alertPromptDialogConfirmButton), testData.alertPromptDialogEmptyText);
   }
 
   async alertPromptDialogWithMessage(testData: AlertTestData) {
-    await AlertHelper.alertHandling(
-      this.#page,
-      DialogActions.ACCEPT,
-      testData.typeNameDropValue,
-    );
-    await this.#page.locator(AlertLocators.alertPromptDialogButton).click();
-    logger.info(
-      "Clicked on button to trigger the alert and clicked on accept with the message.",
-    );
-    await AssertHelper.assertText(
-      this.#page,
-      AlertLocators.alertPromptDialogConfirmButton,
-      testData.alertPromptDialogGivenText,
-    );
+    await AlertHelper.alertHandling(this.#page, DialogActions.ACCEPT, testData.typeNameDropValue);
+    await ClickHelper.click(this.#page.locator(AlertLocators.alertPromptDialogButton));
+    await AssertionHelper.assertText(this.#page.locator(AlertLocators.alertPromptDialogConfirmButton), testData.alertPromptDialogGivenText);
   }
 
   async alertPromptDialogWithNullMessage(testData: AlertTestData) {
     await AlertHelper.alertHandling(this.#page, DialogActions.ACCEPT);
-    await this.#page.locator(AlertLocators.alertPromptDialogButton).click();
-    logger.info(
-      "Clicked on button to trigger the alert and clicked on accept without the message.",
-    );
-    await AssertHelper.assertText(
-      this.#page,
-      AlertLocators.alertPromptDialogConfirmButton,
-      testData.alertPromptDialogNullText,
-    );
+    await ClickHelper.click(this.#page.locator(AlertLocators.alertPromptDialogButton));
+    await AssertionHelper.assertText(this.#page.locator(AlertLocators.alertPromptDialogConfirmButton), testData.alertPromptDialogNullText);
   }
 
   async sweetAlertConfirmationYes(testData: AlertTestData) {
-    await ClickHelper.clickMatchingByRole(
-      this.#page,
-      AlertLocators.delete,
-      Roles.BUTTON,
-    );
-    logger.info(
-      "Clicked on button to trigger the alert and clicked on YES button.",
-    );
-    await AssertHelper.assertVisible(
-      this.#page,
-      AlertLocators.sweetAlertButton,
-    );
-    await AssertHelper.assertText(
-      this.#page,
-      AlertLocators.sweetAlertTitle,
-      AlertLocators.confirmationButton,
-    );
-    await AssertHelper.assertText(
-      this.#page,
-      AlertLocators.sweetAlertMessage,
-      testData.sweetAlertBody,
-    );
-    await ClickHelper.clickMatchingByRole(
-      this.#page,
-      AlertLocators.yesText,
-      Roles.BUTTON,
-    );
+    await ClickHelper.clickByRole(this.#page, Roles.BUTTON, AlertLocators.delete);
+    await AssertionHelper.assertVisible(this.#page.locator(AlertLocators.sweetAlertButton));
+    await AssertionHelper.assertText(this.#page.locator(AlertLocators.sweetAlertTitle), AlertLocators.confirmationButton);
+    await AssertionHelper.assertText(this.#page.locator(AlertLocators.sweetAlertMessage), testData.sweetAlertBody);
+    await ClickHelper.clickByRole(this.#page, Roles.BUTTON, AlertLocators.yesText);
   }
 
   async sweetAlertConfirmationNo(testData: AlertTestData) {
-    await ClickHelper.clickMatchingByRole(
-      this.#page,
-      AlertLocators.delete,
-      Roles.BUTTON,
-    );
-    logger.info(
-      "Clicked on button to trigger the alert and clicked on NO button.",
-    );
-    await AssertHelper.assertVisible(
-      this.#page,
-      AlertLocators.sweetAlertButton,
-    );
-    await AssertHelper.assertText(
-      this.#page,
-      AlertLocators.sweetAlertTitle,
-      AlertLocators.confirmationButton,
-    );
-    await AssertHelper.assertText(
-      this.#page,
-      AlertLocators.sweetAlertMessage,
-      testData.sweetAlertBody,
-    );
-    await ClickHelper.clickMatchingByRole(
-      this.#page,
-      AlertLocators.noText,
-      Roles.BUTTON,
-    );
+    await ClickHelper.clickByRole(this.#page, Roles.BUTTON, AlertLocators.delete);
+    await AssertionHelper.assertVisible(this.#page.locator(AlertLocators.sweetAlertButton));
+    await AssertionHelper.assertText(this.#page.locator(AlertLocators.sweetAlertTitle), AlertLocators.confirmationButton);
+    await AssertionHelper.assertText(this.#page.locator(AlertLocators.sweetAlertMessage), testData.sweetAlertBody);
+    await ClickHelper.clickByRole(this.#page, Roles.BUTTON, AlertLocators.noText);
   }
 }

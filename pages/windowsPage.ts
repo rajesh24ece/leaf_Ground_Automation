@@ -1,6 +1,6 @@
 import { expect, Page, test } from "@playwright/test";
-import { WindowsLocators } from "../locators/windowsLocator";
-import { logger } from "../utils/logger";
+import { WindowsLocators } from "../locators/WindowsLocator";
+import { logger } from "../utils/Logger";
 
 export class WindowsPage {
   readonly #page: Page;
@@ -16,10 +16,7 @@ export class WindowsPage {
   async openNewWindows() {
     const parentTitle = await this.#page.title();
     logger.info("Parent Page Title: " + parentTitle);
-    const [newPage] = await Promise.all([
-      this.#page.context().waitForEvent("page"),
-      this.#page.click(WindowsLocators.openOneBrowserlocator),
-    ]);
+    const [newPage] = await Promise.all([this.#page.context().waitForEvent("page"), this.#page.click(WindowsLocators.openOneBrowserlocator)]);
     await newPage.waitForLoadState();
     const newPageTitle = await newPage.title();
     logger.info("New Page Title: " + newPageTitle);
@@ -31,12 +28,8 @@ export class WindowsPage {
     const context = this.#page.context();
     const parentTitle = await this.#page.title();
     const pagesBefore = context.pages();
-    await this.#page
-      .locator(WindowsLocators.openThreeBrowsersCloseLocator)
-      .click();
-    await expect
-      .poll(() => context.pages().length)
-      .toBe(pagesBefore.length + 3);
+    await this.#page.locator(WindowsLocators.openThreeBrowsersCloseLocator).click();
+    await expect.poll(() => context.pages().length).toBe(pagesBefore.length + 3);
     const newPages = context.pages().slice(pagesBefore.length);
     for (const page of newPages) {
       await page.waitForLoadState();
@@ -49,18 +42,12 @@ export class WindowsPage {
   }
 
   async countOpenedTabs() {
-    const [newpage] = await Promise.all([
-      this.#page.context().waitForEvent("page"),
-      await this.#page.getByRole("button", { name: "Open Multiple" }).click(),
-    ]);
+    const [newpage] = await Promise.all([this.#page.context().waitForEvent("page"), await this.#page.getByRole("button", { name: "Open Multiple" }).click()]);
     const pages = this.#page.context().pages();
     logger.info("Total pages:", pages.length);
   }
 
   async waitForTabsToOpen() {
-    const [newpage] = await Promise.all([
-      this.#page.context().waitForEvent("page"),
-      await this.#page.getByRole("button", { name: "Open with delay" }).click(),
-    ]);
+    const [newpage] = await Promise.all([this.#page.context().waitForEvent("page"), await this.#page.getByRole("button", { name: "Open with delay" }).click()]);
   }
 }

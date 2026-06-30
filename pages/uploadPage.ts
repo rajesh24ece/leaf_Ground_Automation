@@ -1,10 +1,13 @@
 import { Page, test, expect } from "@playwright/test";
 import { FileHelper } from "../utils/fileHelper";
-import { UploadTestData } from "../utils/test-data.interface";
-import { UploadLocators } from "../locators/uploadLocators";
+import { NavigationHelper } from "../helpers/NavigationHelper";
+import { ClickHelper } from "../helpers/ClickHelper";
+import { UploadTestData } from "../utils/Test-data.interface";
+import { UploadLocators } from "../locators/UploadLocators";
 import path from "path";
 import fs from "fs";
-import { logger } from "../utils/logger";
+import { logger } from "../utils/Logger";
+import { Roles } from "../utils/Constants";
 
 export class UploadPage {
   #page: Page;
@@ -13,25 +16,8 @@ export class UploadPage {
     this.#page = page;
   }
 
-  async handlingUpload() {
-    let testData!: UploadTestData;
-
-    await test.step("Read test data from json file.", async () => {
-      testData = await FileHelper.accessJsonData(UploadLocators.uploadJson);
-    });
-
-    await test.step("Successfully landed in the upload and download page.", async () => {
-      await this.landingPage();
-    });
-
-    await this.fileUploadOne();
-    await this.fileUploadTwo();
-    await this.fileDownload(testData);
-  }
-
   async landingPage(): Promise<void> {
-    await this.#page.goto(UploadLocators.pageUrl);
-    await this.#page.waitForLoadState();
+    await NavigationHelper.navigateToPage(this.#page, UploadLocators.pageUrl);
   }
 
   async fileUploadOne(): Promise<void> {
@@ -42,12 +28,12 @@ export class UploadPage {
   async fileUploadTwo(): Promise<void> {
     const filepath = path.resolve(__dirname, UploadLocators.uploadTwo);
     await this.#page.setInputFiles(UploadLocators.uploadTwoLocator, filepath);
-    await this.#page.getByRole("button", { name: " Upload" }).click();
+    await ClickHelper.clickByRole(this.#page, Roles.BUTTON, UploadLocators.uploadButton);
   }
 
   async fileDownload(testData: UploadTestData): Promise<void> {
     const downloadPromise = this.#page.waitForEvent("download");
-    await this.#page.getByRole("button", { name: "Download" }).click();
+    await ClickHelper.clickByRole(this.#page, Roles.BUTTON, UploadLocators.downloadButton);
     const download = await downloadPromise;
     logger.info(download.suggestedFilename());
     expect(download.suggestedFilename()).toBe(testData.fileName);

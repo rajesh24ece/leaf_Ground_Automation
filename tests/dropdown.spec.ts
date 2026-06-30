@@ -1,7 +1,7 @@
-import { test } from "../fixtures/accessJsonFile";
-import { DropdownLocators } from "../locators/dropdownLocators";
-import { DropdownPage } from "../pages/dropdownPage";
-import { DropdownTestData } from "../utils/test-data.interface";
+import { test } from "../fixtures/AccessJsonFile";
+import { DropdownLocators } from "../locators/DropdownLocators";
+import { DropdownPage } from "../pages/DropdownPage";
+import { DropdownTestData } from "../utils/Test-data.interface";
 import { Page } from "@playwright/test";
 
 let dropdownPage: DropdownPage;

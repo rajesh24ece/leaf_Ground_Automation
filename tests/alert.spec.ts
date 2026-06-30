@@ -1,7 +1,7 @@
-import { test } from "../fixtures/accessJsonFile";
-import { AlertPage } from "../pages/alertPage";
-import { AlertTestData } from "../utils/test-data.interface";
-import { AlertLocators } from "../locators/alertLocators";
+import { test } from "../fixtures/AccessJsonFile";
+import { AlertPage } from "../pages/AlertPage";
+import { AlertTestData } from "../utils/Test-data.interface";
+import { AlertLocators } from "../locators/AlertLocators";
 
 let alertPage: AlertPage;
 let data: AlertTestData;
