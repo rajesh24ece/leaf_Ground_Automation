@@ -2,6 +2,7 @@
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "types": ["node", "@playwright/test"]
+    "types": ["node", "@playwright/test"],
+    "strict": true
   }
 }
