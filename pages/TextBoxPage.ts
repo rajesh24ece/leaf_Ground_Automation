@@ -1,8 +1,6 @@
 import { expect, Page } from "@playwright/test";
 import { TextBoxTestData } from "../utils/Test-data.interface";
 import { TextBoxLocators } from "../locators/TextBoxLocators";
-import { logger } from "../utils/Logger";
-import { Roles } from "../utils/Constants";
 import { NavigationHelper } from "../helpers/NavigationHelper";
 import { AssertionHelper } from "../helpers/AssertionHelper";
 import { InputHelper } from "../helpers/InputHelper";
@@ -74,8 +72,7 @@ export class TextBoxPage {
     await ClickHelper.click(drop);
     await InputHelper.pressSequentially(drop, testData.typeNameDropValue);
     await AssertionHelper.assertVisible(this.#page.locator(TextBoxLocators.dropDownClickLocator));
-    //await ClickHelper.clickAllByRole(this.#page, Roles.OPTION, TextBoxLocators.dropDownClickLocator);
-    await this.#page.locator(TextBoxLocators.dropDownClickLocator).getByRole(Roles.OPTION).nth(2).click();
+    await ClickHelper.clickNth(this.#page.locator(TextBoxLocators.dropDownClickLocatorList), 2);
     const selectedValue = this.#page.locator(TextBoxLocators.dropDownDisplayValueLocator);
     await AssertionHelper.assertText(selectedValue, testData.typeNameDropValueDisplay);
   }
@@ -123,13 +120,9 @@ export class TextBoxPage {
   async oskHandling(testData: TextBoxTestData) {
     await ClickHelper.click(this.#page.locator(TextBoxLocators.oskLocator));
     for (let char of testData.typeNameDropValue) {
-      await this.#page.locator(TextBoxLocators.oskKeyPad, { hasText: char }).click();
+      await ClickHelper.clickByText(this.#page.locator(TextBoxLocators.oskKeyPad), char);
     }
-    await this.#page
-      .locator(TextBoxLocators.oskKeypadClick, {
-        hasText: TextBoxLocators.closeButton,
-      })
-      .click();
+    await ClickHelper.clickByText(this.#page.locator(TextBoxLocators.oskKeypadClick), TextBoxLocators.closeButton);
     const value = this.#page.locator(TextBoxLocators.oskInputValue);
     await AssertionHelper.assertValue(value, testData.typeNameDropValue);
   }
@@ -143,14 +136,12 @@ export class TextBoxPage {
   async typeNumberAndSpin() {
     const value = this.#page.locator(TextBoxLocators.typeNumberToSpinLocator);
     await value.clear();
-    await value.pressSequentially(TextBoxLocators.typeNumberToSpin, {
-      delay: 50,
-    });
+    await InputHelper.pressSequentially(value, TextBoxLocators.typeNumberToSpin, 50);
     await value.press("Tab");
-    await expect(this.#page.locator(TextBoxLocators.spinningButton)).toBeVisible();
-    await expect(value).toHaveValue(TextBoxLocators.typeNumberToSpin);
+    await AssertionHelper.assertVisible(this.#page.locator(TextBoxLocators.spinningButton));
+    await AssertionHelper.assertValue(value, TextBoxLocators.typeNumberToSpin);
     const beforeValue = Number(await value.getAttribute(TextBoxLocators.typedNumber));
-    await this.#page.locator(TextBoxLocators.upArrow).click();
-    await expect(value).toHaveAttribute(TextBoxLocators.typedNumber, String(beforeValue + 1));
+    await ClickHelper.click(this.#page.locator(TextBoxLocators.upArrow));
+    await AssertionHelper.assertAttribute(value, TextBoxLocators.typedNumber, String(beforeValue + 1));
   }
 }

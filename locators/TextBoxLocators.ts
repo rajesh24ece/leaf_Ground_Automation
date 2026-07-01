@@ -13,6 +13,7 @@ export const TextBoxLocators = {
   errorMessageTextLocator: "#j_idt106\\:thisform\\:j_idt110_error-detail",
   typeNameDrop: "#j_idt106\\:auto-complete",
   dropDownClickLocator: "#j_idt106\\:auto-complete_panel",
+  dropDownClickLocatorList: "[class='ui-autocomplete-query']",
   calendariconLocator: ".ui-button-icon-left.ui-icon.ui-icon-calendar",
   calendarPanelLocator: "#j_idt106\\:j_idt116_panel",
   currentYearLocator: ".ui-datepicker-year",
@@ -36,8 +37,7 @@ export const TextBoxLocators = {
   upArrow: ".ui-icon.ui-c.ui-icon-triangle-1-n",
   typeNumberToSpinLocator: "#j_idt106\\:j_idt118_input",
   typedNumber: "aria-valuenow",
-  spinningButton:
-    ".ui-spinner-button.ui-spinner-up ui-corner-tr ui-button.ui-widget.ui-state-default.ui-button-text-only",
+  spinningButton: ".ui-spinner-button.ui-spinner-up ui-corner-tr ui-button.ui-widget.ui-state-default.ui-button-text-only",
   closeButton: "Close",
   dropDownDisplayValueLocator: ".ui-autocomplete-token-label",
 } as const;

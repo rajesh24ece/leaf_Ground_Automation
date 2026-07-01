@@ -88,6 +88,11 @@ export class AssertionHelper {
     await this.getExpect(soft)(locator).toHaveText(expected, { timeout });
   }
 
+  static async assertTexts(locator: Locator, expected: string[]): Promise<void> {
+    const actual = await locator.allTextContents();
+    expect(actual.map((text) => text.trim())).toEqual(expected);
+  }
+
   static async assertContainsText(locator: Locator, expected: string, options?: AssertionOptions): Promise<void> {
     const { timeout, soft } = this.getOptions(options);
     await this.getExpect(soft)(locator).toContainText(expected, { timeout });

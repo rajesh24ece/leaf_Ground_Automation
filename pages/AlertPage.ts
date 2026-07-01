@@ -44,7 +44,6 @@ export class AlertPage {
     await AssertionHelper.assertVisible(this.#page.locator(AlertLocators.sweetAlertSimplePopup));
     await AssertionHelper.assertText(this.#page.locator(AlertLocators.sweetAlertSimplePopupTitle), testData.dialogText);
     await AssertionHelper.assertText(this.#page.locator(AlertLocators.sweetAlertSimplePopupBody), testData.sweetAlertSimplePopupBodyText);
-
     await ClickHelper.clickByRole(this.#page, Roles.BUTTON, DialogActions.DISMISS);
     const popupWindow = this.#page.locator(AlertLocators.sweetAlertSimplePopup);
     await AssertionHelper.assertNotVisible(popupWindow);

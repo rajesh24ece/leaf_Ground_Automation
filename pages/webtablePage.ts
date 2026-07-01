@@ -1,43 +1,27 @@
-import { Page, test, expect } from "@playwright/test";
-import { Methods } from "../utils/methods";
-import { TableTestData } from "../utils/Test-data.interface";
+import { Page, expect } from "@playwright/test";
+import { NavigationHelper } from "../helpers/NavigationHelper";
+import { WebTableLocators } from "../locators/WebTableLocators";
+import { WebTableTestData } from "../utils/Test-data.interface";
+import { ClickHelper } from "../helpers/ClickHelper";
+import { InputHelper } from "../helpers/InputHelper";
 
-export class WebTablePage extends Methods {
+export class WebTablePage {
   #page: Page;
   constructor(page: Page) {
-    super();
     this.#page = page;
   }
 
-  async handlingTable() {
-    let testData: TableTestData;
-
-    await test.step("Read test data from json file.", async () => {
-      testData = await Methods.accessJsonData(this.tableJson);
-    });
-
-    await test.step("Successfully landed in the web table page.", async () => {
-      await this.landingPage();
-    });
-
-    await test.step("Successfully landed in the web table page.", async () => {
-      await this.createNewProduct(testData);
-    });
+  async landingPage(): Promise<void> {
+    await NavigationHelper.navigateToPage(this.#page, WebTableLocators.webTablePage);
   }
 
-  private async landingPage(): Promise<void> {
-    await this.#page.goto(this.webTable);
-    await this.#page.waitForLoadState();
-  }
-
-  private async createNewProduct(testData: TableTestData) {
-    await this.#page.getByRole("button", { name: "New" }).click();
-    await this.#page.waitForSelector("#form\\:j_idt130");
+  async createNewProduct(testData: WebTableTestData) {
+    await ClickHelper.clickByRole(this.#page, "button", "New");
+    //await this.#page.getByRole("button", { name: "New" }).click();
+    //await this.#page.waitForSelector("#form\\:j_idt130");
     await this.#page.getByRole("textbox", { name: "Name*" }).fill(testData.ProductName);
     await this.#page.getByRole("textbox", { name: "Description" }).fill(testData.Description);
-
     await this.#page.locator(`label:text-is("${testData.Category}")`).click();
-
     await this.#page.getByRole("textbox", { name: "Price" }).clear();
     await this.#page.getByRole("textbox", { name: "Price" }).fill(String(testData.Price));
     await this.#page.locator("#form\\:quantity_input").fill(String(testData.Quantity));
@@ -59,10 +43,8 @@ export class WebTablePage extends Methods {
       await pagination.nth(i).click();
       const rows = this.#page.locator("tbody[id='form:dt-products_data'] tr");
       const rowCount = await rows.count();
-      //console.log("row count  == >" + rowCount);
       for (let j = 1; j < rowCount; j++) {
         const cellText = await rows.nth(j).getByRole("gridcell").nth(2).textContent();
-        //console.log(cellText);
         if (cellText?.includes(productName)) {
           return true;
         }
