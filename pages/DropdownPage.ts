@@ -18,19 +18,23 @@ export class DropdownPage {
     await NavigationHelper.navigateToPage(this.#page, DropdownLocators.dropdownPage);
   }
 
+  async selectCountry(testData: DropdownTestData) {
+    await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.countryLocator, testData.india, Roles.OPTION);
+  }
+
   async selectTool(testData: DropdownTestData) {
     const toolDropdown = this.#page.locator(DropdownLocators.selectToolLocator);
     await DropdownHelper.selectByText(toolDropdown, testData.playwrightText);
     await AssertionHelper.assertValue(toolDropdown, testData.playwrightText);
   }
 
-  async selectCountry(testData: DropdownTestData) {
-    await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.countryLocator, testData.india, Roles.OPTION);
-  }
-
   async selectCity(testData: DropdownTestData) {
     await AssertionHelper.assertVisible(this.#page.locator(DropdownLocators.cityLocator));
     await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.cityLocator, testData.chennai, Roles.OPTION);
+  }
+
+  async selectLanguage(testData: DropdownTestData) {
+    await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.languageLocator, testData.tamil, Roles.OPTION);
   }
 
   async selectCourse(testData: DropdownTestData) {
@@ -41,10 +45,6 @@ export class DropdownPage {
       await AssertionHelper.assertHidden(this.#page.locator(DropdownLocators.courseDropdownPanel));
     }
     await AssertionHelper.assertTexts(this.#page.locator(DropdownLocators.dropDownDisplayValueLocator), testData.courses);
-  }
-
-  async selectLanguage(testData: DropdownTestData) {
-    await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.languageLocator, testData.tamil, Roles.OPTION);
   }
 
   async selectTwo(testData: DropdownTestData) {
