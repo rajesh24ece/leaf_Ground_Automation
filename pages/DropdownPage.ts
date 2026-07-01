@@ -29,6 +29,7 @@ export class DropdownPage {
   }
 
   async selectCity(testData: DropdownTestData) {
+    await AssertionHelper.assertVisible(this.#page.locator(DropdownLocators.cityLocator));
     await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.cityLocator, testData.chennai, Roles.OPTION);
   }
 
@@ -47,6 +48,7 @@ export class DropdownPage {
   }
 
   async selectTwo(testData: DropdownTestData) {
+    await AssertionHelper.assertVisible(this.#page.locator(DropdownLocators.languageValue));
     await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.languageValue, testData.rendu, Roles.OPTION);
   }
 }
