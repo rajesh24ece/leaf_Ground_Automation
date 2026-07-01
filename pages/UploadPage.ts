@@ -1,5 +1,4 @@
 import { Page, test, expect } from "@playwright/test";
-import { FileHelper } from "../utils/fileHelper";
 import { NavigationHelper } from "../helpers/NavigationHelper";
 import { ClickHelper } from "../helpers/ClickHelper";
 import { UploadTestData } from "../utils/Test-data.interface";
@@ -8,6 +7,7 @@ import path from "path";
 import fs from "fs";
 import { logger } from "../utils/Logger";
 import { Roles } from "../utils/Constants";
+import { AssertionHelper } from "../helpers/AssertionHelper";
 
 export class UploadPage {
   #page: Page;
@@ -36,9 +36,9 @@ export class UploadPage {
     await ClickHelper.clickByRole(this.#page, Roles.BUTTON, UploadLocators.downloadButton);
     const download = await downloadPromise;
     logger.info(download.suggestedFilename());
-    expect(download.suggestedFilename()).toBe(testData.fileName);
+    await AssertionHelper.assertToBe(download.suggestedFilename(), testData.fileName);
     const savePath = path.join("downloads", testData.fileName);
     await download.saveAs(savePath);
-    expect(fs.existsSync(savePath)).toBeTruthy();
+    await AssertionHelper.assertToBeTruthy(fs.existsSync(savePath));
   }
 }

@@ -223,4 +223,12 @@ export class ClickHelper {
       ErrorUtils.handleError("Failed while waiting for the expected response.", error);
     }
   }
+
+  static async clickDynamicLocator(page: Page, locator: string): Promise<void> {
+    try {
+      await page.locator(locator).click();
+    } catch (error) {
+      ErrorUtils.handleError(`Failed to click locator: ${locator}`, error);
+    }
+  }
 }

@@ -247,4 +247,17 @@ export class AssertionHelper {
       expect(actual).toEqual(expected);
     }
   }
+
+  static async assertPoll<T>(fn: () => T | Promise<T>, expected: T, options?: Pick<AssertionOptions, "timeout">): Promise<void> {
+    const { timeout } = this.getOptions(options);
+    await expect.poll(fn, { timeout }).toBe(expected);
+  }
+
+  static async assertToBeTruthy(actual: unknown, soft: boolean = false): Promise<void> {
+    await this.getExpect(soft)(actual).toBeTruthy();
+  }
+
+  static async assertToBe<T>(actual: T, expected: T, soft: boolean = false): Promise<void> {
+    await this.getExpect(soft)(actual).toBe(expected);
+  }
 }

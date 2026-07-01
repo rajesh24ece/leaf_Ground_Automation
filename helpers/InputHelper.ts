@@ -6,11 +6,10 @@ export class InputHelper {
   /**
    * Fill an input field.
    */
-  static async fill(locator: Locator, value: string): Promise<void> {
+  static async fill(locator: Locator, value: string | number): Promise<void> {
     logger.info("Filling the input field.");
-
     try {
-      await locator.fill(value);
+      await locator.fill(String(value));
       logger.info("Successfully filled the input field.");
     } catch (error) {
       ErrorUtils.handleError("Failed to fill the input field.", error);
@@ -20,23 +19,15 @@ export class InputHelper {
   /**
    * Fill and press Enter.
    */
-  static async fillAndPressEnter(
-    locator: Locator,
-    value: string,
-    fieldName = "Input",
-  ): Promise<void> {
+  static async fillAndPressEnter(locator: Locator, value: string, fieldName = "Input"): Promise<void> {
     logger.info(`Filling '${fieldName}' and pressing Enter`);
 
     try {
       await locator.fill(value);
       await locator.press("Enter");
-
       logger.info(`Successfully filled '${fieldName}' and pressed Enter`);
     } catch (error) {
-      ErrorUtils.handleError(
-        `Failed to fill '${fieldName}' and press Enter`,
-        error,
-      );
+      ErrorUtils.handleError(`Failed to fill '${fieldName}' and press Enter`, error);
     }
   }
 
@@ -45,10 +36,8 @@ export class InputHelper {
    */
   static async clear(locator: Locator, fieldName = "Input"): Promise<void> {
     logger.info(`Clearing '${fieldName}'`);
-
     try {
       await locator.clear();
-
       logger.info(`Successfully cleared '${fieldName}'`);
     } catch (error) {
       ErrorUtils.handleError(`Failed to clear '${fieldName}'`, error);
@@ -58,13 +47,8 @@ export class InputHelper {
   /**
    * Append text.
    */
-  static async append(
-    locator: Locator,
-    value: string,
-    fieldName = "Input",
-  ): Promise<void> {
+  static async append(locator: Locator, value: string, fieldName = "Input"): Promise<void> {
     logger.info(`Appending text to '${fieldName}'`);
-
     try {
       const currentValue = await locator.inputValue();
       await locator.fill(currentValue + value);
@@ -78,11 +62,7 @@ export class InputHelper {
   /**
    * Type text sequentially.
    */
-  static async pressSequentially(
-    locator: Locator,
-    value: string,
-    delay?: number,
-  ): Promise<void> {
+  static async pressSequentially(locator: Locator, value: string, delay?: number): Promise<void> {
     try {
       await locator.pressSequentially(value, { delay });
       logger.info(`Successfully typed the value '${value}'`);
@@ -94,12 +74,7 @@ export class InputHelper {
   /**
    * Replace text.
    */
-  static async replace(
-    locator: Locator,
-    oldValue: string,
-    newValue: string,
-    fieldName = "Input",
-  ): Promise<void> {
+  static async replace(locator: Locator, oldValue: string, newValue: string, fieldName = "Input"): Promise<void> {
     logger.info(`Replacing text in '${fieldName}'`);
 
     try {
@@ -120,9 +95,7 @@ export class InputHelper {
     logger.info(`Copying text from '${fieldName}'`);
 
     try {
-      await locator.press(
-        process.platform === "darwin" ? "Meta+C" : "Control+C",
-      );
+      await locator.press(process.platform === "darwin" ? "Meta+C" : "Control+C");
 
       logger.info(`Successfully copied text from '${fieldName}'`);
     } catch (error) {
@@ -137,9 +110,7 @@ export class InputHelper {
     logger.info(`Pasting text into '${fieldName}'`);
 
     try {
-      await locator.press(
-        process.platform === "darwin" ? "Meta+V" : "Control+V",
-      );
+      await locator.press(process.platform === "darwin" ? "Meta+V" : "Control+V");
 
       logger.info(`Successfully pasted text into '${fieldName}'`);
     } catch (error) {
@@ -154,9 +125,7 @@ export class InputHelper {
     logger.info(`Cutting text from '${fieldName}'`);
 
     try {
-      await locator.press(
-        process.platform === "darwin" ? "Meta+X" : "Control+X",
-      );
+      await locator.press(process.platform === "darwin" ? "Meta+X" : "Control+X");
 
       logger.info(`Successfully cut text from '${fieldName}'`);
     } catch (error) {
@@ -171,16 +140,11 @@ export class InputHelper {
     logger.info(`Selecting all text from '${fieldName}'`);
 
     try {
-      await locator.press(
-        process.platform === "darwin" ? "Meta+A" : "Control+A",
-      );
+      await locator.press(process.platform === "darwin" ? "Meta+A" : "Control+A");
 
       logger.info(`Successfully selected all text from '${fieldName}'`);
     } catch (error) {
-      ErrorUtils.handleError(
-        `Failed to select all text from '${fieldName}'`,
-        error,
-      );
+      ErrorUtils.handleError(`Failed to select all text from '${fieldName}'`, error);
     }
   }
 
@@ -210,20 +174,14 @@ export class InputHelper {
 
       logger.info(`Successfully removed focus from '${fieldName}'`);
     } catch (error) {
-      ErrorUtils.handleError(
-        `Failed to remove focus from '${fieldName}'`,
-        error,
-      );
+      ErrorUtils.handleError(`Failed to remove focus from '${fieldName}'`, error);
     }
   }
 
   /**
    * Get input value.
    */
-  static async getValue(
-    locator: Locator,
-    fieldName = "Input",
-  ): Promise<string> {
+  static async getValue(locator: Locator, fieldName = "Input"): Promise<string> {
     logger.info(`Reading value from '${fieldName}'`);
 
     try {
