@@ -77,6 +77,15 @@ export class ClickHelper {
     }
   }
 
+  static async clickByText(locator: Locator, text: string): Promise<void> {
+    try {
+      await locator.filter({ hasText: text }).click();
+      logger.info(`Successfully clicked '${text}'.`);
+    } catch (error) {
+      ErrorUtils.handleError(`Failed to click '${text}'.`, error);
+    }
+  }
+
   static async clickAll(locator: Locator): Promise<void> {
     try {
       const count = await locator.count();

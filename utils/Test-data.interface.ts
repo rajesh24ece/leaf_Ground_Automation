@@ -42,7 +42,7 @@ export interface AlertTestData {
   dialogText: string;
 }
 
-export interface TableTestData {
+export interface WebTableTestData {
   ProductName: string;
   Description: string;
   Category: string;

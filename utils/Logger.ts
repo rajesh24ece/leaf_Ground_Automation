@@ -21,11 +21,7 @@ export const logger = createLogger({
   transports: [
     // Console output with colors
     new transports.Console({
-      format: combine(
-        colorize(),
-        timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-        logFormat,
-      ),
+      format: combine(colorize(), timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), logFormat),
     }),
 
     // Info log file
