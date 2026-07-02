@@ -1,10 +1,10 @@
 import { Page } from "@playwright/test";
 import { DropdownHelper } from "../helpers/DropdownHelper";
 import { NavigationHelper } from "../helpers/NavigationHelper";
-import { DropdownTestData } from "../utils/Test-data.interface";
+import { DropdownTestData } from "../utils/testInterface";
 import { DropdownLocators } from "../locators/DropdownLocators";
 import { ClickHelper } from "../helpers/ClickHelper";
-import { Roles } from "../utils/Constants";
+import { Roles } from "../utils/constants";
 import { AssertionHelper } from "../helpers/AssertionHelper";
 
 export class DropdownPage {

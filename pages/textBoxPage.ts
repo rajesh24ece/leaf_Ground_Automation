@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test";
-import { TextBoxTestData } from "../utils/Test-data.interface";
+import { TextBoxTestData } from "../utils/testInterface";
 import { TextBoxLocators } from "../locators/textBoxLocators";
 import { NavigationHelper } from "../helpers/navigationHelper";
 import { AssertionHelper } from "../helpers/assertionHelper";

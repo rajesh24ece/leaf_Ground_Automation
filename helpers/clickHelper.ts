@@ -1,6 +1,6 @@
 import { Locator, Page } from "@playwright/test";
-import { logger } from "../utils/Logger";
-import { ErrorUtils } from "../utils/ErrorUtils";
+import { logger } from "../utils/logger";
+import { ErrorUtils } from "../utils/errorUtils";
 
 type AriaRole = Parameters<Page["getByRole"]>[0];
 

@@ -1,4 +1,4 @@
-import { logger } from "./Logger";
+import { logger } from "./logger";
 
 export class ErrorUtils {
   static handleError(message: string, error: unknown): never {

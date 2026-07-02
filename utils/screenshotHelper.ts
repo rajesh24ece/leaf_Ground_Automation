@@ -1,4 +1,4 @@
-import { logger } from "./Logger";
+import { logger } from "./logger";
 import { Page } from "@playwright/test";
 import * as fs from "fs";
 

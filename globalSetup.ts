@@ -1,5 +1,5 @@
 import fs from "fs";
-import { logger } from "./utils/Logger";
+import { logger } from "./utils/logger";
 import { AllureEnvironment } from "./utils/AllureEnvironment";
 
 async function globalSetup() {

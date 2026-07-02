@@ -1,6 +1,6 @@
-import { logger } from "../utils/Logger";
+import { logger } from "../utils/logger";
 import { Page } from "@playwright/test";
-import { ErrorUtils } from "../utils/ErrorUtils";
+import { ErrorUtils } from "../utils/errorUtils";
 
 export class NavigationHelper {
   static async navigateToPage(page: Page, url: string): Promise<void> {

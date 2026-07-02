@@ -3,9 +3,9 @@ import { AlertHelper } from "../helpers/AlertHelper";
 import { NavigationHelper } from "../helpers/NavigationHelper";
 import { AssertionHelper } from "../helpers/AssertionHelper";
 import { ClickHelper } from "../helpers/ClickHelper";
-import { AlertTestData } from "../utils/Test-data.interface";
+import { AlertTestData } from "../utils/testInterface";
 import { AlertLocators } from "../locators/AlertLocators";
-import { DialogActions, Roles } from "../utils/Constants";
+import { DialogActions, Roles } from "../utils/constants";
 
 export class AlertPage {
   readonly #page: Page;

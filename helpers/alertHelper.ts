@@ -1,6 +1,6 @@
 import { Page } from "@playwright/test";
-import { logger } from "../utils/Logger";
-import { DialogAction } from "../utils/Constants";
+import { logger } from "../utils/logger";
+import { DialogAction } from "../utils/constants";
 import { TextConstants } from "../utils/CommonText";
 
 export class AlertHelper {
