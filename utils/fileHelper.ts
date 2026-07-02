@@ -1,4 +1,4 @@
-import { logger } from "./Logger";
+import { logger } from "./logger";
 import * as fs from "fs";
 
 export class FileHelper {

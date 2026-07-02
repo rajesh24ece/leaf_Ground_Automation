@@ -1,6 +1,6 @@
 import { Locator } from "@playwright/test";
-import { logger } from "../utils/Logger";
-import { ErrorUtils } from "../utils/ErrorUtils";
+import { logger } from "../utils/logger";
+import { ErrorUtils } from "../utils/errorUtils";
 
 export class InputHelper {
   /**

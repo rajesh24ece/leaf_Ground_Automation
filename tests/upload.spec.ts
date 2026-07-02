@@ -1,7 +1,7 @@
 import { UploadPage } from "../pages/UploadPage";
 import { test } from "../fixtures/AccessJsonFile";
 import { UploadLocators } from "../locators/UploadLocators";
-import { UploadTestData } from "../utils/Test-data.interface";
+import { UploadTestData } from "../utils/test-data.interface";
 
 let uploadPage: UploadPage;
 let data: UploadTestData;

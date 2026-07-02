@@ -1,7 +1,7 @@
 import { Page } from "@playwright/test";
-import { logger } from "../utils/Logger";
-import { DialogAction } from "../utils/Constants";
-import { TextConstants } from "../utils/CommonText";
+import { logger } from "../utils/logger";
+import { DialogAction } from "../utils/constants";
+import { TextConstants } from "../utils/commonText";
 
 export class AlertHelper {
   static async alertHandling(page: Page, action: DialogAction, text?: string): Promise<void> {

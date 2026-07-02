@@ -1,12 +1,12 @@
 import { Page, test, expect } from "@playwright/test";
 import { NavigationHelper } from "../helpers/NavigationHelper";
 import { ClickHelper } from "../helpers/ClickHelper";
-import { UploadTestData } from "../utils/Test-data.interface";
+import { UploadTestData } from "../utils/test-data.interface";
 import { UploadLocators } from "../locators/UploadLocators";
 import path from "path";
 import fs from "fs";
-import { logger } from "../utils/Logger";
-import { Roles } from "../utils/Constants";
+import { logger } from "../utils/logger";
+import { Roles } from "../utils/constants";
 import { AssertionHelper } from "../helpers/AssertionHelper";
 
 export class UploadPage {

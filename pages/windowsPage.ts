@@ -1,6 +1,6 @@
 import { expect, Page, test } from "@playwright/test";
 import { WindowsLocators } from "../locators/WindowsLocator";
-import { logger } from "../utils/Logger";
+import { logger } from "../utils/logger";
 
 export class WindowsPage {
   readonly #page: Page;

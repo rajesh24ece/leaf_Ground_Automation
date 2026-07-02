@@ -1,8 +1,8 @@
 import { Page, Locator } from "@playwright/test";
-import { ErrorUtils } from "../utils/ErrorUtils";
+import { ErrorUtils } from "../utils/errorUtils";
 import { ClickHelper } from "./ClickHelper";
 import { AssertionHelper } from "../helpers/AssertionHelper";
-import { logger } from "../utils/Logger";
+import { logger } from "../utils/logger";
 
 type AriaRole = Parameters<Page["getByRole"]>[0];
 
