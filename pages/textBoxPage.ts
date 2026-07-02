@@ -1,10 +1,10 @@
 import { expect, Page } from "@playwright/test";
 import { TextBoxTestData } from "../utils/Test-data.interface";
-import { TextBoxLocators } from "../locators/TextBoxLocators";
-import { NavigationHelper } from "../helpers/NavigationHelper";
-import { AssertionHelper } from "../helpers/AssertionHelper";
-import { InputHelper } from "../helpers/InputHelper";
-import { ClickHelper } from "../helpers/ClickHelper";
+import { TextBoxLocators } from "../locators/textBoxLocators";
+import { NavigationHelper } from "../helpers/navigationHelper";
+import { AssertionHelper } from "../helpers/assertionHelper";
+import { InputHelper } from "../helpers/inputHelper";
+import { ClickHelper } from "../helpers/clickHelper";
 
 export class TextBoxPage {
   readonly #page: Page;
