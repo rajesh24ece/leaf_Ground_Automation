@@ -1,6 +1,6 @@
 # 🌿 leaf_Ground_Automation
 
-A portfolio-grade test automation framework built with **Playwright** and **TypeScript**, following a clean three-level **Page Object Model (POM)** architecture. Designed for scalability, reusability, and CI/CD readiness.
+A portfolio-grade test automation framework built with **Playwright** and **TypeScript**, combining UI and API testing under a single, layered architecture. Designed for scalability, reusability, and CI/CD readiness.
 
 ![CI](https://github.com/rajesh24ece/leaf_Ground_Automation/actions/workflows/playwright-tests.yml/badge.svg)
 
@@ -8,13 +8,15 @@ A portfolio-grade test automation framework built with **Playwright** and **Type
 
 ## 🛠️ Tech Stack
 
-| Tool                                  | Version |
-| ------------------------------------- | ------- |
-| [Playwright](https://playwright.dev/) | ^1.59.1 |
-| TypeScript                            | ^6.0.3  |
-| Node.js                               | ≥ 18.x  |
-| Allure Playwright                     | ^3.10.1 |
-| dotenv                                | ^17.4.2 |
+| Tool              | Version |
+| ----------------- | ------- |
+| Playwright        | ^1.59.1 |
+| TypeScript        | ^6.0.3  |
+| Node.js           | ≥ 18.x  |
+| Allure Playwright | ^3.10.1 |
+| Winston (logging) | ^3.19.0 |
+| Faker.js          | ^10.5.0 |
+| dotenv            | ^17.4.2 |
 
 ---
 
@@ -23,212 +25,189 @@ A portfolio-grade test automation framework built with **Playwright** and **Type
 ```
 leaf_Ground_Automation/
 ├── .github/
-│   └── workflows/
-│       └── playwright-tests.yml  # GitHub Actions CI/CD pipeline
+│   ├── workflows/
+│   │   └── playwright-tests.yml     # CI/CD pipeline (Docker, Allure, Slack)
+│   └── agents/                      # Copilot agent configs for test generation/healing
 ├── fixtures/
-│   └── accessJsonFile.ts         # Custom Playwright fixture for JSON data loading
-├── locators/                     # Locator files (one per feature)
+│   ├── accessJsonFile.ts            # Custom fixture for typed JSON test-data loading
+│   └── apiFixture.ts                # Custom fixture providing an APIRequestContext
+├── helpers/                         # Single-responsibility static helper classes
+│   ├── clickHelper.ts               # Click actions (safe click, clickIfVisible, etc.)
+│   ├── inputHelper.ts               # Fill / type / clear actions
+│   ├── dropdownHelper.ts            # Native + custom (PrimeFaces-style) dropdown handling
+│   ├── alertHelper.ts               # Browser dialog (alert/confirm) handling
+│   ├── navigationHelper.ts          # Tab/window navigation and waits
+│   ├── fileHelper.ts                # File upload/download handling
+│   ├── screenshotHelper.ts          # Timestamped screenshot capture
+│   ├── assertionHelper.ts           # Centralized soft/hard assertion wrapper
+│   ├── dataGenerator.ts             # Faker-based test data generation (UI + API)
+│   └── storeApiHelper.ts            # Generic REST helper (GET/POST/PUT + status/JSON handling)
+├── locators/                        # One file per feature, `as const` for type safety
 │   ├── alertLocators.ts
 │   ├── dropdownLocators.ts
 │   ├── textBoxLocators.ts
 │   ├── uploadLocators.ts
-│   └── windowsLocator.ts
-├── pages/                        # Page classes (one per feature)
+│   ├── webTableLocators.ts
+│   ├── windowsLocator.ts
+│   └── storeApiLocator.ts
+├── pages/                           # Page Object classes, one per feature
 │   ├── alertPage.ts
 │   ├── dropdownPage.ts
 │   ├── textBoxPage.ts
 │   ├── uploadPage.ts
-│   ├── webtablePage.ts
-│   └── windowsPage.ts
-├── test-data/                    # JSON test data files
+│   ├── webTablePage.ts
+│   ├── windowsPage.ts
+│   └── storeApiPage.ts              # API "page object" wrapping FakeStoreAPI endpoints
+├── test-data/                       # JSON test data per feature
 │   ├── alert.json
 │   ├── dropdown.json
 │   ├── textBox.json
 │   ├── upload.json
-│   └── webTable.json
-├── tests/                        # Test spec files
+│   ├── webTable.json
+│   ├── storeApi.json
+│   └── files/                       # Sample files used for upload tests
+├── tests/                           # Test spec files
 │   ├── alert.spec.ts
 │   ├── dropdown.spec.ts
 │   ├── textBox.spec.ts
 │   ├── upload.spec.ts
 │   ├── webtable.spec.ts
-│   └── windows.spec.ts
+│   ├── windows.spec.ts
+│   └── storeApi.spec.ts             # API test suite (FakeStoreAPI)
 ├── utils/
-│   ├── constants.ts              # Typed constants and enums
-│   ├── methods.ts                # Reusable static utility methods
-│   └── test-data.interface.ts   # TypeScript interfaces for test data
-├── globalSetup.ts                # Cleans output folders before each run
-├── playwright.config.ts          # Playwright configuration
-└── .env.leafground               # Environment variables (BASE_URL etc.)
+│   ├── constants.ts                 # Typed constants and enums
+│   ├── commonText.ts                # Shared text/message constants
+│   ├── errorUtils.ts                # Centralized error handling
+│   ├── gitUtils.ts                  # Git branch/commit info for Allure environment
+│   ├── logger.ts                    # Winston logger configuration
+│   ├── allureEnvironment.ts         # Injects environment + git metadata into Allure
+│   ├── pageLocator.ts               # Shared locator utilities
+│   └── testInterface.ts             # TypeScript interfaces for all test data shapes
+├── globalSetup.ts                   # Cleans output folders before each run
+├── playwright.config.ts             # Playwright configuration (loads .env.qe)
+├── tsconfig.json                    # Strict TypeScript configuration
+└── .env.qe                          # Environment variables (BASE_URL, API_BASE_URL, etc.)
 ```
 
 ---
 
 ## 🏗️ Framework Architecture
 
-This framework follows a **three-layer POM architecture**:
+This framework follows a **three-layer architecture**, applied consistently across both UI and API testing:
 
 ```
-Layer 1 — Locators     (locators/*.ts)
-              ↓
-Layer 2 — Methods      (utils/methods.ts)    ← static utility methods
-              ↓
-Layer 3 — Page Classes (pages/*.ts)          ← action methods per page
+Layer 1 — Locators        (locators/*.ts)
+               ↓
+Layer 2 — Helpers         (helpers/*.ts)     ← single-responsibility static helper classes
+               ↓
+Layer 3 — Page Classes    (pages/*.ts)       ← action methods per feature/page
 ```
 
-### Layer 1 — Locators
+### Design principles
 
-- One file per feature (`alertLocators.ts`, `dropdownLocators.ts` etc.)
-- All selectors declared as `as const` objects for type safety and autocomplete
-- JSON data file paths resolved at runtime using `path.join(process.cwd(), ...)`
-
-### Layer 2 — Methods
-
-- Reusable `static` utility methods that accept `page` as a parameter
-- Key utilities:
-  - `alertHandling(page, action, text?)` — handles browser dialogs (accept/dismiss)
-  - `clickDropdownHandling(page, locator, value, role)` — handles PrimeFaces custom dropdowns
-  - `clickMatchingByRole(page, locator, roleType)` — clicks all elements matching a role
-  - `assertText / assertVisible / assertVisibleWithText` — assertion helpers
-  - `accessJsonData<T>(filePath)` — generic typed JSON loader
-  - `captureAndLog(page, name)` — timestamped full-page screenshot capture
-
-### Layer 3 — Page Classes
-
-- One class per page/feature (`AlertPage`, `DropdownPage` etc.)
-- Uses `#page` private class field for strict page encapsulation
-- Extends `Methods` to inherit utility functions
-- Each method wraps one logical user action
+- **Composition over inheritance** — every Page class holds its own private `#page` (or `#request`, for API pages) field rather than extending a shared base class. This keeps each page class self-contained and avoids the fragile-base-class problem.
+- **Single-responsibility helpers** — instead of one large `Methods` utility class, functionality is split into focused static classes (`ClickHelper`, `InputHelper`, `DropdownHelper`, `AlertHelper`, `NavigationHelper`, `FileHelper`, `ScreenshotHelper`, `AssertionHelper`), each with one clear purpose.
+- **Typed by default** — `strict: true` in `tsconfig.json`, `as const` locator objects for autocomplete and immutability, and typed interfaces (`utils/testInterface.ts`) for every piece of test data and API payload.
+- **Centralized assertions** — all assertions (soft or hard) go through `AssertionHelper`, so assertion behavior (e.g., soft-assert mode) is controlled in one place rather than scattered across test files.
+- **Centralized logging** — all actions and API calls are logged through a Winston-based `logger` (`utils/logger.ts`), giving structured, leveled logs across both UI and API test runs.
 
 ---
 
-## ⚙️ Setup & Installation
+## 🌐 API Testing Layer
 
-### 1. Clone the repository
+Alongside the UI framework, this project includes a REST API testing layer built against the public [FakeStoreAPI](https://fakestoreapi.com/), following the same layered pattern as the UI tests:
 
-```bash
-git clone https://github.com/rajesh24ece/leaf_Ground_Automation.git
-cd leaf_Ground_Automation
+- **`helpers/storeApiHelper.ts` (`ApiHelper`)** — a generic, reusable REST helper:
+  - `get<T>()` — GET request with built-in status assertion and safe JSON parsing
+  - `getStatusCode()` — returns the raw HTTP status (intentionally assertion-free, for tests that need to check an arbitrary/unexpected status)
+  - `getLength()` — returns the length of an array-based response
+  - `post<T>()` / `put<T>()` — write requests with status assertion, safe JSON parsing, and full request/response logging
+- **`pages/storeApiPage.ts` (`FakeStoreApiPage`)** — wraps the above into feature-level methods (`getProducts`, `getSingleProduct`, `getProductsCount`, `addProduct`, `putProduct`, etc.)
+- **`helpers/dataGenerator.ts` (`DataGenerator`)** — generates realistic fake product payloads (via `@faker-js/faker`) for POST/PUT requests, and random product IDs for single-record lookups
+- **`tests/storeApi.spec.ts`** — covers status codes, record counts, single/all product retrieval, product creation, and product updates
+
+### ⚠️ Important note on API validation
+
+FakeStoreAPI is a **public demo/test API** with no real backend database — it is designed for practicing HTTP requests, not for persisting data. This has a direct effect on what can and cannot be validated:
+
+- **POST and PUT requests succeed and echo back a realistic-looking response** (including a generated `id`), but **nothing is actually saved server-side**.
+- A follow-up `GET` request will **not** reflect any data created or updated via POST/PUT — it will always return the original seed data.
+- Because of this, all write-operation tests (`addProduct`, `putProduct`) validate the **echoed response from the same request** (e.g., confirming the response contains the fields that were sent), rather than attempting to verify persistence via a subsequent GET or checking that record counts changed. This is intentional and documented inline in the test file — not a gap in coverage, but a deliberate boundary based on what this specific public API actually supports.
+- If full end-to-end persistence testing is required in the future, this would need either a real backend or a local mock server (e.g., `json-server`) that genuinely persists writes.
+
+---
+
+## 🔁 CI/CD Pipeline
+
+GitHub Actions workflow (`.github/workflows/playwright-tests.yml`) runs on every push to `main`, on a daily schedule, and on manual dispatch:
+
+- Runs inside the **official Microsoft Playwright Docker image** (`mcr.microsoft.com/playwright:v1.59.1-noble`) for consistent, pre-provisioned browser dependencies
+- Loads environment configuration from `.env.qe`, populated from GitHub Secrets at runtime
+- Parses Playwright's JSON test results to compute pass/fail/flaky/skipped counts and a success percentage
+- Generates and uploads both the **Playwright HTML report** and the **Allure HTML report** as build artifacts (30-day retention)
+- Sends a **Slack notification** (via Block Kit) summarizing the run — repository, branch, triggering actor, run link, and full pass/fail/flaky/skipped breakdown — regardless of whether the run passed or failed
+
+## 📊 Allure Reporting
+
+- `allure-playwright` integration captures step-level detail, screenshots, and traces per test
+- `utils/allureEnvironment.ts` and `utils/gitUtils.ts` inject environment info and git branch/commit metadata into the report, so every run is traceable back to the exact code state that produced it
+- Generate and view locally:
+  ```bash
+  npm run allure:generate
+  npm run allure:open
+  ```
+
+---
+
+## ⚙️ Environment Configuration
+
+Environment variables are loaded from `.env.qe` via `dotenv`, referenced in `playwright.config.ts`. Required variables:
+
+```
+BASE_URL=<UI application base URL>
+API_BASE_URL=https://fakestoreapi.com
+WORKERS=<parallel worker count>
 ```
 
-### 2. Install dependencies
+In CI, these are populated from GitHub Secrets directly into `.env.qe` at runtime, so the same file is the single source of truth for both local and CI runs.
+
+---
+
+## 🚀 Getting Started
 
 ```bash
+# Install dependencies
 npm install
-```
 
-### 3. Configure environment
+# Run all tests
+npm test
 
-Create `.env.leafground` in the project root:
+# Run tests in headed mode
+npm run test:headed
 
-```env
-BASE_URL=https://leafground.com
-WORKERS=1
-```
+# View the Playwright HTML report
+npm run report
 
----
-
-## ▶️ Running Tests
-
-```bash
-# Run all tests (headless)
-npx playwright test
-
-# Run in headed mode (visible browser)
-npx playwright test --headed
-
-# Run a specific spec file
-npx playwright test tests/dropdown.spec.ts
-
-# Run with Playwright UI mode
-npx playwright test --ui
+# Generate and open the Allure report
+npm run allure:generate
+npm run allure:open
 ```
 
 ---
 
-## 📊 Reports
+## ✅ What This Project Demonstrates
 
-```bash
-# Open Playwright HTML report
-npx playwright show-report
-
-# Generate Allure HTML report
-npx allure generate allure-results --clean -o allure-report
-npx allure open allure-report
-```
-
----
-
-## 🧪 Test Coverage
-
-| Feature                                          | Tests  | Status |
-| ------------------------------------------------ | ------ | ------ |
-| Alerts — simple, confirm, prompt, sweet alert    | 10     | ✅     |
-| Dropdowns — native, PrimeFaces AJAX-dependent    | 1      | ✅     |
-| Text Box — fill, append, clear, date picker, OSK | 11     | ✅     |
-| File Upload & Download                           | 3      | ✅     |
-| Multi-Window & Tab handling                      | 4      | ✅     |
-| Web Table — create, search, paginate             | 1      | ✅     |
-| **Total**                                        | **31** | ✅     |
-
----
-
-## 🚀 CI/CD Pipeline
-
-The framework runs on **GitHub Actions** using the official **Microsoft Playwright Docker image** (`mcr.microsoft.com/playwright:v1.59.1-noble`), which eliminates browser download steps entirely.
-
-### Pipeline steps
-
-1. Checkout → Install dependencies
-2. Run all 31 tests headless inside Docker
-3. Upload Playwright HTML report artifact
-4. Upload test results (screenshots, videos, traces)
-5. Install Java → Generate Allure HTML report
-6. Upload Allure results + Allure HTML report artifacts
-7. Send Slack Block Kit notification with pass/fail/flaky counts and run link
-
-### Slack notification sample
-
-```
-✅ Playwright Tests — All Passed
-
-Repository:   rajesh24ece/leaf_Ground_Automation
-Branch:       main
-Triggered by: rajesh24ece
-Run:          View Run
-
-Test Results:
-🔢 Total         =>  31
-✅ Passed        =>  31
-❌ Failed        =>  0
-⚠️ Flaky          =>  0
-⏭️ Skipped       =>  0
-📊 Success Rate  =>  100.0%
-```
-
----
-
-## 🔑 Key TypeScript Patterns Used
-
-- **Private class fields** — `#page` for strict page encapsulation
-- **Literal union types** — `type DialogAction = "accept" | "dismiss"` for type-safe constants
-- **`as const`** — on locator objects to prevent type widening and enable autocomplete
-- **Generics** — `accessJsonData<T>()` and `getJsonData<T>()` fixture for typed JSON loading
-- **`Parameters<Page["getByRole"]>[0]`** — for `AriaRole` typing without importing internal Playwright types
-- **Custom fixtures** — `getJsonData` fixture extends Playwright's base `test` for reusable data loading
-- **`Promise.all`** — for concurrent page event listening and action triggering in multi-tab tests
-- **`waitForLoadState("networkidle")`** — for AJAX-dependent dropdown timing in CI environments
+- A layered, composition-based POM architecture applied consistently across UI and API testing
+- Custom Playwright fixtures for both JSON test-data injection and API request context
+- Strict TypeScript with typed locators, typed test data, and typed API payloads/responses
+- Centralized, reusable assertion and logging layers
+- A production-style CI/CD pipeline: containerized test execution, artifact retention, Allure reporting, and real-time Slack notifications
+- Realistic handling of a public test API's limitations, with validation strategy adjusted (and documented) accordingly rather than ignored
 
 ---
 
 ## 👤 Author
 
 **Rajesh Kumar Pandian**
-Senior SDET | 11+ years experience | Playwright · TypeScript · CI/CD
-[GitHub](https://github.com/rajesh24ece) · [LinkedIn](https://www.linkedin.com/in/rajeshkumarpandian/)
-
----
-
-## 📄 License
-
-ISC
+Senior SDET / QA Automation Engineer
+GitHub: [@rajesh24ece](https://github.com/rajesh24ece)
