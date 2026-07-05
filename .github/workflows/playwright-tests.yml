@@ -37,6 +37,7 @@ jobs:
       - name: Create Environment File
         run: |
           echo "BASE_URL=${{ secrets.BASE_URL }}" > .env.qe
+          echo "API_BASE_URL=https://fakestoreapi.com" >> .env.qe
           echo "WORKERS=1" >> .env.qe
           echo "CI=true" >> .env.qe
 
