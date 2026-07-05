@@ -11,4 +11,8 @@ export class DataGenerator {
       category: faker.commerce.department().toLowerCase(),
     };
   }
+
+  static randomNumber(max: number): number {
+    return Math.floor(Math.random() * max) + 1;
+  }
 }

@@ -64,4 +64,16 @@ export class ApiHelper {
     logger.info(`✅ Response Body:\n${JSON.stringify(responseBody, null, 2)}`);
     return responseBody;
   }
+
+  static async put<T = unknown>(request: APIRequestContext, url: string, data?: unknown, headers?: Record<string, string>): Promise<T> {
+    logger.info(`✅ PUT: ${url}`);
+    const response = await request.put(url, {
+      data,
+      headers,
+    });
+    await this.#assertStatus(response, 200, url);
+    const responseBody = await this.#parseJson<T>(response);
+    logger.info(`✅ Response Body:\n${JSON.stringify(responseBody, null, 2)}`);
+    return responseBody;
+  }
 }
