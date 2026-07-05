@@ -260,4 +260,12 @@ export class AssertionHelper {
   static async assertToBe<T>(actual: T, expected: T, soft: boolean = false): Promise<void> {
     await this.getExpect(soft)(actual).toBe(expected);
   }
+
+  static async assertGreaterThan(actual: number, expected: number, soft = false): Promise<void> {
+    this.getExpect(soft)(actual).toBeGreaterThan(expected);
+  }
+
+  static async assertNotNull<T>(actual: T, soft = false): Promise<void> {
+    this.getExpect(soft)(actual).not.toBeNull();
+  }
 }

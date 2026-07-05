@@ -7,9 +7,9 @@ export class NavigationHelper {
     try {
       await page.goto(url);
       await page.waitForLoadState("networkidle");
-      logger.info(`Navigated to ${url}`);
+      logger.info(`✅ Navigated: "${page.url()}"`);
     } catch (error: unknown) {
-      ErrorUtils.handleError(`Failed to navigate to ${url}`, error);
+      ErrorUtils.handleError(`❌ Failed to navigate to "${page.url()}"`, error);
     }
   }
 
@@ -17,9 +17,9 @@ export class NavigationHelper {
     try {
       await page.goBack();
       await page.waitForLoadState("networkidle");
-      logger.info(`Navigated back to the previous page`);
+      logger.info(`✅ Navigated back to the previous page "${page.url()}"`);
     } catch (error: unknown) {
-      ErrorUtils.handleError(`Failed to navigate back`, error);
+      ErrorUtils.handleError(`❌ Failed to navigate back "${page.url()}"`, error);
     }
   }
 
@@ -27,9 +27,9 @@ export class NavigationHelper {
     try {
       await page.goForward();
       await page.waitForLoadState("networkidle");
-      logger.info(`Navigated forward to the next page`);
+      logger.info(`✅ Navigated forward to the next page "${page.url()}"`);
     } catch (error: unknown) {
-      ErrorUtils.handleError(`Failed to navigate forward`, error);
+      ErrorUtils.handleError(`❌ Failed to navigate forward "${page.url()}"`, error);
     }
   }
 
@@ -37,9 +37,9 @@ export class NavigationHelper {
     try {
       await page.reload();
       await page.waitForLoadState("networkidle");
-      logger.info(`Page refreshed successfully`);
+      logger.info(`✅ Page refreshed successfully and landed in "${page.url()}"`);
     } catch (error: unknown) {
-      ErrorUtils.handleError(`Failed to refresh the page`, error);
+      ErrorUtils.handleError(`❌ Failed to refresh the page "${page.url()}"`, error);
     }
   }
 }

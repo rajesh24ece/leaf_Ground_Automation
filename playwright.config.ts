@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import path from "path";
 
 dotenv.config({
-  path: path.resolve(__dirname, ".env.leafground"),
+  path: path.resolve(__dirname, ".env.qe"),
 });
 
 export default defineConfig({
@@ -29,12 +29,7 @@ export default defineConfig({
     timeout: 10 * 1000,
   },
 
-  reporter: [
-    ["list"],
-    ["html"],
-    ["allure-playwright"],
-    ["json", { outputFile: "test-results/test-results.json" }],
-  ],
+  reporter: [["list"], ["html"], ["allure-playwright"], ["json", { outputFile: "test-results/test-results.json" }]],
 
   use: {
     baseURL: process.env.BASE_URL,
@@ -44,7 +39,7 @@ export default defineConfig({
 
     trace: "on-first-retry",
 
-    screenshot: "on",
+    screenshot: "only-on-failure",
 
     video: "on",
 

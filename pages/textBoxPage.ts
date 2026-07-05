@@ -80,7 +80,11 @@ export class TextBoxPage {
   async selectDateOfBirth(testData: TextBoxTestData) {
     await ClickHelper.click(this.#page.locator(TextBoxLocators.calendariconLocator));
     await AssertionHelper.assertVisible(this.#page.locator(TextBoxLocators.calendarPanelLocator));
-    while (true) {
+
+    const MAX_NAVIGATION_ATTEMPTS = 1200; // up to 100 years back, 12 clicks/year — generous safety net, not a real limit
+    let dateSelected = false;
+
+    for (let attempt = 0; attempt < MAX_NAVIGATION_ATTEMPTS; attempt++) {
       const currentYear = await this.#page.locator(TextBoxLocators.currentYearLocator).textContent();
       if (currentYear !== testData.dobYear) {
         await ClickHelper.click(this.#page.locator(TextBoxLocators.calendarLeftArrow));
@@ -99,8 +103,16 @@ export class TextBoxPage {
           hasText: new RegExp(`^${testData.dobDate}$`),
         })
         .click();
+      dateSelected = true;
       break;
     }
+
+    if (!dateSelected) {
+      throw new Error(
+        `Could not locate ${testData.monthInText} ${testData.dobYear} in the calendar after ${MAX_NAVIGATION_ATTEMPTS} navigation attempts. Check that the calendar's left-arrow locator and testData.dobYear/monthInText values are correct.`,
+      );
+    }
+
     const dataData = await this.#page.locator(TextBoxLocators.fullDateInput).inputValue();
     expect(dataData).toBe(testData.fullDate);
   }

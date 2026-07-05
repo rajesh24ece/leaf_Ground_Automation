@@ -53,3 +53,25 @@ export interface WebTableTestData {
 export interface UploadTestData {
   fileName: string;
 }
+
+export interface Product {
+  url: string;
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
+  rating: {
+    rate: number;
+    count: number;
+  };
+}
+
+export interface CreateProductRequest {
+  title: string;
+  price: number;
+  description: string;
+  image: string;
+  category: string;
+}

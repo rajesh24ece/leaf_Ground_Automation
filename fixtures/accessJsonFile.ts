@@ -1,18 +1,21 @@
-import { test as base } from "@playwright/test";
-import { FileHelper } from "../utils/fileHelper";
+import { test as base, expect } from "@playwright/test";
+import fs from "fs/promises";
+import path from "path";
 
-type MyFixtures = {
-  getJsonData: <T>(path: string) => Promise<T>;
+type JsonFixture = {
+  getJsonData: <T>(fileName: string) => Promise<T>;
 };
 
-export const test = base.extend<MyFixtures>({
+export const test = base.extend<JsonFixture>({
   getJsonData: async ({}, use) => {
-    const loader = async <T>(path: string): Promise<T> => {
-      return await FileHelper.accessJsonData<T>(path);
+    const readJson = async <T>(fileName: string): Promise<T> => {
+      const filePath = path.join(process.cwd(), "test-data", fileName);
+      const fileContent = await fs.readFile(filePath, "utf-8");
+      return JSON.parse(fileContent) as T;
     };
 
-    await use(loader);
+    await use(readJson);
   },
 });
 
-export { expect } from "@playwright/test";
+export { expect };

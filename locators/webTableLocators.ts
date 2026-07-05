@@ -1,7 +1,7 @@
 import path from "path";
 
 export const WebTableLocators = {
-  webTableJson: path.join(process.cwd(), "test-data", "webTable.json"),
+  webTableJson: "webTable.json",
   webTablePage: "grid.xhtml",
   newButton: "New",
   nameLocator: "#form\\:name",
