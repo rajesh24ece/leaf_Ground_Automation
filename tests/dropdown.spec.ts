@@ -1,6 +1,7 @@
-import { test } from "../fixtures/AccessJsonFile";
-import { DropdownLocators } from "../locators/DropdownLocators";
-import { DropdownPage } from "../pages/DropdownPage";
+import { test } from "../fixtures/accessJsonFile";
+import { ScreenshotHelper } from "../helpers/screenshotHelper";
+import { DropdownLocators } from "../locators/dropdownLocators";
+import { DropdownPage } from "../pages/dropdownPage";
 import { DropdownTestData } from "../utils/testInterface";
 import { Page } from "@playwright/test";
 
@@ -19,7 +20,7 @@ test.afterAll(async () => {
   await sharedPage.close();
 });
 
-test("Select favourite UI automation tool.", async () => {
+test("Validate Dropdown Selection Functionality.", async () => {
   await test.step("Country is loaded and selected correctly.", async () => {
     await dropdownPage.selectCountry(data);
   });
@@ -43,4 +44,8 @@ test("Select favourite UI automation tool.", async () => {
   await test.step("Select 'Two' irrespective of the language chosen.", async () => {
     await dropdownPage.selectTwo(data);
   });
+});
+
+test.afterEach(async ({}, testInfo) => {
+  await ScreenshotHelper.captureAndAttach(sharedPage, testInfo, testInfo.title);
 });

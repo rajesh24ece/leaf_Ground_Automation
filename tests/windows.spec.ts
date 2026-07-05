@@ -1,5 +1,5 @@
-import { test } from "../fixtures/AccessJsonFile";
-import { WindowsPage } from "../pages/WindowsPage";
+import { test } from "../fixtures/accessJsonFile";
+import { WindowsPage } from "../pages/windowsPage";
 
 let windowsPage: WindowsPage;
 

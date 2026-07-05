@@ -2,7 +2,7 @@ import path from "path";
 
 export const AlertLocators = {
   alertPage: "alert.xhtml",
-  alertJson: path.join(process.cwd(), "test-data", "alert.json"),
+  alertJson: "alert.json",
   simpleAlertButton: "#j_idt88\\:j_idt91",
   simpleAlertResult: "#simple_result",
   simpleAlertConfirmButton: "#j_idt88\\:j_idt93",

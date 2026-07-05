@@ -1,7 +1,7 @@
 import path from "path";
 
 export const DropdownLocators = {
-  dropdownJson: path.join(process.cwd(), "test-data", "dropdown.json"),
+  dropdownJson: "dropdown.json",
   dropdownPage: "select.xhtml",
   selectToolLocator: "select.ui-selectonemenu",
   courseDropdownPanel: "#j_idt87\\:auto-complete_panel",

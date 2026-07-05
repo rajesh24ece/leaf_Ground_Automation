@@ -36,9 +36,9 @@ jobs:
 
       - name: Create Environment File
         run: |
-          echo "BASE_URL=${{ secrets.BASE_URL }}" > .env.leafground
-          echo "WORKERS=1" >> .env.leafground
-          echo "CI=true" >> .env.leafground
+          echo "BASE_URL=${{ secrets.BASE_URL }}" > .env.qe
+          echo "WORKERS=1" >> .env.qe
+          echo "CI=true" >> .env.qe
 
       - name: Run Playwright Tests
         run: npx playwright test

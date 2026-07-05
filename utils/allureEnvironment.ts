@@ -2,7 +2,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { version as playwrightVersion } from "@playwright/test/package.json";
-import { GitUtils } from "./GitUtils";
+import { GitUtils } from "./gitUtils";
 
 export class AllureEnvironment {
   static async create(): Promise<void> {

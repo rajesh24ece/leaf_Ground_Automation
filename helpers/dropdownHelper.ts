@@ -1,8 +1,7 @@
 import { Page, Locator } from "@playwright/test";
 import { ErrorUtils } from "../utils/errorUtils";
-import { ClickHelper } from "./ClickHelper";
-import { AssertionHelper } from "../helpers/AssertionHelper";
-import { logger } from "../utils/logger";
+import { ClickHelper } from "./clickHelper";
+import { AssertionHelper } from "../helpers/assertionHelper";
 
 type AriaRole = Parameters<Page["getByRole"]>[0];
 
@@ -14,56 +13,72 @@ export class DropdownHelper {
       await ClickHelper.clickByRole(page, role, value);
       await AssertionHelper.assertText(dropdown, value);
     } catch (error) {
-      ErrorUtils.handleError(`Unable to select "${value}"`, error);
-    }
-  }
-
-  static async selectByText(locator: Locator, text: string): Promise<void> {
-    try {
-      await locator.selectOption({ label: text });
-      logger.info(`Selected dropdown option by text: "${text}"`);
-    } catch (error) {
-      ErrorUtils.handleError(`Unable to select "${text}"`, error);
+      ErrorUtils.handleError(`❌ Unable to select "${value}"`, error);
     }
   }
 
   /**
-   * Select option by value
+   *
+   * @param locator
+   * @param text
+   */
+
+  static async selectByText(locator: Locator, text: string): Promise<void> {
+    try {
+      await locator.selectOption({ label: text });
+    } catch (error) {
+      ErrorUtils.handleError(`❌ Unable to select "${text}"`, error);
+    }
+  }
+
+  /**
+   *
+   * @param locator
+   * @param value
    */
 
   static async selectByValue(locator: Locator, value: string): Promise<void> {
     try {
       await locator.selectOption({ value });
     } catch (error) {
-      ErrorUtils.handleError(`Unable to select value "${value}"`, error);
+      ErrorUtils.handleError(`❌ Unable to select value "${value}"`, error);
     }
   }
 
   /**
-   * Select option by index
+   *
+   * @param locator
+   * @param index
    */
+
   static async selectByIndex(locator: Locator, index: number): Promise<void> {
     try {
       await locator.selectOption({ index });
     } catch (error) {
-      ErrorUtils.handleError(`Unable to select index "${index}"`, error);
+      ErrorUtils.handleError(`❌ Unable to select index "${index}"`, error);
     }
   }
 
   /**
-   * Select multiple options
+   *
+   * @param locator
+   * @param values
    */
+
   static async selectMultiple(locator: Locator, values: string[]): Promise<void> {
     try {
       await locator.selectOption(values);
     } catch (error) {
-      ErrorUtils.handleError("Unable to select multiple options", error);
+      ErrorUtils.handleError("❌ Unable to select multiple options", error);
     }
   }
 
   /**
-   * Get selected option text
+   *
+   * @param locator
+   * @returns
    */
+
   static async getSelectedText(locator: Locator): Promise<string> {
     try {
       return (await locator.locator("option:checked").textContent()) ?? "";

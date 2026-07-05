@@ -1,11 +1,10 @@
 import { Page } from "@playwright/test";
-import { NavigationHelper } from "../helpers/NavigationHelper";
-import { WebTableLocators } from "../locators/WebTableLocators";
+import { NavigationHelper } from "../helpers/navigationHelper";
+import { WebTableLocators } from "../locators/webTableLocators";
 import { WebTableTestData } from "../utils/testInterface";
-import { ClickHelper } from "../helpers/ClickHelper";
-import { InputHelper } from "../helpers/InputHelper";
-import { logger } from "../utils/logger";
-import { AssertionHelper } from "../helpers/AssertionHelper";
+import { ClickHelper } from "../helpers/clickHelper";
+import { InputHelper } from "../helpers/inputHelper";
+import { AssertionHelper } from "../helpers/assertionHelper";
 import { Roles } from "../utils/constants";
 
 type AriaRole = Parameters<Page["getByRole"]>[0];

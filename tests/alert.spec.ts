@@ -1,7 +1,8 @@
-import { test } from "../fixtures/AccessJsonFile";
-import { AlertPage } from "../pages/AlertPage";
+import { test } from "../fixtures/accessJsonFile";
+import { AlertPage } from "../pages/alertPage";
 import { AlertTestData } from "../utils/testInterface";
-import { AlertLocators } from "../locators/AlertLocators";
+import { AlertLocators } from "../locators/alertLocators";
+import { ScreenshotHelper } from "../helpers/screenshotHelper";
 
 let alertPage: AlertPage;
 let data: AlertTestData;
@@ -53,4 +54,8 @@ test("Sweet Alert Confirmation - Clicked on NO button.", async () => {
 
 test("Sweet Modal Dialog - Opening the alert and clicked on CLOSE icon.", async () => {
   await alertPage.sweetModalDialog(data);
+});
+
+test.afterEach(async ({ page }, testInfo) => {
+  await ScreenshotHelper.captureAndAttach(page, testInfo, testInfo.title);
 });

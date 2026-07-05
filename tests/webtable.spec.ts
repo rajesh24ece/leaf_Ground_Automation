@@ -1,6 +1,6 @@
-import { test } from "../fixtures/AccessJsonFile";
-import { WebTableLocators } from "../locators/WebTableLocators";
-import { WebTablePage } from "../pages/WebtablePage";
+import { test } from "../fixtures/accessJsonFile";
+import { WebTableLocators } from "../locators/webTableLocators";
+import { WebTablePage } from "../pages/webTablePage";
 import { WebTableTestData } from "../utils/testInterface";
 
 let webTablePage: WebTablePage;

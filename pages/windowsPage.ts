@@ -1,5 +1,5 @@
 import { expect, Page, test } from "@playwright/test";
-import { WindowsLocators } from "../locators/WindowsLocator";
+import { WindowsLocators } from "../locators/windowsLocator";
 import { logger } from "../utils/logger";
 
 export class WindowsPage {
@@ -34,7 +34,7 @@ export class WindowsPage {
     for (const page of newPages) {
       await page.waitForLoadState();
       const newTitle = await page.title();
-      logger.info("New Page Title:", newTitle);
+      logger.info(`New Page Title: ${newTitle}`);
       expect(newTitle).not.toBe(parentTitle);
       await page.close();
     }
@@ -44,7 +44,7 @@ export class WindowsPage {
   async countOpenedTabs() {
     const [newpage] = await Promise.all([this.#page.context().waitForEvent("page"), await this.#page.getByRole("button", { name: "Open Multiple" }).click()]);
     const pages = this.#page.context().pages();
-    logger.info("Total pages:", pages.length);
+    logger.info(`Total pages: ${pages.length}`);
   }
 
   async waitForTabsToOpen() {
