@@ -21,7 +21,7 @@ export class DropdownPage {
 
   async selectCountry(testData: DropdownTestData) {
     await this.#page.locator(DropdownLocators.countryLocator).click();
-    await this.#page.locator(`[id*=j_idt87:country]`).filter({ hasText: testData.india }).click();
+    await this.#page.getByText(testData.india).nth(1).click();
     //await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.countryLocator, testData.india, Roles.OPTION);
     logger.info(`✅ Selected Country: "${testData.india}"`);
   }
@@ -34,14 +34,17 @@ export class DropdownPage {
   }
 
   async selectCity(testData: DropdownTestData) {
-    await AssertionHelper.assertVisible(this.#page.locator(DropdownLocators.cityLocator));
-    await this.#page.locator(`[id*=j_idt87:city]`).filter({ hasText: testData.india }).click();
+    // await AssertionHelper.assertVisible(this.#page.locator(DropdownLocators.cityLocator));
+    await this.#page.locator(DropdownLocators.cityLocator).click();
+    await this.#page.getByText(testData.chennai).nth(1).click();
     //await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.cityLocator, testData.chennai, Roles.OPTION);
     logger.info(`✅ Selected City: "${testData.chennai}"`);
   }
 
   async selectLanguage(testData: DropdownTestData) {
-    await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.languageLocator, testData.tamil, Roles.OPTION);
+    await this.#page.locator(DropdownLocators.languageLocator).click();
+    await this.#page.getByText(testData.tamil).nth(1).click();
+    //await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.languageLocator, testData.tamil, Roles.OPTION);
     logger.info(`✅ Selected Language: "${testData.tamil}"`);
   }
 
@@ -57,8 +60,10 @@ export class DropdownPage {
   }
 
   async selectTwo(testData: DropdownTestData) {
-    await AssertionHelper.assertVisible(this.#page.locator(DropdownLocators.languageValue));
-    await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.languageValue, testData.rendu, Roles.OPTION);
+    //await AssertionHelper.assertVisible(this.#page.locator(DropdownLocators.languageValue));
+    await this.#page.locator(DropdownLocators.languageValue).click();
+    await this.#page.getByText(testData.rendu).nth(1).click();
+    // await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.languageValue, testData.rendu, Roles.OPTION);
     logger.info(`✅ Selected Value: "${testData.rendu}"`);
   }
 }
