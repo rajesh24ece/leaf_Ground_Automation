@@ -20,7 +20,9 @@ export class DropdownPage {
   }
 
   async selectCountry(testData: DropdownTestData) {
-    await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.countryLocator, testData.india, Roles.OPTION);
+    await this.#page.locator(DropdownLocators.countryLocator).click();
+    await this.#page.locator(`[id*=j_idt87:country]`).filter({ hasText: testData.india }).click();
+    //await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.countryLocator, testData.india, Roles.OPTION);
     logger.info(`✅ Selected Country: "${testData.india}"`);
   }
 
@@ -33,7 +35,8 @@ export class DropdownPage {
 
   async selectCity(testData: DropdownTestData) {
     await AssertionHelper.assertVisible(this.#page.locator(DropdownLocators.cityLocator));
-    await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.cityLocator, testData.chennai, Roles.OPTION);
+    await this.#page.locator(`[id*=j_idt87:city]`).filter({ hasText: testData.india }).click();
+    //await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.cityLocator, testData.chennai, Roles.OPTION);
     logger.info(`✅ Selected City: "${testData.chennai}"`);
   }
 
