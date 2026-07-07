@@ -20,18 +20,26 @@ export class ApiHelper {
   static async getStatusCode(request: APIRequestContext, url: string, headers?: Record<string, string>): Promise<number> {
     const response = await request.get(url, { headers });
     logger.info(`✅ GET ${url} → ${response.status()} ${response.statusText()}`);
+    this.#assertStatus(response, 200, url);
     return response.status();
   }
 
   /**
    * Executes a GET request and returns the number of records.
    */
-  static async getLength(request: APIRequestContext, url: string, headers?: Record<string, string>): Promise<number> {
+  static async getLength(request: APIRequestContext, url: string, arrayProperty?: string, headers?: Record<string, string>): Promise<number> {
     const response = await request.get(url, { headers });
     await this.#assertStatus(response, 200, url);
-    const records = await this.#parseJson<unknown[]>(response);
-    logger.info(`✅ GET ${url} → Total Records: ${records.length}`);
-    return records.length;
+    const body = await this.#parseJson<any>(response);
+    if (Array.isArray(body)) {
+      return body.length;
+    }
+    if (arrayProperty && Array.isArray(body[arrayProperty])) {
+      const length = body[arrayProperty].length;
+      logger.info(`✅ GET ${url} → Total Records: ${length}`);
+      return length;
+    }
+    throw new Error(`Response does not contain an array${arrayProperty ? ` at '${arrayProperty}'` : ""}`);
   }
 
   static async #assertStatus(response: APIResponse, expectedStatus: number, url: string): Promise<void> {

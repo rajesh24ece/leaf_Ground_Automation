@@ -12,7 +12,7 @@ export class FakeStoreApiPage {
   }
 
   async getProductsCount(): Promise<number> {
-    return ApiHelper.getLength(this.#request, StoreApiLocator.url);
+    return ApiHelper.getLength(this.#request, StoreApiLocator.url, "products");
   }
 
   async getProductsStatusCode(): Promise<number> {
@@ -24,13 +24,13 @@ export class FakeStoreApiPage {
   }
 
   async getSingleProduct(): Promise<Product> {
-    const totalProducts = await ApiHelper.getLength(this.#request, StoreApiLocator.url);
+    const totalProducts = await ApiHelper.getLength(this.#request, StoreApiLocator.url, "products");
     const randomProductId = DataGenerator.randomNumber(totalProducts);
     return ApiHelper.get<Product>(this.#request, `${StoreApiLocator.url}/${randomProductId}`);
   }
 
   async addProduct(payload: CreateProductRequest): Promise<Product> {
-    return ApiHelper.post<Product>(this.#request, StoreApiLocator.url, payload);
+    return ApiHelper.post<Product>(this.#request, StoreApiLocator.addUrl, payload);
   }
 
   async putProduct(productId: number, payload: CreateProductRequest): Promise<Product> {
