@@ -7,38 +7,22 @@ type AriaRole = Parameters<Page["getByRole"]>[0];
 
 export class DropdownHelper {
   static async clickDropdownHandling(page: Page, elementLocator: string, value: string, role: AriaRole): Promise<void> {
+    const dropdown = page.locator(elementLocator); // moved outside try, so catch can see it
     try {
-      const dropdown = page.locator(elementLocator);
       await ClickHelper.click(dropdown);
       await dropdown.waitFor({ state: "visible", timeout: 15000 });
 
-      // wait for the panel to actually expand (covers case #1: click didn't register)
-      await page.waitForTimeout(300); // let the open-animation start
-      const isExpanded = await dropdown.getAttribute("aria-expanded").catch(() => null);
-      if (isExpanded === "false") {
-        // dropdown didn't open — retry the click once
-        await ClickHelper.click(dropdown);
-      }
-
-      // wait for ANY option to attach first — proves the listbox rendered at all
-      const anyOption = page.getByRole(role).first();
-      await anyOption.waitFor({ state: "attached", timeout: 15000 });
-
-      const option = page.getByRole(role, { name: value }).first();
-
-      // covers case #2: virtualized list — scroll it into view before checking visibility
-      await option.scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {});
+      const option = dropdown.getByRole(role, { name: value }).first();
       await option.waitFor({ state: "visible", timeout: 15000 });
       await option.click();
 
       await AssertionHelper.assertText(dropdown, value);
     } catch (error) {
-      // extra diagnostics on failure — tells us exactly what state the page was in
-      const optionCount = await page
+      const optionCount = await dropdown
         .getByRole(role)
         .count()
         .catch(() => -1);
-      const allOptionTexts = await page
+      const allOptionTexts = await dropdown
         .getByRole(role)
         .allTextContents()
         .catch(() => []);
