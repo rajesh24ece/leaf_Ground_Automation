@@ -11,7 +11,9 @@ export class DropdownHelper {
       const dropdown = page.locator(elementLocator);
       await ClickHelper.click(dropdown);
       await dropdown.waitFor({ state: "visible", timeout: 15000 });
-      await ClickHelper.clickByRole(page, role, value);
+      const option = page.getByRole(role, { name: value }).first();
+      await option.waitFor({ state: "visible", timeout: 15000 }); // wait for AJAX-populated option to actually appear
+      await option.click();
       await AssertionHelper.assertText(dropdown, value);
     } catch (error) {
       ErrorUtils.handleError(`❌ Unable to select "${value}"`, error);
