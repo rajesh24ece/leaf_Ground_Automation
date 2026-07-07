@@ -10,6 +10,7 @@ export class DropdownHelper {
     try {
       const dropdown = page.locator(elementLocator);
       await ClickHelper.click(dropdown);
+      await dropdown.waitFor({ state: "visible", timeout: 15000 });
       await ClickHelper.clickByRole(page, role, value);
       await AssertionHelper.assertText(dropdown, value);
     } catch (error) {
