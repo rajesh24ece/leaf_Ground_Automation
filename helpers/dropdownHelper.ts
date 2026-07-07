@@ -152,10 +152,19 @@ export class DropdownHelper {
   /**
    * Select custom dropdown option
    */
-  static async selectCustomOption(dropdown: Locator, option: Locator): Promise<void> {
+  static async selectCustomnNthOption(dropdown: Locator, option: Locator, dropdownCount?: number, optionCount?: number): Promise<void> {
     try {
-      await dropdown.click();
-      await option.click();
+      if (dropdownCount !== undefined) {
+        await dropdown.nth(dropdownCount).click();
+      } else {
+        await dropdown.click();
+      }
+
+      if (optionCount !== undefined) {
+        await option.nth(optionCount).click();
+      } else {
+        await option.click();
+      }
     } catch (error) {
       ErrorUtils.handleError("Unable to select custom dropdown option", error);
     }

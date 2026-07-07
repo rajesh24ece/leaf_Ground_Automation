@@ -20,8 +20,9 @@ export class DropdownPage {
   }
 
   async selectCountry(testData: DropdownTestData) {
-    await this.#page.locator(DropdownLocators.countryLocator).click();
-    await this.#page.getByText(testData.india).nth(1).click();
+    await DropdownHelper.selectCustomnNthOption(this.#page.locator(DropdownLocators.countryLocator), this.#page.getByText(testData.india), undefined, 1);
+    //await this.#page.locator(DropdownLocators.countryLocator).click();
+    //await this.#page.getByText(testData.india).nth(1).click();
     //await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.countryLocator, testData.india, Roles.OPTION);
     logger.info(`✅ Selected Country: "${testData.india}"`);
   }
@@ -35,8 +36,9 @@ export class DropdownPage {
 
   async selectCity(testData: DropdownTestData) {
     // await AssertionHelper.assertVisible(this.#page.locator(DropdownLocators.cityLocator));
-    await this.#page.locator(DropdownLocators.cityLocator).click();
-    await this.#page.getByText(testData.chennai).nth(1).click();
+    await DropdownHelper.selectCustomnNthOption(this.#page.locator(DropdownLocators.cityLocator), this.#page.getByText(testData.chennai), undefined, 1);
+    //await this.#page.locator(DropdownLocators.cityLocator).click();
+    //await this.#page.getByText(testData.chennai).nth(1).click();
     //await DropdownHelper.clickDropdownHandling(this.#page, DropdownLocators.cityLocator, testData.chennai, Roles.OPTION);
     logger.info(`✅ Selected City: "${testData.chennai}"`);
   }
