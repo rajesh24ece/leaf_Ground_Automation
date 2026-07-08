@@ -25,16 +25,16 @@ test("Validate Dropdown Selection Functionality.", async () => {
     await dropdownPage.selectCountry(data);
   });
 
+  await test.step("Select language to select the two from the following dropdown.", async () => {
+    await dropdownPage.selectLanguage(data);
+  });
+
   await test.step("Which is your favorite UI Automation tool?", async () => {
     await dropdownPage.selectTool(data);
   });
 
   await test.step("Selecting Confirm Cities belongs to Country is loaded.", async () => {
     await dropdownPage.selectCity(data);
-  });
-
-  await test.step("Select language to select the two from the following dropdown.", async () => {
-    await dropdownPage.selectLanguage(data);
   });
 
   await test.step("Selecting the Course.", async () => {
