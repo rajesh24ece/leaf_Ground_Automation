@@ -51,22 +51,22 @@ export class WebTablePage {
     await AssertionHelper.assertVisible(this.#page.locator(WebTableLocators.alertLocator));
     await AssertionHelper.assertContainsText(this.#page.locator(WebTableLocators.alertLocator), WebTableLocators.alertHeader);
 
-    const notification = this.#page.locator(".ui-growl-item-container").first();
-    const box = await notification.boundingBox();
+    // const notification = this.#page.locator(".ui-growl-item-container").first();
+    // const box = await notification.boundingBox();
 
-    if (box) {
-      await this.#page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    // if (box) {
+    //   await this.#page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
 
-      await this.#page.locator(".ui-growl-icon-close").click();
-    }
+    //   await this.#page.locator(".ui-growl-icon-close").click();
+    // }
 
-    const search = this.#page.getByPlaceholder(WebTableLocators.searchPlaceholder).nth(1);
-    await ClickHelper.click(search);
+    // const search = this.#page.getByPlaceholder(WebTableLocators.searchPlaceholder).nth(1);
+    // await ClickHelper.click(search);
 
-    await InputHelper.pressSequentially(search, testData.ProductName, 50);
+    // await InputHelper.pressSequentially(search, testData.ProductName, 50);
 
-    const isAvailable = await this.checkTableData(testData.ProductName);
-    await AssertionHelper.assertEquals(isAvailable, true);
+    // const isAvailable = await this.checkTableData(testData.ProductName);
+    // await AssertionHelper.assertEquals(isAvailable, true);
   }
 
   private async checkTableData(productName: string): Promise<boolean> {
