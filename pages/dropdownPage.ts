@@ -32,11 +32,13 @@ export class DropdownPage {
   }
 
   async selectCity(testData: DropdownTestData) {
+    await this.#page.waitForTimeout(1000);
     await DropdownHelper.selectCustomnNthOption(this.#page.locator(DropdownLocators.cityLocator), this.#page.getByText(testData.chennai), undefined, 1);
     logger.info(`✅ Selected City: "${testData.chennai}"`);
   }
 
   async selectLanguage(testData: DropdownTestData) {
+    await this.#page.waitForTimeout(1000);
     await DropdownHelper.selectCustomnNthOption(this.#page.locator(DropdownLocators.languageLocator), this.#page.getByText(testData.tamil), undefined, 1);
     logger.info(`✅ Selected Language: "${testData.tamil}"`);
   }
