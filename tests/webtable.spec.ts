@@ -16,13 +16,9 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("Successfully landed in the web table page and added a new product.", async () => {
-  // const browser = await chromium.launch({
-  //   headless: false,
-  //   slowMo: 500,
-  // });
-  // const page = await browser.newPage();
-  // const webTablePage = new WebTablePage(page);
-
   await webTablePage.createNewProduct(data);
-  //await browser.close();
+});
+
+test("Search existing product", async () => {
+  await webTablePage.searchProduct(data);
 });

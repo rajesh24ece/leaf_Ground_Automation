@@ -48,6 +48,7 @@ export interface WebTableTestData {
   Category: string;
   Price: number;
   Quantity: number;
+  SearchProduct: string;
 }
 
 export interface UploadTestData {

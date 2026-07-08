@@ -59,14 +59,6 @@ export class WebTablePage {
 
     //   await this.#page.locator(".ui-growl-icon-close").click();
     // }
-
-    // const search = this.#page.getByPlaceholder(WebTableLocators.searchPlaceholder).nth(1);
-    // await ClickHelper.click(search);
-
-    // await InputHelper.pressSequentially(search, testData.ProductName, 50);
-
-    // const isAvailable = await this.checkTableData(testData.ProductName);
-    // await AssertionHelper.assertEquals(isAvailable, true);
   }
 
   private async checkTableData(productName: string): Promise<boolean> {
@@ -89,5 +81,13 @@ export class WebTablePage {
     }
 
     return false;
+  }
+
+  async searchProduct(testData: WebTableTestData): Promise<void> {
+    const search = this.#page.getByPlaceholder(WebTableLocators.searchPlaceholder).nth(1);
+    await ClickHelper.click(search);
+    await InputHelper.pressSequentially(search, testData.SearchProduct, 50);
+    const isAvailable = await this.checkTableData(testData.SearchProduct);
+    await AssertionHelper.assertEquals(isAvailable, true);
   }
 }

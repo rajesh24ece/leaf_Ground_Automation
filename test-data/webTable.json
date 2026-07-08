@@ -3,5 +3,6 @@
   "Description": "It is a fine 3D product to purchase.",
   "Category": "Accessories",
   "Price": 100,
-  "Quantity": 10
+  "Quantity": 10,
+  "SearchProduct": "Mini Speakers"
 }
