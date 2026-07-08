@@ -7,10 +7,8 @@ export class InputHelper {
    * Fill an input field.
    */
   static async fill(locator: Locator, value: string | number): Promise<void> {
-    logger.info("Filling the input field.");
     try {
       await locator.fill(String(value));
-      logger.info("Successfully filled the input field.");
     } catch (error) {
       ErrorUtils.handleError("Failed to fill the input field.", error);
     }
@@ -21,7 +19,6 @@ export class InputHelper {
    */
   static async fillAndPressEnter(locator: Locator, value: string, fieldName = "Input"): Promise<void> {
     logger.info(`Filling '${fieldName}' and pressing Enter`);
-
     try {
       await locator.fill(value);
       await locator.press("Enter");
@@ -34,13 +31,11 @@ export class InputHelper {
   /**
    * Clear an input field.
    */
-  static async clear(locator: Locator, fieldName = "Input"): Promise<void> {
-    logger.info(`Clearing '${fieldName}'`);
+  static async clear(locator: Locator): Promise<void> {
     try {
       await locator.clear();
-      logger.info(`Successfully cleared '${fieldName}'`);
     } catch (error) {
-      ErrorUtils.handleError(`Failed to clear '${fieldName}'`, error);
+      ErrorUtils.handleError(`Failed to clear '${locator}'`, error);
     }
   }
 

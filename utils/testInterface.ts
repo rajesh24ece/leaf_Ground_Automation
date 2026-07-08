@@ -55,17 +55,14 @@ export interface UploadTestData {
 }
 
 export interface Product {
-  url: string;
   id: number;
   title: string;
   price: number;
   description: string;
   category: string;
-  image: string;
-  rating: {
-    rate: number;
-    count: number;
-  };
+  thumbnail: string;
+  images: string[];
+  rating: number;
 }
 
 export interface CreateProductRequest {
@@ -74,4 +71,11 @@ export interface CreateProductRequest {
   description: string;
   image: string;
   category: string;
+}
+
+export interface ProductResponse {
+  products: Product[];
+  total: number;
+  skip: number;
+  limit: number;
 }
