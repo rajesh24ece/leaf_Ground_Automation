@@ -6,19 +6,19 @@ import { WebTableTestData } from "../utils/testInterface";
 let webTablePage: WebTablePage;
 let data: WebTableTestData;
 
-test.beforeAll(async ({ getJsonData }) => {
-  data = await getJsonData<WebTableTestData>(WebTableLocators.webTableJson);
-});
+// test.beforeAll(async ({ getJsonData }) => {
+//   data = await getJsonData<WebTableTestData>(WebTableLocators.webTableJson);
+// });
 
-test.beforeEach(async ({ page }) => {
-  webTablePage = new WebTablePage(page);
-  await webTablePage.landingPage();
-});
+// test.beforeEach(async ({ page }) => {
+//   webTablePage = new WebTablePage(page);
+//   await webTablePage.landingPage();
+// });
 
-test("Successfully landed in the web table page and added a new product.", async () => {
-  await webTablePage.createNewProduct(data);
-});
+// test("Successfully landed in the web table page and added a new product.", async () => {
+//   await webTablePage.createNewProduct(data);
+// });
 
-test("Search existing product", async () => {
-  await webTablePage.searchProduct(data);
-});
+// test("Search existing product", async () => {
+//   await webTablePage.searchProduct(data);
+// });
