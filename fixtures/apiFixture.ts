@@ -1,9 +1,9 @@
 import { test as base, expect, request, APIRequestContext } from "@playwright/test";
-import { FakeStoreApiPage } from "../pages/storeApiPage";
+import { DummyJsonApiPage } from "../pages/dummyJsonApiPage";
 
 type ApiFixtures = {
   apiContext: APIRequestContext;
-  storeApi: FakeStoreApiPage;
+  storeApi: DummyJsonApiPage;
 };
 
 export const test = base.extend<ApiFixtures>({
@@ -18,7 +18,7 @@ export const test = base.extend<ApiFixtures>({
   },
 
   storeApi: async ({ apiContext }, use) => {
-    const storeApi = new FakeStoreApiPage(apiContext);
+    const storeApi = new DummyJsonApiPage(apiContext);
 
     await use(storeApi);
   },

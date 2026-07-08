@@ -15,12 +15,15 @@ const logFormat = printf(({ level, message, timestamp }) => {
   return `[${timestamp}] [${level.toUpperCase()}] ${message}`;
 });
 
+const logLevel = process.env.LOG_LEVEL ?? (process.env.CI ? "info" : "debug");
+
 export const logger = createLogger({
-  level: "info",
+  level: logLevel,
   format: combine(timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), logFormat),
   transports: [
     // Console output with colors
     new transports.Console({
+      level: logLevel,
       format: combine(colorize(), timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), logFormat),
     }),
 

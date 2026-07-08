@@ -7,7 +7,7 @@ export class NavigationHelper {
     try {
       await page.goto(url);
       await page.waitForLoadState("networkidle");
-      logger.info(`✅ Navigated: "${page.url()}"`);
+      logger.info(`✅ Navigated to: ${page.url()}`);
     } catch (error: unknown) {
       ErrorUtils.handleError(`❌ Failed to navigate to "${page.url()}"`, error);
     }
