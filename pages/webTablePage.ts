@@ -59,6 +59,20 @@ export class WebTablePage {
 
     //   await this.#page.locator(".ui-growl-icon-close").click();
     // }
+    const notification = this.#page.locator(".ui-growl-item-container").first();
+    const box = await notification.boundingBox();
+
+    if (box) {
+      await this.#page.waitForTimeout(1000);
+
+      await this.#page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+
+      await this.#page.waitForTimeout(1000);
+
+      await this.#page.locator(".ui-growl-icon-close").click();
+
+      await this.#page.waitForTimeout(1000);
+    }
   }
 
   private async checkTableData(productName: string): Promise<boolean> {
