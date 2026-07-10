@@ -47,10 +47,7 @@ export class DropdownPage {
 
   async selectLanguage(testData: DropdownTestData): Promise<string> {
     const selectedlanguage = DataGenerator.randomItem(testData.langauge);
-    await this.#page.waitForLoadState("networkidle");
-    const languageDropdown = this.#page.locator(DropdownLocators.languageLocator);
-    await languageDropdown.waitFor({ state: "visible" });
-    await DropdownHelper.selectCustomnNthOption(languageDropdown, this.#page.getByText(selectedlanguage), undefined, 1);
+    await DropdownHelper.selectCustomnNthOption(this.#page.locator(DropdownLocators.languageLocator), this.#page.getByText(selectedlanguage), undefined, 1);
     logger.info(`✅ Selected Language: ${selectedlanguage}`);
     return selectedlanguage;
   }
@@ -70,8 +67,11 @@ export class DropdownPage {
 
   async selectTwo(testData: DropdownTestData, selectedlanguage: string) {
     const twos = testData.twos[selectedlanguage];
+    await this.#page.waitForLoadState("networkidle");
+    const twosDropdown = this.#page.locator(DropdownLocators.languageValue);
+    await twosDropdown.waitFor({ state: "visible" });
     const selectedtwos = DataGenerator.randomItem(twos);
-    await DropdownHelper.selectCustomnNthOption(this.#page.locator(DropdownLocators.languageValue), this.#page.getByText(selectedtwos), undefined, 1);
+    await DropdownHelper.selectCustomnNthOption(twosDropdown, this.#page.getByText(selectedtwos), undefined, 1);
     logger.info(`✅ Selected Value: ${selectedtwos}`);
   }
 }
