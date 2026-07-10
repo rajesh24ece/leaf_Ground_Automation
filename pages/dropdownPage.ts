@@ -38,13 +38,19 @@ export class DropdownPage {
   async selectCity(testData: DropdownTestData, selectedCountry: string) {
     const cities = testData.city[selectedCountry];
     const selectedCity = DataGenerator.randomItem(cities);
-    await DropdownHelper.selectCustomnNthOption(this.#page.locator(DropdownLocators.cityLocator), this.#page.getByText(selectedCity), undefined, 1);
+    await this.#page.waitForLoadState("networkidle");
+    const cityDropdown = this.#page.locator(DropdownLocators.cityLocator);
+    await cityDropdown.waitFor({ state: "visible" });
+    await DropdownHelper.selectCustomnNthOption(cityDropdown, this.#page.getByText(selectedCity), undefined, 1);
     logger.info(`✅ Selected City: ${selectedCity}`);
   }
 
   async selectLanguage(testData: DropdownTestData): Promise<string> {
     const selectedlanguage = DataGenerator.randomItem(testData.langauge);
-    await DropdownHelper.selectCustomnNthOption(this.#page.locator(DropdownLocators.languageLocator), this.#page.getByText(selectedlanguage), undefined, 1);
+    await this.#page.waitForLoadState("networkidle");
+    const languageDropdown = this.#page.locator(DropdownLocators.languageLocator);
+    await languageDropdown.waitFor({ state: "visible" });
+    await DropdownHelper.selectCustomnNthOption(languageDropdown, this.#page.getByText(selectedlanguage), undefined, 1);
     logger.info(`✅ Selected Language: ${selectedlanguage}`);
     return selectedlanguage;
   }

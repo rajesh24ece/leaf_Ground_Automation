@@ -170,14 +170,6 @@ export class DropdownHelper {
     }
   }
 
-  // static async selectCustomNthOption(dropdown: Locator, optionText: string, dropdownCount?: number): Promise<void> {
-  //   const targetDropdown = dropdownCount !== undefined ? dropdown.nth(dropdownCount) : dropdown;
-  //   await targetDropdown.click();
-  //   const option = targetDropdown.locator("xpath=following::ul[contains(@class,'ui-selectonemenu-items')][1]").getByRole("option", { name: optionText });
-  //   await option.waitFor();
-  //   await option.click();
-  // }
-
   /**
    * Search and select option
    */
