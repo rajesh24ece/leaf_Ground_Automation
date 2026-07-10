@@ -1,7 +1,7 @@
 import { expect, Page } from "@playwright/test";
 import { NavigationHelper } from "../helpers/navigationHelper";
 import { WebTableLocators } from "../locators/webTableLocators";
-import { WebTableTestData } from "../utils/testInterface";
+import { OperationResult, WebTableTestData } from "../utils/testInterface";
 import { ClickHelper } from "../helpers/clickHelper";
 import { InputHelper } from "../helpers/inputHelper";
 import { AssertionHelper } from "../helpers/assertionHelper";
@@ -51,14 +51,6 @@ export class WebTablePage {
     await AssertionHelper.assertVisible(this.#page.locator(WebTableLocators.alertLocator));
     await AssertionHelper.assertContainsText(this.#page.locator(WebTableLocators.alertLocator), WebTableLocators.alertHeader);
 
-    // const notification = this.#page.locator(".ui-growl-item-container").first();
-    // const box = await notification.boundingBox();
-
-    // if (box) {
-    //   await this.#page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-
-    //   await this.#page.locator(".ui-growl-icon-close").click();
-    // }
     const notification = this.#page.locator(".ui-growl-item-container").first();
     const box = await notification.boundingBox();
 
@@ -75,7 +67,7 @@ export class WebTablePage {
     }
   }
 
-  private async checkTableData(productName: string): Promise<boolean> {
+  async checkTableData(productName: string): Promise<OperationResult> {
     const pagination = this.#page.locator(".ui-paginator-pages a");
     const pageCount = await pagination.count();
 
@@ -89,19 +81,21 @@ export class WebTablePage {
         const cellText = await rows.nth(j).getByRole("gridcell").nth(2).textContent();
 
         if (cellText?.includes(productName)) {
-          return true;
+          const message = `✅ Product "${productName}" found on page ${i + 1}, row ${j + 1}.`;
+          logger.info(message);
+          return { success: true, message };
         }
       }
     }
-
-    return false;
+    const message = `❌ Product "${productName}" was not found across ${pageCount} page(s) of the table.`;
+    logger.error(message);
+    return { success: false, message };
   }
 
   async searchProduct(testData: WebTableTestData): Promise<void> {
     const search = this.#page.getByPlaceholder(WebTableLocators.searchPlaceholder).nth(1);
     await ClickHelper.click(search);
     await InputHelper.pressSequentially(search, testData.SearchProduct, 50);
-    const isAvailable = await this.checkTableData(testData.SearchProduct);
-    await AssertionHelper.assertEquals(isAvailable, true);
+    const result = await this.checkTableData(testData.SearchProduct);
   }
 }

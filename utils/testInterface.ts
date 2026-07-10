@@ -19,11 +19,11 @@ export interface TextBoxTestData {
 }
 
 export interface DropdownTestData {
-  playwrightText: string;
-  india: string;
-  chennai: string;
-  tamil: string;
-  rendu: string;
+  tool: string[];
+  country: string[];
+  city: Record<string, string[]>;
+  langauge: string[];
+  twos: Record<string, string[]>;
   courses: string[];
 }
 
@@ -79,4 +79,9 @@ export interface ProductResponse {
   total: number;
   skip: number;
   limit: number;
+}
+
+export interface OperationResult {
+  success: boolean;
+  message: string;
 }
