@@ -8,6 +8,8 @@ import { Page } from "@playwright/test";
 let dropdownPage: DropdownPage;
 let data: DropdownTestData;
 let sharedPage: Page;
+let selectedCountry: string;
+let selectedLanguage: string;
 
 test.beforeAll(async ({ browser, getJsonData }) => {
   data = await getJsonData<DropdownTestData>(DropdownLocators.dropdownJson);
@@ -22,11 +24,11 @@ test.afterAll(async () => {
 
 test("Validate Dropdown Selection Functionality.", async () => {
   await test.step("Country is loaded and selected correctly.", async () => {
-    await dropdownPage.selectCountry(data);
+    selectedCountry = await dropdownPage.selectCountry(data);
   });
 
   await test.step("Select language to select the two from the following dropdown.", async () => {
-    await dropdownPage.selectLanguage(data);
+    selectedLanguage = await dropdownPage.selectLanguage(data);
   });
 
   await test.step("Which is your favorite UI Automation tool?", async () => {
@@ -34,7 +36,7 @@ test("Validate Dropdown Selection Functionality.", async () => {
   });
 
   await test.step("Selecting Confirm Cities belongs to Country is loaded.", async () => {
-    await dropdownPage.selectCity(data);
+    await dropdownPage.selectCity(data, selectedCountry);
   });
 
   await test.step("Selecting the Course.", async () => {
@@ -42,7 +44,7 @@ test("Validate Dropdown Selection Functionality.", async () => {
   });
 
   await test.step("Select 'Two' irrespective of the language chosen.", async () => {
-    await dropdownPage.selectTwo(data);
+    await dropdownPage.selectTwo(data, selectedLanguage);
   });
 });
 

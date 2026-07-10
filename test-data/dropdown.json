@@ -1,8 +1,20 @@
 {
-  "playwrightText": "Playwright",
-  "india": "India",
-  "chennai": "Chennai",
-  "tamil": "Tamil",
-  "rendu": "இரண்டு",
-  "courses": ["Playwright", "AWS"]
+  "tool": ["Selenium", "Playwright", "Puppeteer", "Cypress"],
+  "country": ["Brazil", "Germany", "India", "USA"],
+  "city": {
+    "Brazil": ["Rio de Janerio", "Salvador", "Sao Paulo"],
+    "Germany": ["Berlin", "Frankfurt", "Munich"],
+    "India": ["Chennai", "Bengaluru", "Delhi"],
+    "USA": ["Denver", "New York", "San Francisco"]
+  },
+  "langauge": ["English", "Tamil", "Telugu", "Kannada", "Malayalam", "Hindi"],
+  "twos": {
+    "English": ["One", "Three", "Two"],
+    "Tamil": ["இரண்டு", "ஒன்று", "மூன்று"],
+    "Telugu": ["ఒకటి", "మూడు", "రెండు"],
+    "Kannada": ["ಎರಡು", "ಒಂದು", "ಮೂರು"],
+    "Malayalam": ["ഒന്ന്", "മൂന്ന്", "രണ്ട്"],
+    "Hindi": ["एक", "तीन", "दो"]
+  },
+  "courses": ["AWS", "Appium", "Selenium WebDriver", "Playwright", "ReactJs", "PostMan", "JMeter", "RestAssured"]
 }
