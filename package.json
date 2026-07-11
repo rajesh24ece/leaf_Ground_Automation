@@ -13,7 +13,7 @@
   "main": "index.js",
   "author": "Rajesh Kumar Pandian <rajesh24ece@github.com>",
   "devDependencies": {
-    "@playwright/test": "^1.59.1",
+    "@playwright/test": "^1.61.1",
     "@types/node": "^25.9.3",
     "@types/winston": "^2.4.4",
     "allure-commandline": "^2.43.0",
