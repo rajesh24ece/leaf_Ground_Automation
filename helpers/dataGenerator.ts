@@ -34,4 +34,20 @@ export class DataGenerator {
 
     return shuffled.slice(0, count);
   }
+
+  static firstName(): string {
+    return faker.person.firstName();
+  }
+
+  static countryName(): string {
+    return faker.location.country();
+  }
+
+  static emailID(): string {
+    return faker.internet.email();
+  }
+
+  static pragraph(): string {
+    return faker.lorem.paragraph();
+  }
 }

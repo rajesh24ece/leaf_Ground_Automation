@@ -5,6 +5,8 @@ import { NavigationHelper } from "../helpers/navigationHelper";
 import { AssertionHelper } from "../helpers/assertionHelper";
 import { InputHelper } from "../helpers/inputHelper";
 import { ClickHelper } from "../helpers/clickHelper";
+import { DataGenerator } from "../helpers/dataGenerator";
+import { logger } from "../utils/logger";
 
 export class TextBoxPage {
   readonly #page: Page;
@@ -17,24 +19,29 @@ export class TextBoxPage {
     await NavigationHelper.navigateToPage(this.#page, TextBoxLocators.textPage);
   }
 
-  async typeInTextBox(testData: TextBoxTestData) {
+  async typeInTextBox() {
     const textbox = this.#page.getByPlaceholder(TextBoxLocators.typeNamePlaceHolder);
-    await InputHelper.fill(textbox, testData.typeNewName);
-    await AssertionHelper.assertValue(textbox, testData.typeNewName);
+    const firstName = DataGenerator.firstName();
+    await InputHelper.fill(textbox, firstName);
+    logger.info(`First Name: ${firstName}`);
+    await AssertionHelper.assertValue(textbox, firstName);
   }
 
-  async appendText(testData: TextBoxTestData) {
+  async appendText() {
     const input = this.#page.locator(TextBoxLocators.appendTextLocator);
     await ClickHelper.click(input);
     await input.press("Control+End");
     await input.press("Space");
-    await InputHelper.pressSequentially(input, testData.appendCountry);
-    const result = "Chennai" + " " + testData.appendCountry.trim();
+    const countryName = DataGenerator.countryName();
+    await InputHelper.pressSequentially(input, countryName);
+    logger.info(`Country: ${countryName}`);
+    const result = "Chennai" + " " + countryName.trim();
     await AssertionHelper.assertValue(input, result);
   }
 
   async isDisabled() {
     await AssertionHelper.assertDisabled(this.#page.locator(TextBoxLocators.isDisabledLocator));
+    logger.info("Verfied text box is disabled");
   }
 
   async clearText() {
@@ -43,19 +50,24 @@ export class TextBoxPage {
     await AssertionHelper.assertValue(textField, "");
   }
 
-  async typeMailIDPressTab(testData: TextBoxTestData) {
+  async typeMailIDPressTab() {
     const emailInput = this.#page.getByPlaceholder(TextBoxLocators.mailIDLocator);
-    await InputHelper.fill(emailInput, testData.mailID);
+    const emailID = DataGenerator.emailID();
+    await InputHelper.fill(emailInput, emailID);
+    logger.info(`EmailID: ${emailID}`);
     await emailInput.press("Tab");
-    await AssertionHelper.assertValue(emailInput, testData.mailID);
+    logger.info(`Pressed tab button`);
+    await AssertionHelper.assertValue(emailInput, emailID);
     const focusedField = this.#page.getByPlaceholder(TextBoxLocators.aboutYouLocator);
     await AssertionHelper.assertFocused(focusedField);
   }
 
-  async aboutYourself(testData: TextBoxTestData) {
+  async aboutYourself() {
     const aboutYouInput = this.#page.getByPlaceholder(TextBoxLocators.aboutYouLocator);
-    await InputHelper.pressSequentially(aboutYouInput, testData.aboutYourselfText);
-    await AssertionHelper.assertValue(aboutYouInput, testData.aboutYourselfText);
+    const pragraph = DataGenerator.pragraph();
+    logger.info(`About Yourself: ${pragraph}`);
+    await InputHelper.pressSequentially(aboutYouInput, pragraph);
+    await AssertionHelper.assertValue(aboutYouInput, pragraph);
   }
 
   async confirmErrorMessage(testData: TextBoxTestData) {
@@ -117,14 +129,12 @@ export class TextBoxPage {
     expect(dataData).toBe(testData.fullDate);
   }
 
-  async checkSliding() {
+  async checkSlidingByNumber() {
     const sliderValue = this.#page.locator(TextBoxLocators.sliderLocator);
-    await sliderValue.fill(TextBoxLocators.sliderValue);
+    await InputHelper.pressSequentially(sliderValue, TextBoxLocators.sliderValue, 100);
     await sliderValue.press("Tab");
     const sliderWidth = await this.#page.locator(TextBoxLocators.sliderRangeWidth).getAttribute(TextBoxLocators.sliderStyle);
-
     const sliderLeft = await this.#page.locator(TextBoxLocators.sliderLeft).getAttribute(TextBoxLocators.sliderStyle);
-
     expect(sliderWidth).not.toContain(TextBoxLocators.sliderZeroPercentage);
     expect(sliderLeft).not.toContain(TextBoxLocators.sliderZeroPercentage);
   }
@@ -139,21 +149,24 @@ export class TextBoxPage {
     await AssertionHelper.assertValue(value, testData.typeNameDropValue);
   }
 
-  async typeCustomToolBar(testData: TextBoxTestData) {
+  async typeCustomToolBar() {
     const editor = this.#page.locator(TextBoxLocators.customToolBarEditor).nth(1);
-    await InputHelper.pressSequentially(editor, testData.customToolBarValue);
-    await AssertionHelper.assertText(editor.locator(TextBoxLocators.paragraphLocator), testData.customToolBarValue);
+    const pragraph = DataGenerator.pragraph();
+    await InputHelper.pressSequentially(editor, pragraph);
+    logger.info(`Type Custom ToolBar: ${pragraph}`);
+    await AssertionHelper.assertText(editor.locator(TextBoxLocators.paragraphLocator), pragraph);
   }
 
   async typeNumberAndSpin() {
     const value = this.#page.locator(TextBoxLocators.typeNumberToSpinLocator);
     await value.clear();
+    const arrows = this.#page.locator(TextBoxLocators.arrowClick);
     await InputHelper.pressSequentially(value, TextBoxLocators.typeNumberToSpin, 50);
-    await value.press("Tab");
-    await AssertionHelper.assertVisible(this.#page.locator(TextBoxLocators.spinningButton));
+    await ClickHelper.clickNth(arrows, 2);
+    const incremental = Number(TextBoxLocators.typeNumberToSpin) + 1;
+    const incrementalValue = String(incremental);
+    await AssertionHelper.assertValue(value, incrementalValue);
+    await ClickHelper.clickNth(arrows, 3);
     await AssertionHelper.assertValue(value, TextBoxLocators.typeNumberToSpin);
-    const beforeValue = Number(await value.getAttribute(TextBoxLocators.typedNumber));
-    await ClickHelper.click(this.#page.locator(TextBoxLocators.upArrow));
-    await AssertionHelper.assertAttribute(value, TextBoxLocators.typedNumber, String(beforeValue + 1));
   }
 }
