@@ -37,6 +37,7 @@ export const TextBoxLocators = {
   upArrow: ".ui-icon.ui-c.ui-icon-triangle-1-n",
   typeNumberToSpinLocator: "#j_idt106\\:j_idt118_input",
   typedNumber: "aria-valuenow",
+  arrowClick: ".ui-button-text",
   spinningButton: ".ui-spinner-button.ui-spinner-up ui-corner-tr ui-button.ui-widget.ui-state-default.ui-button-text-only",
   closeButton: "Close",
   dropDownDisplayValueLocator: ".ui-autocomplete-token-label",
