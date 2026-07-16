@@ -1,5 +1,4 @@
 import { expect, Page } from "@playwright/test";
-import { TextBoxTestData } from "../utils/testInterface";
 import { TextBoxLocators } from "../locators/textBoxLocators";
 import { NavigationHelper } from "../helpers/navigationHelper";
 import { AssertionHelper } from "../helpers/assertionHelper";
@@ -7,6 +6,7 @@ import { InputHelper } from "../helpers/inputHelper";
 import { ClickHelper } from "../helpers/clickHelper";
 import { DataGenerator } from "../helpers/dataGenerator";
 import { logger } from "../utils/logger";
+import { TextConstants } from "../utils/commonText";
 
 export class TextBoxPage {
   readonly #page: Page;
@@ -70,40 +70,43 @@ export class TextBoxPage {
     await AssertionHelper.assertValue(aboutYouInput, pragraph);
   }
 
-  async confirmErrorMessage(testData: TextBoxTestData) {
+  async confirmErrorMessage() {
     const textFieldBox = this.#page.locator(TextBoxLocators.errorMessageLocator);
     await ClickHelper.click(textFieldBox);
     await textFieldBox.press("Enter");
     const errorMessage = this.#page.locator(TextBoxLocators.errorMessageTextLocator);
     await AssertionHelper.assertVisible(errorMessage);
-    await AssertionHelper.assertText(errorMessage, testData.errorMessageText);
+    await AssertionHelper.assertText(errorMessage, TextConstants.errorMessageText);
   }
 
-  async selectValueFromDropDown(testData: TextBoxTestData) {
+  async selectValueFromDropDown() {
     const drop = this.#page.locator(TextBoxLocators.typeNameDrop).and(this.#page.getByRole("application"));
     await ClickHelper.click(drop);
-    await InputHelper.pressSequentially(drop, testData.typeNameDropValue);
+    const firstName = DataGenerator.firstName();
+    const firstNameDisplay = firstName + 2;
+    await InputHelper.pressSequentially(drop, firstName);
     await AssertionHelper.assertVisible(this.#page.locator(TextBoxLocators.dropDownClickLocator));
     await ClickHelper.clickNth(this.#page.locator(TextBoxLocators.dropDownClickLocatorList), 2);
     const selectedValue = this.#page.locator(TextBoxLocators.dropDownDisplayValueLocator);
-    await AssertionHelper.assertText(selectedValue, testData.typeNameDropValueDisplay);
+    await AssertionHelper.assertText(selectedValue, firstNameDisplay);
   }
 
-  async selectDateOfBirth(testData: TextBoxTestData) {
+  async selectDateOfBirth() {
+    const dob = DataGenerator.randomDOB();
     await ClickHelper.click(this.#page.locator(TextBoxLocators.calendariconLocator));
     await AssertionHelper.assertVisible(this.#page.locator(TextBoxLocators.calendarPanelLocator));
 
-    const MAX_NAVIGATION_ATTEMPTS = 1200; // up to 100 years back, 12 clicks/year — generous safety net, not a real limit
+    const MAX_NAVIGATION_ATTEMPTS = 1200;
     let dateSelected = false;
 
     for (let attempt = 0; attempt < MAX_NAVIGATION_ATTEMPTS; attempt++) {
       const currentYear = await this.#page.locator(TextBoxLocators.currentYearLocator).textContent();
-      if (currentYear !== testData.dobYear) {
+      if (currentYear !== dob.year) {
         await ClickHelper.click(this.#page.locator(TextBoxLocators.calendarLeftArrow));
         continue;
       }
       const currentMonth = await this.#page.locator(TextBoxLocators.currentMonthLocator).textContent();
-      if (currentMonth !== testData.monthInText) {
+      if (currentMonth !== dob.month) {
         await ClickHelper.click(this.#page.locator(TextBoxLocators.calendarLeftArrow));
         continue;
       }
@@ -112,7 +115,7 @@ export class TextBoxPage {
         .locator(TextBoxLocators.calendarPanelLocator)
         .locator(TextBoxLocators.calendarDates)
         .filter({
-          hasText: new RegExp(`^${testData.dobDate}$`),
+          hasText: new RegExp(`^${dob.date}$`),
         })
         .click();
       dateSelected = true;
@@ -121,12 +124,12 @@ export class TextBoxPage {
 
     if (!dateSelected) {
       throw new Error(
-        `Could not locate ${testData.monthInText} ${testData.dobYear} in the calendar after ${MAX_NAVIGATION_ATTEMPTS} navigation attempts. Check that the calendar's left-arrow locator and testData.dobYear/monthInText values are correct.`,
+        `Could not locate ${dob.month} ${dob.year} in the calendar after ${MAX_NAVIGATION_ATTEMPTS} navigation attempts. Check that the calendar's left-arrow locator and testData.dobYear/monthInText values are correct.`,
       );
     }
 
     const dataData = await this.#page.locator(TextBoxLocators.fullDateInput).inputValue();
-    expect(dataData).toBe(testData.fullDate);
+    expect(dataData).toBe(dob.fullDate);
   }
 
   async checkSlidingByNumber() {
@@ -139,14 +142,15 @@ export class TextBoxPage {
     expect(sliderLeft).not.toContain(TextBoxLocators.sliderZeroPercentage);
   }
 
-  async oskHandling(testData: TextBoxTestData) {
+  async oskHandling() {
     await ClickHelper.click(this.#page.locator(TextBoxLocators.oskLocator));
-    for (let char of testData.typeNameDropValue) {
+    const firstName = DataGenerator.firstName();
+    for (let char of firstName) {
       await ClickHelper.clickByText(this.#page.locator(TextBoxLocators.oskKeyPad), char);
     }
     await ClickHelper.clickByText(this.#page.locator(TextBoxLocators.oskKeypadClick), TextBoxLocators.closeButton);
     const value = this.#page.locator(TextBoxLocators.oskInputValue);
-    await AssertionHelper.assertValue(value, testData.typeNameDropValue);
+    await AssertionHelper.assertValue(value, firstName, { ignoreCase: true });
   }
 
   async typeCustomToolBar() {

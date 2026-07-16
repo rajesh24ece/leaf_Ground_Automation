@@ -1,14 +1,8 @@
 import { test } from "../fixtures/accessJsonFile";
 import { TextBoxPage } from "../pages/textBoxPage";
 import { TextBoxLocators } from "../locators/textBoxLocators";
-import { TextBoxTestData } from "../utils/testInterface";
 
 let textBoxPage: TextBoxPage;
-let data: TextBoxTestData;
-
-test.beforeAll(async ({ getJsonData }) => {
-  data = await getJsonData<TextBoxTestData>(TextBoxLocators.textBoxJson);
-});
 
 test.beforeEach(async ({ page }) => {
   textBoxPage = new TextBoxPage(page);
@@ -40,15 +34,15 @@ test("Fill the about yourself text box", async () => {
 });
 
 test("Without giving input press/click on the enter button to extract the error message", async () => {
-  await textBoxPage.confirmErrorMessage(data);
+  await textBoxPage.confirmErrorMessage();
 });
 
 test("Type your name and choose the third option", async () => {
-  await textBoxPage.selectValueFromDropDown(data);
+  await textBoxPage.selectValueFromDropDown();
 });
 
 test("Type your DOB and confirm date chosen.", async () => {
-  await textBoxPage.selectDateOfBirth(data);
+  await textBoxPage.selectDateOfBirth();
 });
 
 test("Type number and spin.", async () => {
@@ -60,7 +54,7 @@ test("Check sliding range.", async () => {
 });
 
 test("Click and Confirm Keyboard appears.", async () => {
-  await textBoxPage.oskHandling(data);
+  await textBoxPage.oskHandling();
 });
 
 test("Type in Custom Toolbar.", async () => {

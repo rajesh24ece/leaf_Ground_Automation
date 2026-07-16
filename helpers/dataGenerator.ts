@@ -50,4 +50,19 @@ export class DataGenerator {
   static pragraph(): string {
     return faker.lorem.paragraph();
   }
+
+  static randomDOB() {
+    const dob = faker.date.between({
+      from: new Date("2023-01-01"),
+      to: new Date(),
+    });
+
+    return {
+      value: dob,
+      year: String(dob.getFullYear()),
+      month: dob.toLocaleString("en-US", { month: "long" }),
+      date: String(dob.getDate()),
+      fullDate: dob.toLocaleDateString("en-US"), // MM/dd/yyyy
+    };
+  }
 }

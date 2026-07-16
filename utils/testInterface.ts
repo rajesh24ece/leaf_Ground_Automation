@@ -1,23 +1,3 @@
-export interface TextBoxTestData {
-  typeName: string;
-  typeNewName: string;
-  mailID: string;
-  appendCountry: string;
-  aboutYourselfText: string;
-  errorMessageText: string;
-  dobYear: string;
-  dobDate: string;
-  monthInText: string;
-  fullDate: string;
-  typeNameDropValue: string;
-  typeNameDropValueDisplay: string;
-  courses: string[];
-  india: string;
-  chennai: string;
-  tamil: string;
-  customToolBarValue: string;
-}
-
 export interface DropdownTestData {
   tool: string[];
   country: string[];
