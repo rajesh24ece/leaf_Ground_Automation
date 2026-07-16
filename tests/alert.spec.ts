@@ -1,6 +1,6 @@
 import { test } from "../fixtures/accessJsonFile";
 import { AlertPage } from "../pages/alertPage";
-import { AlertTestData } from "../utils/testInterface";
+import { AlertTestData } from "../interface/uiInterface";
 import { AlertLocators } from "../locators/alertLocators";
 import { ScreenshotHelper } from "../helpers/screenshotHelper";
 

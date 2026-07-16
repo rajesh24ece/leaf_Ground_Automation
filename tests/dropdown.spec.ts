@@ -2,7 +2,7 @@ import { test } from "../fixtures/accessJsonFile";
 import { ScreenshotHelper } from "../helpers/screenshotHelper";
 import { DropdownLocators } from "../locators/dropdownLocators";
 import { DropdownPage } from "../pages/dropdownPage";
-import { DropdownTestData } from "../utils/testInterface";
+import { DropdownTestData } from "../interface/uiInterface";
 import { Page } from "@playwright/test";
 
 let dropdownPage: DropdownPage;

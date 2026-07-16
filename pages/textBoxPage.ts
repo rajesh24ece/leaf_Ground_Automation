@@ -6,7 +6,7 @@ import { InputHelper } from "../helpers/inputHelper";
 import { ClickHelper } from "../helpers/clickHelper";
 import { DataGenerator } from "../helpers/dataGenerator";
 import { logger } from "../utils/logger";
-import { TextConstants } from "../utils/commonText";
+import { TextConstants } from "../utils/textUtils";
 
 export class TextBoxPage {
   readonly #page: Page;

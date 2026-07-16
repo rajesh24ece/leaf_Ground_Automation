@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import type { CreateProductRequest } from "../utils/testInterface";
+import type { CreateProductRequest, DOBData } from "../utils/testInterface";
 
 export class DataGenerator {
   static apiData(): CreateProductRequest {
@@ -51,7 +51,7 @@ export class DataGenerator {
     return faker.lorem.paragraph();
   }
 
-  static randomDOB() {
+  static randomDOB(): DOBData {
     const dob = faker.date.between({
       from: new Date("2023-01-01"),
       to: new Date(),
@@ -59,10 +59,10 @@ export class DataGenerator {
 
     return {
       value: dob,
-      year: String(dob.getFullYear()),
-      month: dob.toLocaleString("en-US", { month: "long" }),
       date: String(dob.getDate()),
-      fullDate: dob.toLocaleDateString("en-US"), // MM/dd/yyyy
+      month: dob.toLocaleString("en-US", { month: "long" }),
+      year: String(dob.getFullYear()),
+      fullDate: dob.toLocaleDateString("en-US"),
     };
   }
 }
