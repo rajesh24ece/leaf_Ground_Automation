@@ -1,6 +1,5 @@
 import { test } from "../fixtures/accessJsonFile";
 import { TextBoxPage } from "../pages/textBoxPage";
-import { TextBoxLocators } from "../locators/textBoxLocators";
 
 let textBoxPage: TextBoxPage;
 

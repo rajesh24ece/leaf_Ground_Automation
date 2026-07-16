@@ -3,7 +3,7 @@ import { AlertHelper } from "../helpers/alertHelper";
 import { NavigationHelper } from "../helpers/navigationHelper";
 import { AssertionHelper } from "../helpers/assertionHelper";
 import { ClickHelper } from "../helpers/clickHelper";
-import { AlertTestData } from "../utils/testInterface";
+import { AlertTestData } from "../interface/uiInterface";
 import { AlertLocators } from "../locators/alertLocators";
 import { DialogActions, Roles } from "../utils/constants";
 import { logger } from "../utils/logger";
