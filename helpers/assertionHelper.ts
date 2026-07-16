@@ -122,11 +122,15 @@ export class AssertionHelper {
     });
   }
 
-  static async assertValue(locator: Locator, value: string, options?: AssertionOptions): Promise<void> {
+  static async assertValue(locator: Locator, value: string, options?: AssertionOptions & { ignoreCase?: boolean }): Promise<void> {
     const { timeout, soft } = this.getOptions(options);
-    await this.getExpect(soft)(locator).toHaveValue(value, {
-      timeout,
-    });
+    if (options?.ignoreCase) {
+      await this.getExpect(soft)(locator).toHaveValue(new RegExp(`^${value}$`, "i"), { timeout });
+    } else {
+      await this.getExpect(soft)(locator).toHaveValue(value, {
+        timeout,
+      });
+    }
   }
 
   static async assertCSS(locator: Locator, property: string, value: string, options?: AssertionOptions): Promise<void> {
