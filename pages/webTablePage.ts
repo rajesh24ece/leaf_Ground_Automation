@@ -51,29 +51,25 @@ export class WebTablePage {
     await AssertionHelper.assertVisible(this.#page.locator(WebTableLocators.alertLocator));
     await AssertionHelper.assertContainsText(this.#page.locator(WebTableLocators.alertLocator), WebTableLocators.alertHeader);
 
-    const notification = this.#page.locator(".ui-growl-item-container").first();
+    const notification = this.#page.locator(WebTableLocators.alerWindow).first();
 
     if (await notification.isVisible()) {
-      // PrimeFaces growl notifications auto-dismiss on their own after a few
-      // seconds. The close icon only reveals via a JS hover handler that
-      // Playwright's synthetic hover doesn't reliably trigger on this widget —
-      // rather than fighting that, just wait for the natural auto-dismiss.
       await AssertionHelper.assertHidden(notification, { timeout: 10000 });
     }
   }
 
   async checkTableData(productName: string): Promise<OperationResult> {
-    const pagination = this.#page.locator(".ui-paginator-pages a");
+    const pagination = this.#page.locator(WebTableLocators.paginationCount);
     const pageCount = await pagination.count();
 
     for (let i = 0; i < pageCount; i++) {
       await pagination.nth(i).click();
 
-      const rows = this.#page.locator("tbody[id='form:dt-products_data'] tr");
+      const rows = this.#page.locator(WebTableLocators.tableRow);
       const rowCount = await rows.count();
 
       for (let j = 0; j < rowCount; j++) {
-        const cellText = await rows.nth(j).getByRole("gridcell").nth(2).textContent();
+        const cellText = await rows.nth(j).getByRole(Roles.GRIDCELL).nth(2).textContent();
 
         if (cellText?.includes(productName)) {
           const message = `✅ Product "${productName}" found on page ${i + 1}, row ${j + 1}.`;

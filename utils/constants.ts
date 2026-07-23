@@ -10,6 +10,7 @@ export const DialogActions = {
 export const Roles = {
   BUTTON: "button" as RoleActions,
   OPTION: "option" as RoleActions,
+  GRIDCELL: "gridcell" as RoleActions,
 };
 
 export const DialogText = "Dialog";
