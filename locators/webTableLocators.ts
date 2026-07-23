@@ -12,4 +12,7 @@ export const WebTableLocators = {
   alertLocator: ".ui-growl-message",
   alertHeader: "Product Added",
   searchPlaceholder: "Search",
+  tableRow: "tbody[id='form:dt-products_data'] tr",
+  paginationCount: ".ui-paginator-pages a",
+  alerWindow: ".ui-growl-item-container",
 } as const;
