@@ -1,5 +1,3 @@
-import path from "path";
-
 export const UploadLocators = {
   pageUrl: "/file.xhtml",
   uploadJson: "upload.json",

@@ -1,5 +1,3 @@
-import path from "path";
-
 export const TextBoxLocators = {
   textPage: "input.xhtml",
   textBoxJson: "textBox.json",

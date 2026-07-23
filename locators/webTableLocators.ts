@@ -1,5 +1,3 @@
-import path from "path";
-
 export const WebTableLocators = {
   webTableJson: "webTable.json",
   webTablePage: "grid.xhtml",

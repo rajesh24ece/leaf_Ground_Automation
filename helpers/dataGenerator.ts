@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
-import type { CreateProductRequest, DOBData } from "../utils/testInterface";
+import type { DOBData } from "../interface/uiInterface";
+import type { CreateProductRequest } from "../interface/apiInterface";
 
 export class DataGenerator {
   static apiData(): CreateProductRequest {

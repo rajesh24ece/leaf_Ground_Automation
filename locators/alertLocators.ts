@@ -1,5 +1,3 @@
-import path from "path";
-
 export const AlertLocators = {
   alertPage: "alert.xhtml",
   alertJson: "alert.json",

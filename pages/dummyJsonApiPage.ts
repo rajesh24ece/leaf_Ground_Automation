@@ -1,7 +1,7 @@
 import { APIRequestContext } from "@playwright/test";
 import { DummyJsonApiLocator } from "../locators/dummyJsonApiLocator";
 import { ApiHelper } from "../helpers/dummyJsonApiHelper";
-import { Product, CreateProductRequest, ProductResponse } from "../utils/testInterface";
+import { Product, CreateProductRequest, ProductResponse } from "../interface/apiInterface";
 import { DataGenerator } from "../helpers/dataGenerator";
 
 export class DummyJsonApiPage {

@@ -1,7 +1,7 @@
 import { Page } from "@playwright/test";
 import { DropdownHelper } from "../helpers/dropdownHelper";
 import { NavigationHelper } from "../helpers/navigationHelper";
-import { DropdownTestData } from "../utils/testInterface";
+import { DropdownTestData } from "../interface/uiInterface";
 import { DropdownLocators } from "../locators/dropdownLocators";
 import { ClickHelper } from "../helpers/clickHelper";
 import { Roles } from "../utils/constants";
