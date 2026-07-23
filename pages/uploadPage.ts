@@ -1,7 +1,7 @@
-import { Page, test, expect } from "@playwright/test";
+import { Page } from "@playwright/test";
 import { NavigationHelper } from "../helpers/navigationHelper";
 import { ClickHelper } from "../helpers/clickHelper";
-import { UploadTestData } from "../utils/testInterface";
+import { UploadTestData } from "../interface/uiInterface";
 import { UploadLocators } from "../locators/uploadLocators";
 import path from "path";
 import fs from "fs";

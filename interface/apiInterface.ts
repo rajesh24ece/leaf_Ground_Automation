@@ -15,3 +15,11 @@ export interface ProductResponse {
   skip: number;
   limit: number;
 }
+
+export interface CreateProductRequest {
+  title: string;
+  price: number;
+  description: string;
+  image: string;
+  category: string;
+}

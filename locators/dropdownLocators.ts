@@ -1,5 +1,3 @@
-import path from "path";
-
 export const DropdownLocators = {
   dropdownJson: "dropdown.json",
   dropdownPage: "select.xhtml",

@@ -1,4 +1,4 @@
-import { expect, Page, test } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 import { WindowsLocators } from "../locators/windowsLocator";
 import { logger } from "../utils/logger";
 
