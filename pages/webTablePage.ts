@@ -1,7 +1,7 @@
-import { expect, Page } from "@playwright/test";
+import { Page } from "@playwright/test";
 import { NavigationHelper } from "../helpers/navigationHelper";
 import { WebTableLocators } from "../locators/webTableLocators";
-import { OperationResult, WebTableTestData } from "../utils/testInterface";
+import { OperationResult, WebTableTestData } from "../interface/uiInterface";
 import { ClickHelper } from "../helpers/clickHelper";
 import { InputHelper } from "../helpers/inputHelper";
 import { AssertionHelper } from "../helpers/assertionHelper";
@@ -52,18 +52,13 @@ export class WebTablePage {
     await AssertionHelper.assertContainsText(this.#page.locator(WebTableLocators.alertLocator), WebTableLocators.alertHeader);
 
     const notification = this.#page.locator(".ui-growl-item-container").first();
-    const box = await notification.boundingBox();
 
-    if (box) {
-      await this.#page.waitForTimeout(1000);
-
-      await this.#page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-
-      await this.#page.waitForTimeout(1000);
-
-      await this.#page.locator(".ui-growl-icon-close").click();
-
-      await this.#page.waitForTimeout(1000);
+    if (await notification.isVisible()) {
+      // PrimeFaces growl notifications auto-dismiss on their own after a few
+      // seconds. The close icon only reveals via a JS hover handler that
+      // Playwright's synthetic hover doesn't reliably trigger on this widget —
+      // rather than fighting that, just wait for the natural auto-dismiss.
+      await AssertionHelper.assertHidden(notification, { timeout: 10000 });
     }
   }
 
