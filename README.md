@@ -39,7 +39,11 @@ leaf_Ground_Automation/
 │   ├── assertionHelper.ts           # Centralized soft/hard assertion wrapper
 │   ├── dataGenerator.ts             # Faker-based test data generation (UI + API)
 │   ├── dummyJsonApiHelper.ts        # Generic REST helper (GET/POST/PUT + status/JSON handling)
-│   └── SchemaHelper.ts              # Ajv-based JSON schema validation wrapper
+│   ├── SchemaHelper.ts              # Ajv-based JSON schema validation wrapper
+│   └── LocatorHelper.ts             # `PageLocators` — role/text/label/testId locator shortcuts
+├── interface/                       # TypeScript interfaces for test data and API payload shapes
+│   ├── uiInterface.ts               # UI test data interfaces (per feature)
+│   └── apiInterface.ts              # API request/response payload interfaces
 ├── locators/                        # One file per feature, `as const` for type safety
 │   ├── alertLocators.ts
 │   ├── dropdownLocators.ts
@@ -59,6 +63,8 @@ leaf_Ground_Automation/
 ├── schemas/                         # Ajv JSON schemas for API response validation
 │   ├── ProductSchema.ts
 │   └── productResponseSchema.ts
+├── specs/                           # Test-spec reference docs (per-suite test counts, run commands)
+│   └── README.md
 ├── test-data/                       # JSON test data per feature
 │   ├── alert.json
 │   ├── dropdown.json
@@ -76,13 +82,11 @@ leaf_Ground_Automation/
 │   └── dummyJsonApi.spec.ts         # API test suite (DummyJSON)
 ├── utils/
 │   ├── constants.ts                 # Typed constants and enums
-│   ├── commonText.ts                # Shared text/message constants
+│   ├── textUtils.ts                 # Shared text-handling utilities
 │   ├── errorUtils.ts                # Centralized error handling
 │   ├── gitUtils.ts                  # Git branch/commit info for Allure environment
 │   ├── logger.ts                    # Winston logger configuration
-│   ├── allureEnvironment.ts         # Injects environment + git metadata into Allure
-│   ├── pageLocator.ts               # Shared locator utilities
-│   └── testInterface.ts             # TypeScript interfaces for all test data shapes
+│   └── allureEnvironment.ts         # Injects environment + git metadata into Allure
 ├── globalSetup.ts                   # Cleans output folders before each run
 ├── playwright.config.ts             # Playwright configuration (loads .env.qe)
 ├── tsconfig.json                    # Strict TypeScript configuration
@@ -105,7 +109,7 @@ Layer 3 — Page Classes    (pages/*.ts)       ← action methods per feature/pa
 
 - **Composition over inheritance** — every Page class holds its own private `#page` (or `#request`, for API pages) field rather than extending a shared base class. This keeps each page class self-contained and avoids the fragile-base-class problem.
 - **Single-responsibility helpers** — instead of one large `Methods` utility class, functionality is split into focused static classes (`ClickHelper`, `InputHelper`, `DropdownHelper`, `AlertHelper`, `NavigationHelper`, `FileHelper`, `ScreenshotHelper`, `AssertionHelper`), each with one clear purpose.
-- **Typed by default** — `strict: true` in `tsconfig.json`, `as const` locator objects for autocomplete and immutability, and typed interfaces (`utils/testInterface.ts`) for every piece of test data and API payload.
+- **Typed by default** — `strict: true` in `tsconfig.json`, `as const` locator objects for autocomplete and immutability, and typed interfaces (`interface/uiInterface.ts`, `interface/apiInterface.ts`) for every piece of test data and API payload.
 - **Centralized assertions** — all assertions (soft or hard) go through `AssertionHelper`, so assertion behavior (e.g., soft-assert mode) is controlled in one place rather than scattered across test files.
 - **Centralized logging** — all actions and API calls are logged through a Winston-based logger (`utils/logger.ts`), giving structured, leveled logs across both UI and API test runs.
 - **Randomized, data-driven flows** — UI test data (e.g., dropdown selections) is picked at random from JSON fixtures via `DataGenerator`, rather than hardcoded to a fixed index/value, so repeated runs exercise a wider range of real option values instead of the same path every time.
