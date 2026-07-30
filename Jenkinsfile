@@ -1,9 +1,6 @@
 pipeline {
     agent any
 
-    // =========================
-    // BUILD PARAMETERS
-    // =========================
     parameters {
         choice(
             name: 'BROWSER',
@@ -14,18 +11,12 @@ pipeline {
 
     stages {
 
-        // =========================
-        // CHECKOUT
-        // =========================
         stage('Checkout') {
             steps {
                 echo 'Source code checkout completed'
             }
         }
 
-        // =========================
-        // INSTALL DEPENDENCIES
-        // =========================
         stage('Install Dependencies') {
             steps {
                 echo 'Installing Node dependencies...'
@@ -33,18 +24,12 @@ pipeline {
             }
         }
 
-        // =========================
-        // PLAYWRIGHT VERSION
-        // =========================
         stage('Playwright Version') {
             steps {
                 bat 'call npx playwright --version'
             }
         }
 
-        // =========================
-        // INSTALL SELECTED BROWSER
-        // =========================
         stage('Install Browser') {
             steps {
                 echo "Installing browser: ${params.BROWSER}"
@@ -52,9 +37,6 @@ pipeline {
             }
         }
 
-        // =========================
-        // RUN TESTS
-        // =========================
         stage('Run Tests') {
             steps {
                 echo "Running Playwright tests on: ${params.BROWSER}"
@@ -63,13 +45,18 @@ pipeline {
         }
     }
 
-    // =========================
-    // POST BUILD
-    // =========================
     post {
 
         always {
             echo 'LeafGround pipeline execution completed'
+
+            echo 'Archiving Playwright test artifacts...'
+
+            archiveArtifacts(
+                artifacts: 'test-results/**/*',
+                allowEmptyArchive: true,
+                fingerprint: true
+            )
         }
 
         success {
