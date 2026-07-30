@@ -1,14 +1,6 @@
 pipeline {
     agent any
 
-    parameters {
-        choice(
-            name: 'BROWSER',
-            choices: ['chromium', 'webkit'],
-            description: 'Select browser for Playwright test execution'
-        )
-    }
-
     stages {
 
         stage('Checkout') {
@@ -30,17 +22,35 @@ pipeline {
             }
         }
 
-        stage('Install Browser') {
+        stage('Install Browsers') {
             steps {
-                echo "Installing browser: ${params.BROWSER}"
-                bat "call npx playwright install ${params.BROWSER}"
+                echo 'Installing Chromium and WebKit...'
+                bat 'call npx playwright install chromium webkit'
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                echo "Running Playwright tests on: ${params.BROWSER}"
-                bat "call npx playwright test --project=${params.BROWSER}"
+        stage('Run Tests in Parallel') {
+            parallel {
+
+                stage('Chromium') {
+                    steps {
+                        echo 'Running Chromium tests...'
+
+                        bat '''
+                            call npx playwright test --project=chromium --output=test-results/chromium --reporter=list
+                        '''
+                    }
+                }
+
+                stage('WebKit') {
+                    steps {
+                        echo 'Running WebKit tests...'
+
+                        bat '''
+                            call npx playwright test --project=webkit --output=test-results/webkit --reporter=list
+                        '''
+                    }
+                }
             }
         }
     }
@@ -48,7 +58,7 @@ pipeline {
     post {
 
         always {
-            echo 'LeafGround pipeline execution completed'
+            echo 'LeafGround parallel pipeline execution completed'
 
             echo 'Archiving Playwright test artifacts...'
 
@@ -60,11 +70,11 @@ pipeline {
         }
 
         success {
-            echo "Playwright tests PASSED on ${params.BROWSER}"
+            echo 'Chromium and WebKit tests PASSED'
         }
 
         failure {
-            echo "Playwright tests FAILED on ${params.BROWSER}"
+            echo 'One or more browser test executions FAILED'
         }
     }
 }
