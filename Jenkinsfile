@@ -1,14 +1,6 @@
 pipeline {
     agent any
 
-    parameters {
-        choice(
-            name: 'BROWSER',
-            choices: ['chromium', 'webkit'],
-            description: 'Select browser for Playwright test execution'
-        )
-    }
-
     stages {
 
         stage('Checkout') {
@@ -33,15 +25,15 @@ pipeline {
 
         stage('Install Browser') {
             steps {
-                echo "Installing browser: ${params.BROWSER}"
-                bat "call npx playwright install ${params.BROWSER}"
+                echo 'Installing Chromium...'
+                bat 'call npx playwright install chromium'
             }
         }
 
         stage('Run Tests') {
             steps {
-                echo "Running Playwright tests on: ${params.BROWSER}"
-                bat "call npx playwright test --project=${params.BROWSER}"
+                echo 'Running Playwright tests on Chromium...'
+                bat 'call npx playwright test --project=chromium'
             }
         }
     }
@@ -61,11 +53,39 @@ pipeline {
         }
 
         success {
-            echo "Playwright tests PASSED on ${params.BROWSER}"
+            echo 'Playwright tests PASSED'
+
+            slackSend(
+                channel: '#jenkins-reports',
+                color: 'good',
+                message: """
+✅ *Jenkins Build PASSED*
+
+*Job:* ${env.JOB_NAME}
+*Build:* #${env.BUILD_NUMBER}
+*Browser:* Chromium
+*Status:* SUCCESS
+*Build URL:* ${env.BUILD_URL}
+"""
+            )
         }
 
         failure {
-            echo "Playwright tests FAILED on ${params.BROWSER}"
+            echo 'Playwright tests FAILED'
+
+            slackSend(
+                channel: '#jenkins-reports',
+                color: 'danger',
+                message: """
+❌ *Jenkins Build FAILED*
+
+*Job:* ${env.JOB_NAME}
+*Build:* #${env.BUILD_NUMBER}
+*Browser:* Chromium
+*Status:* FAILED
+*Build URL:* ${env.BUILD_URL}
+"""
+            )
         }
     }
 }
