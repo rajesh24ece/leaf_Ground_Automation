@@ -4,10 +4,18 @@ export class GitUtils {
   private static git = simpleGit();
 
   static async getBranch(): Promise<string> {
-    return await this.git.revparse(["--abbrev-ref", "HEAD"]);
+    try {
+      return await this.git.revparse(["--abbrev-ref", "HEAD"]);
+    } catch {
+      return "N/A";
+    }
   }
 
   static async getCommit(): Promise<string> {
-    return await this.git.revparse(["HEAD"]);
+    try {
+      return await this.git.revparse(["HEAD"]);
+    } catch {
+      return "N/A";
+    }
   }
 }

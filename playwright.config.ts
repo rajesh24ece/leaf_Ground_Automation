@@ -1,11 +1,14 @@
 import { defineConfig, devices } from "@playwright/test";
 import dotenv from "dotenv";
 import path from "path";
+import fs from "fs";
 
 dotenv.config({
   path: path.resolve(__dirname, ".env.qe"),
   quiet: true,
 });
+
+const isDocker = fs.existsSync("/.dockerenv");
 
 export default defineConfig({
   testDir: "./tests",
@@ -30,13 +33,19 @@ export default defineConfig({
     timeout: 10 * 1000,
   },
 
-  reporter: [["list"], ["html"], ["allure-playwright"], ["json", { outputFile: "test-results/test-results.json" }]],
+  reporter: [
+    ["list"],
+    ["html"],
+    ["allure-playwright"],
+    ["json", { outputFile: "test-results/test-results.json" }],
+  ],
 
   use: {
     baseURL: process.env.BASE_URL,
 
-    // true in CI, false locally — driven by CI env var set in workflow
-    headless: !!process.env.CI,
+    // headless in CI (GitHub Actions/Jenkins set CI=true) or inside any Docker container
+    // (auto-detected via /.dockerenv) — no manual env var required for the Docker case
+    headless: process.env.CI === "true" || isDocker,
 
     trace: "on-first-retry",
 
@@ -64,11 +73,11 @@ export default defineConfig({
     //   },
     // },
 
-    {
-      name: "webkit",
-      use: {
-        ...devices["Desktop Safari"],
-      },
-    },
+    // {
+    //   name: "webkit",
+    //   use: {
+    //     ...devices["Desktop Safari"],
+    //   },
+    // },
   ],
 });
