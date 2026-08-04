@@ -1,8 +1,0 @@
-services:
-  tests:
-    build: .
-    volumes:
-      - ./test-results:/app/test-results
-      - ./allure-results:/app/allure-results
-    env_file:
-      - .env.qe
