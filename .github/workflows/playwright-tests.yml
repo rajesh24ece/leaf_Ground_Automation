@@ -1,83 +1,57 @@
-import { defineConfig, devices } from "@playwright/test";
-import dotenv from "dotenv";
-import path from "path";
-import fs from "fs";
+name: Playwright Tests
 
-dotenv.config({
-  path: path.resolve(__dirname, ".env.qe"),
-  quiet: true,
-});
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
-const isDocker = fs.existsSync("/.dockerenv");
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
 
-export default defineConfig({
-  testDir: "./tests",
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  // Cleanup before execution
-  globalSetup: require.resolve("./globalSetup"),
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-  // Store screenshots, traces, videos etc.
-  outputDir: "test-results",
+      - name: Install dependencies
+        run: npm ci
 
-  fullyParallel: true,
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
 
-  forbidOnly: !!process.env.CI,
+      - name: Run Playwright tests
+        run: npx playwright test
+        env:
+          CI: true
+          BASE_URL: ${{ secrets.BASE_URL }}
 
-  retries: process.env.CI ? 2 : 0,
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report
+          path: playwright-report/
+          retention-days: 30
 
-  workers: Number(process.env.WORKERS) || 1,
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 30
 
-  timeout: 30 * 1000,
-
-  expect: {
-    timeout: 10 * 1000,
-  },
-
-  reporter: [
-    ["list"],
-    ["html"],
-    ["allure-playwright"],
-    ["json", { outputFile: "test-results/test-results.json" }],
-  ],
-
-  use: {
-    baseURL: process.env.BASE_URL,
-
-    // headless in CI (GitHub Actions/Jenkins set CI=true) or inside any Docker container
-    // (auto-detected via /.dockerenv) — no manual env var required for the Docker case
-    headless: process.env.CI === "true" || isDocker,
-
-    trace: "on-first-retry",
-
-    screenshot: "on",
-
-    video: "on",
-
-    actionTimeout: 10 * 1000,
-    navigationTimeout: 30 * 1000,
-    ignoreHTTPSErrors: true,
-  },
-
-  projects: [
-    {
-      name: "chromium",
-      use: {
-        ...devices["Desktop Chrome"],
-      },
-    },
-
-    // {
-    //   name: "firefox",
-    //   use: {
-    //     ...devices["Desktop Firefox"],
-    //   },
-    // },
-
-    // {
-    //   name: "webkit",
-    //   use: {
-    //     ...devices["Desktop Safari"],
-    //   },
-    // },
-  ],
-});
+      - name: Upload test results (screenshots/videos/traces)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 30
