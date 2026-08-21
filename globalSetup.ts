@@ -1,7 +1,7 @@
 import fs from "fs";
 import { logger } from "./utils/logger";
 import { AllureEnvironment } from "./utils/allureEnvironment";
-import path from "path/win32";
+import path from "path";
 
 async function globalSetup() {
   const folders = ["playwright-report", "test-results", "screenshots", "allure-results"];

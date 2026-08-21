@@ -221,13 +221,13 @@ export class ClickHelper {
    * @param page - page expected to navigate
    * @param locator - element to click
    */
-  static async clickAndWaitForNavigation(page: Page, locator: Locator): Promise<void> {
-    try {
-      await Promise.all([page.waitForNavigation(), locator.click()]);
-    } catch (error) {
-      ErrorUtils.handleError(`❌ Failed during click and navigation "${locator}" .`, error);
-    }
+ static async clickAndWaitForNavigation(page: Page, locator: Locator, expectedUrl: string | RegExp): Promise<void> {
+  try {
+    await Promise.all([page.waitForURL(expectedUrl), locator.click()]);
+  } catch (error) {
+    ErrorUtils.handleError(`❌ Failed during click and navigation "${locator}" .`, error);
   }
+}
 
   /**
    * Clicks the element and waits for a new browser tab/page to open (e.g. target="_blank" links).
