@@ -84,9 +84,11 @@ export class WebTablePage {
   }
 
   async searchProduct(testData: WebTableTestData): Promise<void> {
-    const search = this.#page.getByPlaceholder(WebTableLocators.searchPlaceholder).nth(1);
-    await ClickHelper.click(search);
-    await InputHelper.pressSequentially(search, testData.SearchProduct, 50);
-    const result = await this.checkTableData(testData.SearchProduct);
-  }
+  const search = this.#page.getByPlaceholder(WebTableLocators.searchPlaceholder).nth(1);
+  await ClickHelper.click(search);
+  await InputHelper.pressSequentially(search, testData.SearchProduct, 50);
+
+  const result = await this.checkTableData(testData.SearchProduct);
+  await AssertionHelper.assertToBeTruthy(result.success);
+}
 }
